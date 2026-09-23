@@ -15,6 +15,7 @@ A TypeScript Discord bot that reads Vietnamese and English voice messages trigge
 src/
   config/         Environment validation
   utils/          Shared utilities (logging)
+  color/          Name-color command parsing and validation
   voice/          Chat trigger parsing and Discord voice playback
   index.ts        Client lifecycle and interaction routing
 ```
@@ -53,13 +54,23 @@ npm run build
 
 1. In the [Discord Developer Portal](https://discord.com/developers/applications), create an application.
 2. Open **Bot**, create the bot user, and reset/copy its token into `.env` as `DISCORD_TOKEN`.
-3. In **OAuth2 → URL Generator**, select both `bot` and `applications.commands` scopes. Grant **Connect**, **Speak**, **View Channel**, **Send Messages**, and **Manage Messages** permissions (or Administrator, if deliberately chosen). Open the generated URL and invite the bot to your server.
-4. Under **Bot → Privileged Gateway Intents**, enable **Message Content Intent**. No other privileged intent is needed.
+3. In **OAuth2 → URL Generator**, select both `bot` and `applications.commands` scopes. Grant **Connect**, **Speak**, **View Channel**, **Send Messages**, **Manage Messages**, and **Manage Roles** permissions (or Administrator, if deliberately chosen). Open the generated URL and invite the bot to your server. Keep the bot's role above any color roles in the server role list.
+4. Under **Bot → Privileged Gateway Intents**, enable **Message Content Intent** and **Presence Intent**. No other privileged intent is needed.
 5. Start the bot. Join a voice channel, then send `-s Xin chào` in any text channel in the same server. The bot joins and speaks the message.
 
 Use `/chance question:<câu hỏi>` to roll a random probability from 0% through 100% and get the matching response.
 
-The bot uses only `Guilds`, `GuildMessages`, `GuildVoiceStates`, and `MessageContent` intents. It starts TTS streaming while the voice connection is being established to minimize the delay before playback, and it leaves a voice channel automatically once no human users remain there.
+Use `/color x:#RRGGBB` to set your display-name color. The bot removes the user's prior hexadecimal color roles, deletes any that become unused, then creates and assigns the requested color role.
+
+The bot also sends a notification to the configured channel when the watched user is online (including idle or Do Not Disturb) and joins a voice channel. It also reports precise status transitions when that user moves between `offline` and `online`, `idle`, or `dnd`.
+
+When another person enters or moves into a voice channel where Zookeeper is already connected, the bot says `<tên hiển thị> đã đến.` once.
+
+When Zookeeper is not in a voice channel and a person joins or moves into one, it joins that channel and says `<tên hiển thị> đã đến.` Zookeeper leaves when the last human member leaves its voice channel; bots do not count as human members.
+
+Voice greetings are queued and always play before pending `-s`, `-sen`, `--s`, or `--sen` requests. While one or more greetings are playing or queued, new speech commands do not enter the queue; the bot replies that it is speaking, and `--s`/`--sen` still delete their source message. The bot never interrupts speech already in progress.
+
+The bot uses only `Guilds`, `GuildMessages`, `GuildVoiceStates`, `GuildPresences`, and `MessageContent` intents. It starts TTS streaming while the voice connection is being established to minimize the delay before playback, and it leaves a voice channel automatically once no human users remain there.
 
 ## Checks
 

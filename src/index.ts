@@ -1,14 +1,19 @@
-import { Client, Events, GatewayIntentBits, SlashCommandBuilder, type Guild } from "discord.js";
+import { Client, Events, GatewayIntentBits, PermissionFlagsBits, SlashCommandBuilder, type Guild } from "discord.js";
 import { rollChance } from "./chance/command.js";
+import { colorInteger, isColorRoleName, normalizeHexColor } from "./color/command.js";
 import { loadEnvironment } from "./config/environment.js";
 import { logger } from "./utils/logger.js";
 import { SpeechIntroductionTracker, speechRequestFromMessage } from "./voice/command.js";
+import { shouldAnnouncePresenceBoundary, shouldAnnounceVoiceArrival, shouldSpeakMemberArrival, shouldWelcomeFirstVoiceMember } from "./voice/arrival.js";
 import { SpeakerManager } from "./voice/speaker.js";
+
+const WATCHED_USER_ID = "493076491106779148";
+const VOICE_ARRIVAL_CHANNEL_ID = "1513220978816319538";
 
 async function main(): Promise<void> {
   const environment = loadEnvironment();
   const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildPresences, GatewayIntentBits.MessageContent],
   });
   const speakers = new SpeakerManager();
   const introductions = new SpeechIntroductionTracker();
@@ -21,9 +26,16 @@ async function main(): Promise<void> {
       .setName("question")
       .setDescription("Câu hỏi của bạn")
       .setRequired(true));
+  const colorCommand = new SlashCommandBuilder()
+    .setName("color")
+    .setDescription("Đổi màu tên của bạn")
+    .addStringOption((option) => option
+      .setName("x")
+      .setDescription("Mã màu dạng #000000")
+      .setRequired(true));
 
   const registerCommands = async (guild: Guild): Promise<void> => {
-    await guild.commands.set([chanceCommand]);
+    await guild.commands.set([chanceCommand, colorCommand]);
     logger.info("Registered guild commands", { guildId: guild.id });
   };
 
@@ -57,6 +69,11 @@ async function main(): Promise<void> {
       });
     }
 
+    if (speakers.isGreeting(message.guildId)) {
+      await message.reply("Tao đang nói, đợi một chút!").catch(() => undefined);
+      return;
+    }
+
     const voiceChannel = message.member?.voice.channel;
     if (!voiceChannel) {
       await message.reply("Bạn cần tham gia một voice channel trước khi dùng `-s`.").catch(() => undefined);
@@ -73,12 +90,8 @@ async function main(): Promise<void> {
     );
 
     try {
-      const result = await speakers.speak(voiceChannel, textToSpeak, speechRequest.language);
-      if (result === "busy") {
-        await message.reply("Tao đang nói, đợi một chút!").catch(() => undefined);
-      } else {
-        introductions.remember(message.guildId, message.author.id);
-      }
+      await speakers.speak(voiceChannel, textToSpeak, speechRequest.language);
+      introductions.remember(message.guildId, message.author.id);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       logger.error("Voice message failed", { guildId: message.guildId, channelId: voiceChannel.id, message: errorMessage });
@@ -87,18 +100,148 @@ async function main(): Promise<void> {
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
-    if (!interaction.isChatInputCommand() || interaction.commandName !== "chance") return;
+    if (!interaction.isChatInputCommand()) return;
 
-    const question = interaction.options.getString("question", true);
-    const chance = rollChance();
-    await interaction.reply(`> ${question}\n**${chance.percent}%** — ${chance.response}`);
+    if (interaction.commandName === "chance") {
+      const question = interaction.options.getString("question", true);
+      const chance = rollChance();
+      await interaction.reply(`> ${question}\n**${chance.percent}%** — ${chance.response}`);
+      return;
+    }
+
+    if (interaction.commandName !== "color" || !interaction.guild) return;
+
+    const hex = normalizeHexColor(interaction.options.getString("x", true));
+    if (!hex) {
+      await interaction.reply({ content: "Mã màu phải có dạng `#000000`.", ephemeral: true });
+      return;
+    }
+
+    await interaction.deferReply({ ephemeral: true });
+    try {
+      const member = await interaction.guild.members.fetch(interaction.user.id);
+      const botMember = await interaction.guild.members.fetchMe();
+      if (!botMember.permissions.has(PermissionFlagsBits.ManageRoles)) {
+        throw new Error("Bot needs the Manage Roles permission.");
+      }
+
+      const oldColorRoles = member.roles.cache.filter((role) => isColorRoleName(role.name));
+      const rolesToCleanUp = [...oldColorRoles.values()];
+      await member.roles.remove(rolesToCleanUp, "Replacing the member's color role");
+
+      for (const role of rolesToCleanUp) {
+        const refreshedRole = await interaction.guild.roles.fetch(role.id);
+        if (refreshedRole && refreshedRole.members.size === 0 && refreshedRole.editable) {
+          await refreshedRole.delete("Unused color role");
+        }
+      }
+
+      const colorRole = await interaction.guild.roles.create({
+        name: hex,
+        colors: { primaryColor: colorInteger(hex) },
+        reason: `Color selected by ${interaction.user.tag}`,
+      });
+      // Discord displays the color of a member's highest colored role. Put the
+      // new role just under the bot so it wins over ordinary member roles.
+      const positionedColorRole = await colorRole.setPosition(Math.max(1, botMember.roles.highest.position - 1));
+      await member.roles.add(positionedColorRole, "Member selected a color");
+      await interaction.editReply(`Màu tên của bạn đã đổi thành \`${hex}\`.`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      logger.error("Could not set member color", { guildId: interaction.guildId, userId: interaction.user.id, message });
+      await interaction.editReply("Không thể đổi màu. Bot cần quyền **Manage Roles** và role của bot phải nằm cao hơn các role màu.");
+    }
   });
 
-  client.on(Events.VoiceStateUpdate, (oldState, newState) => {
+  client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
     const member = newState.member ?? oldState.member;
     if (!member || member.user.bot || oldState.channelId === newState.channelId) return;
 
     if (oldState.channel) speakers.leaveIfAlone(oldState.channel);
+
+    const botChannelId = newState.guild.members.me?.voice.channelId;
+    if (shouldWelcomeFirstVoiceMember(oldState.channelId, newState.channelId, botChannelId) && newState.channel) {
+      try {
+        await speakers.speakArrival(newState.channel, `${member.displayName} đã đến.`);
+      } catch (error) {
+        logger.error("Could not welcome the first voice member", {
+          guildId: newState.guild.id,
+          userId: member.id,
+          message: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+
+    if (shouldSpeakMemberArrival(oldState.channelId, newState.channelId, botChannelId) && newState.channel) {
+      try {
+        await speakers.speakArrival(newState.channel, `${member.displayName} đã đến.`);
+      } catch (error) {
+        logger.error("Could not speak member-arrival announcement", {
+          guildId: newState.guild.id,
+          userId: member.id,
+          message: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+
+    if (!shouldAnnounceVoiceArrival(
+      member.id,
+      oldState.channelId,
+      newState.channelId,
+      member.presence?.status,
+      WATCHED_USER_ID,
+    )) return;
+
+    try {
+      const notificationChannel = await newState.guild.channels.fetch(VOICE_ARRIVAL_CHANNEL_ID);
+      if (!notificationChannel?.isTextBased()) {
+        throw new Error("The configured voice-arrival channel is not text-based or is unavailable.");
+      }
+
+      await notificationChannel.send({
+        content: `🟢 ${member.displayName} đang online và vừa vào voice <#${newState.channelId}>.`,
+        allowedMentions: { parse: [] },
+      });
+    } catch (error) {
+      logger.error("Could not send voice-arrival notification", {
+        guildId: newState.guild.id,
+        userId: member.id,
+        channelId: VOICE_ARRIVAL_CHANNEL_ID,
+        message: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+
+  client.on(Events.PresenceUpdate, async (oldPresence, newPresence) => {
+    const guild = newPresence.guild;
+    if (!guild) return;
+
+    if (!shouldAnnouncePresenceBoundary(
+      newPresence.userId,
+      oldPresence?.status,
+      newPresence.status,
+      WATCHED_USER_ID,
+    )) return;
+
+    try {
+      const notificationChannel = await guild.channels.fetch(VOICE_ARRIVAL_CHANNEL_ID);
+      if (!notificationChannel?.isTextBased()) {
+        throw new Error("The configured presence-notification channel is not text-based or is unavailable.");
+      }
+
+      const displayName = newPresence.member?.displayName ?? "Người dùng được theo dõi";
+      await notificationChannel.send({
+        content: `🔄 ${displayName} chuyển status từ \`${oldPresence?.status}\` sang \`${newPresence.status}\`.`,
+        allowedMentions: { parse: [] },
+      });
+    } catch (error) {
+      logger.error("Could not send presence-change notification", {
+        guildId: guild.id,
+        userId: newPresence.userId,
+        channelId: VOICE_ARRIVAL_CHANNEL_ID,
+        message: error instanceof Error ? error.message : String(error),
+      });
+    }
   });
 
   const shutdown = (signal: string): void => {

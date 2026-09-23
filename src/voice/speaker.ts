@@ -7,6 +7,7 @@ import { PassThrough } from "node:stream";
 import { delimiter, dirname } from "node:path";
 import { logger } from "../utils/logger.js";
 import type { SpeechLanguage } from "./command.js";
+import { SpeechQueue, type SpeechPriority } from "./queue.js";
 
 const edgeTts = new EdgeTTS({
   outputFormat: "audio-24khz-48kbitrate-mono-mp3",
@@ -228,6 +229,7 @@ class GuildSpeaker {
 
 export class SpeakerManager {
   private readonly speakers = new Map<string, GuildSpeaker>();
+  private readonly queues = new Map<string, QueueState>();
   private lastTtsWarmUpAt = 0;
   private warmingUp?: Promise<void>;
 
@@ -243,10 +245,16 @@ export class SpeakerManager {
     return this.warmingUp;
   }
 
-  async speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage): Promise<"busy" | "spoken"> {
-    const speaker = this.speakers.get(channel.guild.id) ?? new GuildSpeaker(channel.guild.id);
-    this.speakers.set(channel.guild.id, speaker);
-    return speaker.speak(channel, text, language);
+  speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage): Promise<"spoken"> {
+    return this.enqueue(channel, text, language, "standard");
+  }
+
+  speakArrival(channel: VoiceBasedChannel, text: string): Promise<"spoken"> {
+    return this.enqueue(channel, text, "vi", "arrival");
+  }
+
+  isGreeting(guildId: string): boolean {
+    return (this.queues.get(guildId)?.arrivalCount ?? 0) > 0;
   }
 
   leaveIfAlone(channel: VoiceBasedChannel): void {
@@ -258,5 +266,70 @@ export class SpeakerManager {
 
     speaker.leave();
     this.speakers.delete(channel.guild.id);
+    const queueState = this.queues.get(channel.guild.id);
+    if (queueState) {
+      queueState.cancelled = true;
+      for (const speech of queueState.queue.drain()) {
+        if (speech.priority === "arrival") queueState.arrivalCount -= 1;
+        speech.reject(new Error("No human members remain in the voice channel."));
+      }
+      this.queues.delete(channel.guild.id);
+    }
+  }
+
+  private enqueue(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, priority: SpeechPriority): Promise<"spoken"> {
+    const guildId = channel.guild.id;
+    const queueState = this.queues.get(guildId) ?? { queue: new SpeechQueue<QueuedSpeech>(), processing: false, cancelled: false, arrivalCount: 0 };
+    this.queues.set(guildId, queueState);
+    if (priority === "arrival") queueState.arrivalCount += 1;
+
+    const pendingSpeech = new Promise<"spoken">((resolve, reject) => {
+      queueState.queue.enqueue({ channel, text, language, priority, resolve, reject }, priority);
+    });
+    void this.processQueue(guildId, queueState);
+    return pendingSpeech;
+  }
+
+  private async processQueue(guildId: string, queueState: QueueState): Promise<void> {
+    if (queueState.processing) return;
+    queueState.processing = true;
+
+    try {
+      let pendingSpeech: QueuedSpeech | undefined;
+      while (!queueState.cancelled && (pendingSpeech = queueState.queue.dequeue())) {
+        const speaker = this.speakers.get(guildId) ?? new GuildSpeaker(guildId);
+        this.speakers.set(guildId, speaker);
+        try {
+          await speaker.speak(pendingSpeech.channel, pendingSpeech.text, pendingSpeech.language);
+          if (queueState.cancelled) pendingSpeech.reject(new Error("No human members remain in the voice channel."));
+          else pendingSpeech.resolve("spoken");
+        } catch (error) {
+          pendingSpeech.reject(error);
+        } finally {
+          if (pendingSpeech.priority === "arrival") queueState.arrivalCount -= 1;
+        }
+      }
+    } finally {
+      queueState.processing = false;
+      if (this.queues.get(guildId) === queueState && queueState.queue.size === 0) {
+        this.queues.delete(guildId);
+      }
+    }
   }
 }
+
+type QueuedSpeech = {
+  channel: VoiceBasedChannel;
+  text: string;
+  language: SpeechLanguage;
+  priority: SpeechPriority;
+  resolve: (value: "spoken") => void;
+  reject: (reason?: unknown) => void;
+};
+
+type QueueState = {
+  queue: SpeechQueue<QueuedSpeech>;
+  processing: boolean;
+  cancelled: boolean;
+  arrivalCount: number;
+};
