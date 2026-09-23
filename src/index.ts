@@ -45,6 +45,8 @@ async function main(): Promise<void> {
   });
 
   client.on(Events.VoiceStateUpdate, (oldState, newState) => {
+    if (newState.member?.user.bot) return;
+
     const channel = oldState.channel ?? newState.channel;
     if (channel) speakers.leaveIfAlone(channel);
   });
