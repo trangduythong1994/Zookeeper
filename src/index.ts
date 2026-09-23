@@ -1,4 +1,5 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { Client, Events, GatewayIntentBits, SlashCommandBuilder, type Guild } from "discord.js";
+import { rollChance } from "./chance/command.js";
 import { loadEnvironment } from "./config/environment.js";
 import { logger } from "./utils/logger.js";
 import { SpeechIntroductionTracker, speechRequestFromMessage } from "./voice/command.js";
@@ -13,8 +14,28 @@ async function main(): Promise<void> {
   const introductions = new SpeechIntroductionTracker();
   let shuttingDown = false;
 
-  client.once(Events.ClientReady, (readyClient) => {
+  const chanceCommand = new SlashCommandBuilder()
+    .setName("chance")
+    .setDescription("Quay xác suất cho một câu hỏi")
+    .addStringOption((option) => option
+      .setName("question")
+      .setDescription("Câu hỏi của bạn")
+      .setRequired(true));
+
+  const registerCommands = async (guild: Guild): Promise<void> => {
+    await guild.commands.set([chanceCommand]);
+    logger.info("Registered guild commands", { guildId: guild.id });
+  };
+
+  client.once(Events.ClientReady, async (readyClient) => {
     logger.info("Discord client is ready", { username: readyClient.user.tag, userId: readyClient.user.id });
+    await Promise.all(readyClient.guilds.cache.map((guild) => registerCommands(guild)));
+  });
+
+  client.on(Events.GuildCreate, (guild) => {
+    void registerCommands(guild).catch((error: unknown) => {
+      logger.error("Could not register guild commands", { guildId: guild.id, message: error instanceof Error ? error.message : String(error) });
+    });
   });
 
   client.on(Events.Error, (error) => {
@@ -26,6 +47,15 @@ async function main(): Promise<void> {
 
     const speechRequest = speechRequestFromMessage(message.content);
     if (!speechRequest) return;
+
+    if (speechRequest.deleteSource) {
+      void message.delete().catch((error: unknown) => {
+        logger.error("Could not delete speech command", {
+          channelId: message.channelId,
+          message: error instanceof Error ? error.message : String(error),
+        });
+      });
+    }
 
     const voiceChannel = message.member?.voice.channel;
     if (!voiceChannel) {
@@ -39,6 +69,7 @@ async function main(): Promise<void> {
       message.member?.displayName ?? message.author.username,
       speechRequest.content,
       speechRequest.language,
+      speechRequest.whisper,
     );
 
     try {
@@ -53,6 +84,14 @@ async function main(): Promise<void> {
       logger.error("Voice message failed", { guildId: message.guildId, channelId: voiceChannel.id, message: errorMessage });
       await message.reply("Tao không nói được lúc này, thử lại sau.").catch(() => undefined);
     }
+  });
+
+  client.on(Events.InteractionCreate, async (interaction) => {
+    if (!interaction.isChatInputCommand() || interaction.commandName !== "chance") return;
+
+    const question = interaction.options.getString("question", true);
+    const chance = rollChance();
+    await interaction.reply(`> ${question}\n**${chance.percent}%** — ${chance.response}`);
   });
 
   client.on(Events.VoiceStateUpdate, (oldState, newState) => {

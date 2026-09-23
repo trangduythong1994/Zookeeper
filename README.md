@@ -1,6 +1,6 @@
 # Discord Bot
 
-A TypeScript Discord bot that reads Vietnamese and English voice messages triggered by chat. A user in a voice channel can send `-s <nội dung>` for Vietnamese or `-sen <content>` for English in any text channel; the bot joins that voice channel and says the message. Consecutive messages by that same person omit the name for 30 seconds; a different speaker is announced immediately.
+A TypeScript Discord bot that reads Vietnamese and English voice messages triggered by chat. A user in a voice channel can send `-s <nội dung>` for Vietnamese or `-sen <content>` for English in any text channel; the bot joins that voice channel and says the message. Use `--s` to delete the command and read it as `<tên> thì thầm rằng ...`; `--sen` deletes an English command while retaining the normal English introduction. Consecutive messages by that same person omit the name for 30 seconds; a different speaker is announced immediately.
 
 ## Stack
 
@@ -53,9 +53,11 @@ npm run build
 
 1. In the [Discord Developer Portal](https://discord.com/developers/applications), create an application.
 2. Open **Bot**, create the bot user, and reset/copy its token into `.env` as `DISCORD_TOKEN`.
-3. In **OAuth2 → URL Generator**, select the `bot` scope. Grant **Connect**, **Speak**, **View Channel**, and **Send Messages** permissions (or Administrator, if deliberately chosen). Open the generated URL and invite the bot to your server.
+3. In **OAuth2 → URL Generator**, select both `bot` and `applications.commands` scopes. Grant **Connect**, **Speak**, **View Channel**, **Send Messages**, and **Manage Messages** permissions (or Administrator, if deliberately chosen). Open the generated URL and invite the bot to your server.
 4. Under **Bot → Privileged Gateway Intents**, enable **Message Content Intent**. No other privileged intent is needed.
 5. Start the bot. Join a voice channel, then send `-s Xin chào` in any text channel in the same server. The bot joins and speaks the message.
+
+Use `/chance question:<câu hỏi>` to roll a random probability from 0% through 100% and get the matching response.
 
 The bot uses only `Guilds`, `GuildMessages`, `GuildVoiceStates`, and `MessageContent` intents. It starts TTS streaming while the voice connection is being established to minimize the delay before playback, and it leaves a voice channel automatically once no human users remain there.
 
