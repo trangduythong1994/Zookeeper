@@ -1,12 +1,15 @@
-import { Client, Events, GatewayIntentBits, type Interaction } from "discord.js";
-import { commandsByName } from "./commands/index.js";
+import { Client, Events, GatewayIntentBits } from "discord.js";
 import { loadEnvironment } from "./config/environment.js";
-import { registerCommands } from "./register-commands.js";
 import { logger } from "./utils/logger.js";
+import { speechTextForMessage } from "./voice/command.js";
+import { SpeakerManager } from "./voice/speaker.js";
 
 async function main(): Promise<void> {
   const environment = loadEnvironment();
-  const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+  const client = new Client({
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent],
+  });
+  const speakers = new SpeakerManager();
   let shuttingDown = false;
 
   client.once(Events.ClientReady, (readyClient) => {
@@ -17,25 +20,33 @@ async function main(): Promise<void> {
     logger.error("Discord client error", { message: error.message, name: error.name });
   });
 
-  client.on(Events.InteractionCreate, async (interaction: Interaction) => {
-    if (!interaction.isChatInputCommand()) return;
+  client.on(Events.MessageCreate, async (message) => {
+    if (!message.inGuild() || message.author.bot) return;
 
-    const command = commandsByName.get(interaction.commandName);
-    if (!command) return;
+    const textToSpeak = speechTextForMessage(message.member?.displayName ?? message.author.username, message.content);
+    if (!textToSpeak) return;
+
+    const voiceChannel = message.member?.voice.channel;
+    if (!voiceChannel) {
+      await message.reply("Bạn cần tham gia một voice channel trước khi dùng `-s`.").catch(() => undefined);
+      return;
+    }
 
     try {
-      await command.execute(interaction);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      logger.error("Command execution failed", { command: interaction.commandName, message });
-
-      const reply = { content: "Something went wrong while running that command.", ephemeral: true };
-      if (interaction.replied || interaction.deferred) {
-        await interaction.followUp(reply).catch(() => undefined);
-      } else {
-        await interaction.reply(reply).catch(() => undefined);
+      const result = await speakers.speak(voiceChannel, textToSpeak);
+      if (result === "busy") {
+        await message.reply("Tao đang nói, đợi một chút!").catch(() => undefined);
       }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error("Voice message failed", { guildId: message.guildId, channelId: voiceChannel.id, message: errorMessage });
+      await message.reply("Tao không thể nói lúc này, thử lại sau nhé.").catch(() => undefined);
     }
+  });
+
+  client.on(Events.VoiceStateUpdate, (oldState, newState) => {
+    const channel = oldState.channel ?? newState.channel;
+    if (channel) speakers.leaveIfAlone(channel);
   });
 
   const shutdown = (signal: string): void => {
@@ -58,8 +69,6 @@ async function main(): Promise<void> {
     shutdown("uncaughtException");
   });
 
-  logger.info("Registering Discord application commands");
-  await registerCommands(environment);
   logger.info("Logging in to Discord");
   await client.login(environment.token);
 }
