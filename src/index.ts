@@ -1,7 +1,7 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import { loadEnvironment } from "./config/environment.js";
 import { logger } from "./utils/logger.js";
-import { speechTextForMessage } from "./voice/command.js";
+import { SpeechIntroductionTracker, speechRequestFromMessage } from "./voice/command.js";
 import { SpeakerManager } from "./voice/speaker.js";
 
 async function main(): Promise<void> {
@@ -10,6 +10,7 @@ async function main(): Promise<void> {
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent],
   });
   const speakers = new SpeakerManager();
+  const introductions = new SpeechIntroductionTracker();
   let shuttingDown = false;
 
   client.once(Events.ClientReady, (readyClient) => {
@@ -23,8 +24,8 @@ async function main(): Promise<void> {
   client.on(Events.MessageCreate, async (message) => {
     if (!message.inGuild() || message.author.bot) return;
 
-    const textToSpeak = speechTextForMessage(message.member?.displayName ?? message.author.username, message.content);
-    if (!textToSpeak) return;
+    const speechRequest = speechRequestFromMessage(message.content);
+    if (!speechRequest) return;
 
     const voiceChannel = message.member?.voice.channel;
     if (!voiceChannel) {
@@ -32,23 +33,33 @@ async function main(): Promise<void> {
       return;
     }
 
+    const textToSpeak = introductions.format(
+      message.guildId,
+      message.author.id,
+      message.member?.displayName ?? message.author.username,
+      speechRequest.content,
+      speechRequest.language,
+    );
+
     try {
-      const result = await speakers.speak(voiceChannel, textToSpeak);
+      const result = await speakers.speak(voiceChannel, textToSpeak, speechRequest.language);
       if (result === "busy") {
         await message.reply("Tao đang nói, đợi một chút!").catch(() => undefined);
+      } else {
+        introductions.remember(message.guildId, message.author.id);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       logger.error("Voice message failed", { guildId: message.guildId, channelId: voiceChannel.id, message: errorMessage });
-      await message.reply("Tao không thể nói lúc này, thử lại sau nhé.").catch(() => undefined);
+      await message.reply("Tao không nói được lúc này, thử lại sau.").catch(() => undefined);
     }
   });
 
   client.on(Events.VoiceStateUpdate, (oldState, newState) => {
-    if (newState.member?.user.bot) return;
+    const member = newState.member ?? oldState.member;
+    if (!member || member.user.bot || oldState.channelId === newState.channelId) return;
 
-    const channel = oldState.channel ?? newState.channel;
-    if (channel) speakers.leaveIfAlone(channel);
+    if (oldState.channel) speakers.leaveIfAlone(oldState.channel);
   });
 
   const shutdown = (signal: string): void => {
@@ -72,6 +83,9 @@ async function main(): Promise<void> {
   });
 
   logger.info("Logging in to Discord");
+  void speakers.warmUpTts().catch((error: unknown) => {
+    logger.error("Edge TTS warm-up failed", { message: error instanceof Error ? error.message : String(error) });
+  });
   await client.login(environment.token);
 }
 

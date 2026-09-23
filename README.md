@@ -1,10 +1,10 @@
 # Discord Bot
 
-A TypeScript Discord bot that reads Vietnamese voice messages triggered by chat. A user in a voice channel can send `-s <nội dung>` in any text channel; the bot joins that voice channel and says `User <tên hiển thị> nói rằng <nội dung>`.
+A TypeScript Discord bot that reads Vietnamese and English voice messages triggered by chat. A user in a voice channel can send `-s <nội dung>` for Vietnamese or `-sen <content>` for English in any text channel; the bot joins that voice channel and says the message. Consecutive messages by that same person omit the name for 30 seconds; a different speaker is announced immediately.
 
 ## Stack
 
-- Node.js **20.11.0 or newer**
+- Node.js **22.12.0 or newer** (required for Discord's DAVE voice encryption)
 - TypeScript
 - [discord.js](https://discord.js.org/) v14
 - dotenv for local environment configuration
@@ -57,7 +57,7 @@ npm run build
 4. Under **Bot → Privileged Gateway Intents**, enable **Message Content Intent**. No other privileged intent is needed.
 5. Start the bot. Join a voice channel, then send `-s Xin chào` in any text channel in the same server. The bot joins and speaks the message.
 
-The bot uses only `Guilds`, `GuildMessages`, `GuildVoiceStates`, and `MessageContent` intents. It leaves a voice channel automatically once no human users remain there.
+The bot uses only `Guilds`, `GuildMessages`, `GuildVoiceStates`, and `MessageContent` intents. It starts TTS streaming while the voice connection is being established to minimize the delay before playback, and it leaves a voice channel automatically once no human users remain there.
 
 ## Checks
 
@@ -73,5 +73,6 @@ npm run build
 - **Missing environment variable:** ensure `.env` exists beside `package.json` and contains the required non-empty variables.
 - **The bot ignores `-s`:** ensure Message Content Intent is enabled in the Developer Portal, then restart the bot.
 - **The bot cannot join or speak:** verify it has Connect, Speak, and View Channel permissions in the relevant voice channel.
+- **The bot joins but immediately leaves:** confirm you are running Node.js 22.12.0 or newer. Discord now requires DAVE end-to-end encryption for voice, which the current voice library supports on this runtime.
 - **Invalid token:** reset the token in the Developer Portal, replace it in `.env`, and do not share it.
 - **Bot is offline:** check the startup logs. The process must remain running after it reports that the client is ready.
