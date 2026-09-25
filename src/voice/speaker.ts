@@ -6,13 +6,13 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { PassThrough } from "node:stream";
 import { delimiter, dirname } from "node:path";
 import { logger } from "../utils/logger.js";
-import type { SpeechLanguage } from "./command.js";
+import type { SpeechLanguage, SpeechProvider } from "./command.js";
 import { SpeechQueue, type SpeechPriority } from "./queue.js";
 
-const edgeTts = new EdgeTTS({
+const edgeTtsOptions = {
   outputFormat: "audio-24khz-48kbitrate-mono-mp3",
   timeout: 15_000,
-});
+} as const;
 
 const speechSettings: Record<SpeechLanguage, { locale: string; voice: string }> = {
   vi: { locale: "vi-VN", voice: "vi-VN-HoaiMyNeural" },
@@ -28,6 +28,7 @@ if (!ffmpegPath) {
 
 const ffmpegExecutable = ffmpegPath;
 process.env.PATH = `${dirname(ffmpegExecutable)}${delimiter}${process.env.PATH ?? ""}`;
+const MAX_TTS_ATTEMPTS = 3;
 
 type EdgeTtsSocket = {
   close(): void;
@@ -52,6 +53,10 @@ function escapeXml(value: string): string {
 }
 
 async function streamSpeech(text: string, language: SpeechLanguage, destination: PassThrough): Promise<void> {
+  // Edge sometimes drops an individual socket (close code 1006).  A TTS client
+  // has no session state, so make a fresh client and a fresh WebSocket for every
+  // synthesis attempt instead of ever reusing a closed connection.
+  const edgeTts = new EdgeTTS(edgeTtsOptions);
   const socket = await (edgeTts as unknown as StreamableEdgeTts)._connectWebSocket();
   const settings = speechSettings[language];
 
@@ -96,6 +101,38 @@ async function streamSpeech(text: string, language: SpeechLanguage, destination:
     const requestId = crypto.randomUUID().replaceAll("-", "");
     socket.send(`X-RequestId:${requestId}\r\nContent-Type:application/ssml+xml\r\nPath:ssml\r\n\r\n<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="${settings.locale}"><voice name="${settings.voice}"><prosody rate="default" pitch="default" volume="default">${escapeXml(text)}</prosody></voice></speak>`);
   });
+}
+
+function googleTtsChunks(text: string, maxLength = 180): string[] {
+  const chunks: string[] = [];
+  let remaining = text.trim();
+  while (remaining.length > maxLength) {
+    const splitAt = Math.max(remaining.lastIndexOf(" ", maxLength), remaining.lastIndexOf(",", maxLength), remaining.lastIndexOf(".", maxLength));
+    const end = splitAt > 0 ? splitAt + 1 : maxLength;
+    chunks.push(remaining.slice(0, end).trim());
+    remaining = remaining.slice(end).trim();
+  }
+  if (remaining) chunks.push(remaining);
+  return chunks;
+}
+
+async function streamGoogleSpeech(text: string, language: SpeechLanguage, destination: PassThrough): Promise<void> {
+  try {
+    for (const chunk of googleTtsChunks(text)) {
+      const url = new URL("https://translate.google.com/translate_tts");
+      url.searchParams.set("client", "tw-ob");
+      url.searchParams.set("ie", "UTF-8");
+      url.searchParams.set("tl", language);
+      url.searchParams.set("q", chunk);
+      const response = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
+      if (!response.ok) throw new Error(`Google TTS request failed (${response.status}).`);
+      destination.write(Buffer.from(await response.arrayBuffer()));
+    }
+    destination.end();
+  } catch (error) {
+    destination.end();
+    throw error;
+  }
 }
 
 function createLowLatencyResource(audio: PassThrough) {
@@ -154,20 +191,48 @@ class GuildSpeaker {
     return this.channelId;
   }
 
-  async speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage): Promise<"busy" | "spoken"> {
+  async speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider): Promise<"busy" | "spoken"> {
     if (this.speaking) return "busy";
     this.speaking = true;
     this.speechStartedAt = Date.now();
 
     try {
-      const audio = new PassThrough();
-      const resource = createLowLatencyResource(audio);
-      const synthesis = streamSpeech(text, language, audio);
-      await this.connect(channel);
-      this.player.play(resource);
-      await Promise.all([synthesis, entersState(this.player, AudioPlayerStatus.Idle, 120_000)]);
+      if (provider === "google") {
+        await this.playOnce(channel, text, language, "google");
+        return "spoken";
+      }
 
-      logger.info("Finished voice message", { guildId: this.guildId, channelId: channel.id });
+      let lastEdgeError: unknown;
+      for (let attempt = 1; attempt <= MAX_TTS_ATTEMPTS; attempt += 1) {
+        try {
+          await this.playOnce(channel, text, language, "edge");
+          return "spoken";
+        } catch (error) {
+          this.player.stop(true);
+          lastEdgeError = error;
+          if (!isRetryableTtsFailure(error)) throw error;
+          if (attempt === MAX_TTS_ATTEMPTS) break;
+
+          const message = error instanceof Error ? error.message : String(error);
+          const delayMs = ttsRetryDelayMs(attempt);
+          logger.warn("Edge TTS failed; retrying voice message", {
+            guildId: this.guildId,
+            channelId: channel.id,
+            attempt,
+            remainingAttempts: MAX_TTS_ATTEMPTS - attempt,
+            delayMs,
+            message,
+          });
+          await new Promise<void>((resolve) => setTimeout(resolve, delayMs));
+        }
+      }
+
+      logger.warn("Edge TTS remained unavailable; falling back to Google TTS", {
+        guildId: this.guildId,
+        channelId: channel.id,
+        message: lastEdgeError instanceof Error ? lastEdgeError.message : String(lastEdgeError),
+      });
+      await this.playOnce(channel, text, language, "google");
       return "spoken";
     } finally {
       this.speaking = false;
@@ -180,6 +245,16 @@ class GuildSpeaker {
     getVoiceConnection(this.guildId)?.destroy();
     this.channelId = undefined;
     logger.info("Left voice channel", { guildId: this.guildId });
+  }
+
+  private async playOnce(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider): Promise<void> {
+    const audio = new PassThrough();
+    const resource = createLowLatencyResource(audio);
+    const synthesis = provider === "google" ? streamGoogleSpeech(text, language, audio) : streamSpeech(text, language, audio);
+    await this.connect(channel);
+    this.player.play(resource);
+    await Promise.all([synthesis, entersState(this.player, AudioPlayerStatus.Idle, 120_000)]);
+    logger.info("Finished voice message", { guildId: this.guildId, channelId: channel.id, provider });
   }
 
   private async connect(channel: VoiceBasedChannel): Promise<VoiceConnection> {
@@ -245,16 +320,20 @@ export class SpeakerManager {
     return this.warmingUp;
   }
 
-  speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage): Promise<"spoken"> {
-    return this.enqueue(channel, text, language, "standard");
+  speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider): Promise<"spoken"> {
+    return this.enqueue(channel, text, language, provider, "standard");
   }
 
   speakArrival(channel: VoiceBasedChannel, text: string): Promise<"spoken"> {
-    return this.enqueue(channel, text, "vi", "arrival");
+    return this.enqueue(channel, text, "vi", "edge", "arrival");
   }
 
   isGreeting(guildId: string): boolean {
     return (this.queues.get(guildId)?.arrivalCount ?? 0) > 0;
+  }
+
+  getVoiceChannelId(guildId: string): string | undefined {
+    return getVoiceConnection(guildId)?.joinConfig.channelId ?? undefined;
   }
 
   leaveIfAlone(channel: VoiceBasedChannel): void {
@@ -277,14 +356,14 @@ export class SpeakerManager {
     }
   }
 
-  private enqueue(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, priority: SpeechPriority): Promise<"spoken"> {
+  private enqueue(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider, priority: SpeechPriority): Promise<"spoken"> {
     const guildId = channel.guild.id;
     const queueState = this.queues.get(guildId) ?? { queue: new SpeechQueue<QueuedSpeech>(), processing: false, cancelled: false, arrivalCount: 0 };
     this.queues.set(guildId, queueState);
     if (priority === "arrival") queueState.arrivalCount += 1;
 
     const pendingSpeech = new Promise<"spoken">((resolve, reject) => {
-      queueState.queue.enqueue({ channel, text, language, priority, resolve, reject }, priority);
+      queueState.queue.enqueue({ channel, text, language, provider, priority, resolve, reject }, priority);
     });
     void this.processQueue(guildId, queueState);
     return pendingSpeech;
@@ -300,7 +379,7 @@ export class SpeakerManager {
         const speaker = this.speakers.get(guildId) ?? new GuildSpeaker(guildId);
         this.speakers.set(guildId, speaker);
         try {
-          await speaker.speak(pendingSpeech.channel, pendingSpeech.text, pendingSpeech.language);
+          await speaker.speak(pendingSpeech.channel, pendingSpeech.text, pendingSpeech.language, pendingSpeech.provider);
           if (queueState.cancelled) pendingSpeech.reject(new Error("No human members remain in the voice channel."));
           else pendingSpeech.resolve("spoken");
         } catch (error) {
@@ -318,10 +397,20 @@ export class SpeakerManager {
   }
 }
 
+export function isRetryableTtsFailure(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.startsWith("Edge TTS closed unexpectedly") || message === "Edge TTS timed out.";
+}
+
+export function ttsRetryDelayMs(attempt: number): number {
+  return 1_500 * attempt;
+}
+
 type QueuedSpeech = {
   channel: VoiceBasedChannel;
   text: string;
   language: SpeechLanguage;
+  provider: SpeechProvider;
   priority: SpeechPriority;
   resolve: (value: "spoken") => void;
   reject: (reason?: unknown) => void;

@@ -12,4 +12,7 @@ export const logger = {
   info(message: string, context?: LogContext): void {
     write("INFO", message, context);
   },
+  warn(message: string, context?: LogContext): void {
+    write("WARN", message, context);
+  },
 };

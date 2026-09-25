@@ -2,21 +2,26 @@ import { Client, Events, GatewayIntentBits, PermissionFlagsBits, SlashCommandBui
 import { rollChance } from "./chance/command.js";
 import { colorInteger, isColorRoleName, normalizeHexColor } from "./color/command.js";
 import { loadEnvironment } from "./config/environment.js";
+import { provisionPrivateTestWorld, removePrivateTestWorld } from "./pokemon/setup/test-world.js";
+import { initializeRegionBiomeDatabase } from "./pokemon/persistence/region-biome-database.js";
 import { logger } from "./utils/logger.js";
 import { SpeechIntroductionTracker, speechRequestFromMessage } from "./voice/command.js";
-import { shouldAnnouncePresenceBoundary, shouldAnnounceVoiceArrival, shouldSpeakMemberArrival, shouldWelcomeFirstVoiceMember } from "./voice/arrival.js";
+import { shouldAnnouncePresenceBoundary, shouldSpeakMemberArrival, shouldWelcomeFirstVoiceMember, watchedVoiceTransition } from "./voice/arrival.js";
 import { SpeakerManager } from "./voice/speaker.js";
+import { replaceUserMentionsForSpeech } from "./voice/mentions.js";
 
 const WATCHED_USER_ID = "493076491106779148";
 const VOICE_ARRIVAL_CHANNEL_ID = "1513220978816319538";
 
 async function main(): Promise<void> {
   const environment = loadEnvironment();
+  const database = initializeRegionBiomeDatabase(environment.databasePath);
   const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildPresences, GatewayIntentBits.MessageContent],
   });
   const speakers = new SpeakerManager();
   const introductions = new SpeechIntroductionTracker();
+  const watchedPresenceByGuild = new Map<string, string>();
   let shuttingDown = false;
 
   const chanceCommand = new SlashCommandBuilder()
@@ -33,15 +38,20 @@ async function main(): Promise<void> {
       .setName("x")
       .setDescription("Mã màu dạng #000000")
       .setRequired(true));
+  const pokemonSetupCommand = new SlashCommandBuilder().setName("pk-stup").setDescription("Tạo Pokémon test world riêng tư").setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+  const pokemonRemoveCommand = new SlashCommandBuilder().setName("pk-rm").setDescription("Xóa Pokémon test world riêng tư").setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
   const registerCommands = async (guild: Guild): Promise<void> => {
-    await guild.commands.set([chanceCommand, colorCommand]);
+    await guild.commands.set([chanceCommand, colorCommand, pokemonSetupCommand, pokemonRemoveCommand]);
     logger.info("Registered guild commands", { guildId: guild.id });
   };
 
   client.once(Events.ClientReady, async (readyClient) => {
     logger.info("Discord client is ready", { username: readyClient.user.tag, userId: readyClient.user.id });
     await Promise.all(readyClient.guilds.cache.map((guild) => registerCommands(guild)));
+    for (const guild of readyClient.guilds.cache.values()) {
+      watchedPresenceByGuild.set(guild.id, guild.presences.cache.get(WATCHED_USER_ID)?.status ?? "offline");
+    }
   });
 
   client.on(Events.GuildCreate, (guild) => {
@@ -84,13 +94,20 @@ async function main(): Promise<void> {
       message.guildId,
       message.author.id,
       message.member?.displayName ?? message.author.username,
-      speechRequest.content,
+      replaceUserMentionsForSpeech(
+        speechRequest.content,
+        (userId) => message.mentions.members.get(userId)?.displayName
+          ?? message.guild?.members.cache.get(userId)?.displayName
+          ?? message.mentions.users.get(userId)?.globalName
+          ?? message.mentions.users.get(userId)?.username,
+      ),
       speechRequest.language,
       speechRequest.whisper,
+      speechRequest.shouting,
     );
 
     try {
-      await speakers.speak(voiceChannel, textToSpeak, speechRequest.language);
+      await speakers.speak(voiceChannel, textToSpeak, speechRequest.language, speechRequest.provider);
       introductions.remember(message.guildId, message.author.id);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -106,6 +123,44 @@ async function main(): Promise<void> {
       const question = interaction.options.getString("question", true);
       const chance = rollChance();
       await interaction.reply(`> ${question}\n**${chance.percent}%** — ${chance.response}`);
+      return;
+    }
+
+    if (interaction.commandName === "pk-stup") {
+      if (!interaction.guild || !interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+        await interaction.reply({ content: "Lệnh này chỉ dành cho Administrator.", ephemeral: true });
+        return;
+      }
+      await interaction.deferReply({ ephemeral: true });
+      try {
+        const result = await provisionPrivateTestWorld(interaction.guild, interaction.client.user.id);
+        await interaction.editReply(`Đã setup private Pokémon test world. Category: ${result.createdCategory ? "đã tạo" : "đã có"}; biome: ${result.createdAreas} tạo mới, ${result.existingAreas} có sẵn; ${result.pinnedMessages} status message đã ghim.`);
+        logger.info("Provisioned private Pokémon test world", { guildId: interaction.guild.id, userId: interaction.user.id, ...result });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        logger.error("Could not provision private Pokémon test world", { guildId: interaction.guild.id, userId: interaction.user.id, message });
+        await interaction.editReply("Không thể setup Pokémon test world. Bot cần quyền Manage Channels, Send Messages và Manage Messages.");
+      }
+      return;
+    }
+
+    if (interaction.commandName === "pk-rm") {
+      if (!interaction.guild || !interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+        await interaction.reply({ content: "Lệnh này chỉ dành cho Administrator.", ephemeral: true });
+        return;
+      }
+      await interaction.deferReply({ ephemeral: true });
+      try {
+        const result = await removePrivateTestWorld(interaction.guild);
+        await interaction.editReply(result.removedCategory
+          ? `Đã xóa Pokémon test world: ${result.removedAreas} biome channels và category.`
+          : "Không tìm thấy Pokémon test world để xóa.");
+        logger.info("Removed private Pokémon test world", { guildId: interaction.guild.id, userId: interaction.user.id, ...result });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        logger.error("Could not remove private Pokémon test world", { guildId: interaction.guild.id, userId: interaction.user.id, message });
+        await interaction.editReply("Không thể xóa Pokémon test world. Bot cần quyền Manage Channels.");
+      }
       return;
     }
 
@@ -159,7 +214,7 @@ async function main(): Promise<void> {
 
     if (oldState.channel) speakers.leaveIfAlone(oldState.channel);
 
-    const botChannelId = newState.guild.members.me?.voice.channelId;
+    const botChannelId = speakers.getVoiceChannelId(newState.guild.id);
     if (shouldWelcomeFirstVoiceMember(oldState.channelId, newState.channelId, botChannelId) && newState.channel) {
       try {
         await speakers.speakArrival(newState.channel, `${member.displayName} đã đến.`);
@@ -184,13 +239,13 @@ async function main(): Promise<void> {
       }
     }
 
-    if (!shouldAnnounceVoiceArrival(
+    const watchedTransition = watchedVoiceTransition(
       member.id,
       oldState.channelId,
       newState.channelId,
-      member.presence?.status,
       WATCHED_USER_ID,
-    )) return;
+    );
+    if (!watchedTransition) return;
 
     try {
       const notificationChannel = await newState.guild.channels.fetch(VOICE_ARRIVAL_CHANNEL_ID);
@@ -198,9 +253,14 @@ async function main(): Promise<void> {
         throw new Error("The configured voice-arrival channel is not text-based or is unavailable.");
       }
 
+      const transitionMessage = watchedTransition === "joined"
+        ? `${member.displayName} vừa vào voice <#${newState.channelId}>.`
+        : watchedTransition === "left"
+          ? `${member.displayName} vừa rời voice <#${oldState.channelId}>.`
+          : `${member.displayName} vừa chuyển voice từ <#${oldState.channelId}> sang <#${newState.channelId}>.`;
       await notificationChannel.send({
-        content: `🟢 ${member.displayName} đang online và vừa vào voice <#${newState.channelId}>.`,
-        allowedMentions: { parse: [] },
+        content: `@everyone 🟢 ${transitionMessage}`,
+        allowedMentions: { parse: ["everyone"] },
       });
     } catch (error) {
       logger.error("Could not send voice-arrival notification", {
@@ -215,10 +275,14 @@ async function main(): Promise<void> {
   client.on(Events.PresenceUpdate, async (oldPresence, newPresence) => {
     const guild = newPresence.guild;
     if (!guild) return;
+    if (newPresence.userId !== WATCHED_USER_ID) return;
+
+    const previousStatus = watchedPresenceByGuild.get(guild.id) ?? oldPresence?.status ?? "offline";
+    watchedPresenceByGuild.set(guild.id, newPresence.status);
 
     if (!shouldAnnouncePresenceBoundary(
       newPresence.userId,
-      oldPresence?.status,
+      previousStatus,
       newPresence.status,
       WATCHED_USER_ID,
     )) return;
@@ -231,8 +295,8 @@ async function main(): Promise<void> {
 
       const displayName = newPresence.member?.displayName ?? "Người dùng được theo dõi";
       await notificationChannel.send({
-        content: `🔄 ${displayName} chuyển status từ \`${oldPresence?.status}\` sang \`${newPresence.status}\`.`,
-        allowedMentions: { parse: [] },
+        content: `@everyone 🔄 ${displayName} chuyển status từ \`${previousStatus}\` sang \`${newPresence.status}\`.`,
+        allowedMentions: { parse: ["everyone"] },
       });
     } catch (error) {
       logger.error("Could not send presence-change notification", {
@@ -249,6 +313,7 @@ async function main(): Promise<void> {
     shuttingDown = true;
     logger.info("Shutting down Discord client", { signal });
     client.destroy();
+    database.close();
     logger.info("Discord client shut down");
     process.exit(0);
   };

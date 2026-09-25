@@ -1,15 +1,15 @@
-export function shouldAnnounceVoiceArrival(
+export type VoiceTransition = "joined" | "left" | "moved";
+
+export function watchedVoiceTransition(
   userId: string,
   oldChannelId: string | null,
   newChannelId: string | null,
-  presenceStatus: string | undefined,
   watchedUserId: string,
-): boolean {
-  return userId === watchedUserId
-    && oldChannelId === null
-    && newChannelId !== null
-    && presenceStatus !== undefined
-    && presenceStatus !== "offline";
+): VoiceTransition | undefined {
+  if (userId !== watchedUserId || oldChannelId === newChannelId) return undefined;
+  if (oldChannelId === null && newChannelId !== null) return "joined";
+  if (oldChannelId !== null && newChannelId === null) return "left";
+  return "moved";
 }
 
 export function shouldSpeakMemberArrival(

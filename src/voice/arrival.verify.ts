@@ -1,13 +1,11 @@
 import assert from "node:assert/strict";
-import { shouldAnnouncePresenceBoundary, shouldAnnounceVoiceArrival, shouldSpeakMemberArrival, shouldWelcomeFirstVoiceMember } from "./arrival.js";
+import { shouldAnnouncePresenceBoundary, shouldSpeakMemberArrival, shouldWelcomeFirstVoiceMember, watchedVoiceTransition } from "./arrival.js";
 
 const watchedUserId = "471156966866026506";
-assert.equal(shouldAnnounceVoiceArrival(watchedUserId, null, "voice", "online", watchedUserId), true);
-assert.equal(shouldAnnounceVoiceArrival(watchedUserId, null, "voice", "idle", watchedUserId), true);
-assert.equal(shouldAnnounceVoiceArrival(watchedUserId, null, "voice", "dnd", watchedUserId), true);
-assert.equal(shouldAnnounceVoiceArrival(watchedUserId, null, "voice", "offline", watchedUserId), false);
-assert.equal(shouldAnnounceVoiceArrival(watchedUserId, "voice-a", "voice-b", "online", watchedUserId), false);
-assert.equal(shouldAnnounceVoiceArrival("another-user", null, "voice", "online", watchedUserId), false);
+assert.equal(watchedVoiceTransition(watchedUserId, null, "voice", watchedUserId), "joined");
+assert.equal(watchedVoiceTransition(watchedUserId, "voice-a", "voice-b", watchedUserId), "moved");
+assert.equal(watchedVoiceTransition(watchedUserId, "voice", null, watchedUserId), "left");
+assert.equal(watchedVoiceTransition("another-user", null, "voice", watchedUserId), undefined);
 assert.equal(shouldSpeakMemberArrival(null, "voice", "voice"), true);
 assert.equal(shouldSpeakMemberArrival("voice-a", "voice-b", "voice-b"), true);
 assert.equal(shouldSpeakMemberArrival("voice", "voice", "voice"), false);
@@ -16,6 +14,7 @@ assert.equal(shouldWelcomeFirstVoiceMember(null, "voice", null), true);
 assert.equal(shouldWelcomeFirstVoiceMember("voice-a", "voice-b", null), true);
 assert.equal(shouldWelcomeFirstVoiceMember(null, "voice", "another-voice"), false);
 assert.equal(shouldAnnouncePresenceBoundary(watchedUserId, "offline", "online", watchedUserId), true);
+assert.equal(shouldAnnouncePresenceBoundary(watchedUserId, undefined, "online", watchedUserId), false);
 assert.equal(shouldAnnouncePresenceBoundary(watchedUserId, "dnd", "offline", watchedUserId), true);
 assert.equal(shouldAnnouncePresenceBoundary(watchedUserId, "online", "idle", watchedUserId), false);
 assert.equal(shouldAnnouncePresenceBoundary("another-user", "offline", "online", watchedUserId), false);

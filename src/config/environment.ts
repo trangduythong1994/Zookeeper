@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 export interface Environment {
+  databasePath: string;
   token: string;
 }
 
@@ -16,6 +17,7 @@ function requiredEnvironmentVariable(name: string): string {
 
 export function loadEnvironment(): Environment {
   return {
+    databasePath: process.env.DATABASE_PATH?.trim() || "work/zookeeper.sqlite",
     token: requiredEnvironmentVariable("DISCORD_TOKEN"),
   };
 }
