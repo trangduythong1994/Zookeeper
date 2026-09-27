@@ -10,7 +10,7 @@ import { type RegionKey } from "./pokemon/data/regions.js";
 import { locationsForRegion, pokemonForLocation, regionsWithLocations, selectedLocationForPlayer, setPlayerLocation, type TravelLocation } from "./pokemon/travel/travel.js";
 import { provisionExploreChannel } from "./pokemon/setup/explore-channel.js";
 import { rarityBadgePng } from "./pokemon/explore/rarity-badge.js";
-import { CATCH_BUTTON_ID, CATCH_SYMBOLS, EXPLORE_COOLDOWN_MS, SPAWN_LIFETIME_MS, activeSpawnInChannel, addPokemonSpawn, catchInputId, catchPlayId, caughtPokemonForPlayer, createCatchSession, parseCatchInputId, parseCatchPlayId, pokemonSpawn, previewDurationMs, resolvePokemonCaught, resolvePokemonFled, type CatchSession, type PokemonSpawn } from "./pokemon/catch/catch.js";
+import { CATCH_BUTTON_ID, CATCH_SYMBOLS, EVENT_CATCH_SYMBOLS, EXPLORE_COOLDOWN_MS, SPAWN_LIFETIME_MS, activeSpawnInChannel, addPokemonSpawn, catchInputId, catchPlayId, caughtPokemonForPlayer, createCatchSession, giftCaughtPokemon, giftCooldownRemaining, parseCatchInputId, parseCatchPlayId, pokemonSpawn, previewDurationMs, resolvePokemonCaught, resolvePokemonFled, type CatchSession, type CatchSymbolIndex, type PokemonSpawn } from "./pokemon/catch/catch.js";
 import { addWarpCandy, consumeWarpCandy, findsWarpCandy, setWarpCandyChance, warpCandyChance, warpCandyCount } from "./pokemon/warp/warp.js";
 import { roamingChance, roamingPokemonForRegion, setRoamingChance } from "./pokemon/roaming/roaming.js";
 import { logger } from "./utils/logger.js";
@@ -26,7 +26,15 @@ const LOCATION_EXPLORE_BUTTON_ID = "pk-explore-location";
 const TRAVEL_BUTTON_ID = "pk-travel-start";
 const TELEPORT_BUTTON_ID = "pk-teleport";
 const SHOW_OFF_BUTTON_ID = "pk-showoff-start";
+const OWNERSHIP_BUTTON_ID = "pk-check-owned";
 const LOCATION_PAGE_SIZE = 25;
+const STARTER_EVENT_SEQUENCE_LENGTH = 8;
+const STARTER_EVENT_CATCH_RATE = 6;
+const STARTER_EVENT_LOCATION_KEY = "kanto-starter-event";
+const STARTER_EVENT_LIFETIME_MS = 6.5 * 60 * 60 * 1_000;
+const STARTER_EVENT_ENCOUNTER_RATE = 0.02;
+const STARTER_EVENT_PREVIEW_EXTRA_MS = 2_000;
+const STARTER_EVENT_SPAWN_LIFETIME_MS = 90_000;
 
 async function main(): Promise<void> {
   const environment = loadEnvironment();
@@ -43,6 +51,10 @@ async function main(): Promise<void> {
   const catchThreadDeletionTimers = new Map<string, NodeJS.Timeout>();
   const exploreCooldowns = new Map<string, number>();
   const spawnTimers = new Map<string, NodeJS.Timeout>();
+  const travelDrafts = new Map<string, TravelLocation>();
+  const travelThreadDeletionTimers = new Map<string, NodeJS.Timeout>();
+  const managedThreadDeletionTimers = new Map<string, NodeJS.Timeout>();
+  const starterEventEndTimers = new Map<string, NodeJS.Timeout>();
   let shuttingDown = false;
 
   const chanceCommand = new SlashCommandBuilder()
@@ -65,6 +77,7 @@ async function main(): Promise<void> {
   const pokemonCatchCommand = new SlashCommandBuilder().setName("pk-catch").setDescription("Catch the Pokémon appearing here");
   const pokemonTravelCommand = new SlashCommandBuilder().setName("pk-travel").setDescription("Choose a Region and Location");
   const pokemonShowOffCommand = new SlashCommandBuilder().setName("pk-showoff").setDescription("Show off a Pokémon you caught");
+  const pokemonGiftCommand = new SlashCommandBuilder().setName("pk-gift").setDescription("Gift a Pokémon from your Inventory");
   const pokemonWarpCandyCommand = new SlashCommandBuilder()
     .setName("pk-candy-warp-up")
     .setDescription("Set the Warp Candy discovery rate")
@@ -79,7 +92,7 @@ async function main(): Promise<void> {
   const pokemonRemoveCommand = new SlashCommandBuilder().setName("pk-remove").setDescription("Xóa category Kanto và toàn bộ biome").setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
   const registerCommands = async (guild: Guild): Promise<void> => {
-    await guild.commands.set([chanceCommand, colorCommand, pokemonSetupCommand, pokemonTestRemoveCommand, pokemonExploreCommand, pokemonCatchCommand, pokemonTravelCommand, pokemonShowOffCommand, pokemonWarpCandyCommand, pokemonRoamingCommand, pokemonCreateCommand, pokemonRemoveCommand]);
+    await guild.commands.set([chanceCommand, colorCommand, pokemonSetupCommand, pokemonTestRemoveCommand, pokemonExploreCommand, pokemonCatchCommand, pokemonTravelCommand, pokemonShowOffCommand, pokemonGiftCommand, pokemonWarpCandyCommand, pokemonRoamingCommand, pokemonCreateCommand, pokemonRemoveCommand]);
     logger.info("Registered guild commands", { guildId: guild.id });
   };
 
@@ -88,6 +101,13 @@ async function main(): Promise<void> {
     await Promise.all(readyClient.guilds.cache.map((guild) => registerCommands(guild)));
     for (const guild of readyClient.guilds.cache.values()) {
       watchedPresenceByGuild.set(guild.id, guild.presences.cache.get(WATCHED_USER_ID)?.status ?? "offline");
+      const event = database.prepare("SELECT expires_at AS expiresAt FROM pokemon_event_announcements WHERE guild_id = ? AND event_key = 'starter-event'").get(guild.id) as { expiresAt: number | null } | undefined;
+      const eventChannel = guild.channels.cache.find((channel) => channel.isTextBased() && channel.name === "event");
+      if (event?.expiresAt && eventChannel?.isTextBased()) scheduleStarterEventEnd(guild.id, eventChannel.id, event.expiresAt);
+      const activeThreads = await guild.channels.fetchActiveThreads().catch(() => undefined);
+      for (const thread of activeThreads?.threads.values() ?? []) {
+        if (/^(Catch |Travel ·|Inventory ·)/u.test(thread.name)) scheduleManagedThreadExpiry(thread);
+      }
     }
   });
 
@@ -112,9 +132,13 @@ async function main(): Promise<void> {
   const catchComponents = (messageId: string, state: "active" | "caught" | "fled" = "active") => new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder().setCustomId(LOCATION_EXPLORE_BUTTON_ID).setLabel("Explore").setEmoji("🔎").setStyle(ButtonStyle.Primary),
     new ButtonBuilder().setCustomId(CATCH_BUTTON_ID).setLabel(state === "caught" ? "Caught" : state === "fled" ? "Fled" : "Catch").setEmoji("🎯").setStyle(ButtonStyle.Success).setDisabled(state !== "active"),
-    new ButtonBuilder().setCustomId(TRAVEL_BUTTON_ID).setLabel("Travel").setEmoji("🧭").setStyle(ButtonStyle.Secondary),
     new ButtonBuilder().setCustomId(TELEPORT_BUTTON_ID).setLabel("Teleport").setEmoji("🌀").setStyle(ButtonStyle.Secondary),
+  );
+
+  const catchNavigationComponents = () => new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder().setCustomId(TRAVEL_BUTTON_ID).setLabel("Travel").setEmoji("🧭").setStyle(ButtonStyle.Secondary),
     new ButtonBuilder().setCustomId(SHOW_OFF_BUTTON_ID).setLabel("Inventory").setEmoji("🎒").setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId(OWNERSHIP_BUTTON_ID).setLabel("Owned?").setEmoji("📦").setStyle(ButtonStyle.Secondary),
   );
 
   const navigationComponents = () => [new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -123,9 +147,17 @@ async function main(): Promise<void> {
     new ButtonBuilder().setCustomId(SHOW_OFF_BUTTON_ID).setLabel("Inventory").setEmoji("🎒").setStyle(ButtonStyle.Secondary),
   )];
 
-  const catchInputComponents = (messageId: string, userId: string) => new ActionRowBuilder<ButtonBuilder>().addComponents(
-    ...CATCH_SYMBOLS.map((symbol, index) => new ButtonBuilder().setCustomId(catchInputId(messageId, userId, index as 0 | 1 | 2 | 3)).setLabel(symbol).setStyle(ButtonStyle.Secondary)),
+  const catchInputComponents = (messageId: string, userId: string, symbols: readonly string[] = CATCH_SYMBOLS) => Array.from(
+    { length: Math.ceil(symbols.length / 4) },
+    (_, rowIndex) => new ActionRowBuilder<ButtonBuilder>().addComponents(
+      ...symbols.slice(rowIndex * 4, rowIndex * 4 + 4).map((symbol, offset) => {
+        const symbolIndex = rowIndex * 4 + offset;
+        return new ButtonBuilder().setCustomId(catchInputId(messageId, userId, symbolIndex as CatchSymbolIndex)).setLabel(symbol).setStyle(ButtonStyle.Secondary);
+      }),
+    ),
   );
+
+  const catchSymbolsForSpawn = (spawn: PokemonSpawn): readonly string[] => spawn.isEvent ? EVENT_CATCH_SYMBOLS : CATCH_SYMBOLS;
 
   const disabledCatchPlayComponents = (messageId: string, userId: string) => [new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder().setCustomId(catchPlayId(messageId, userId)).setLabel("Play").setEmoji("▶️").setStyle(ButtonStyle.Success).setDisabled(true),
@@ -137,8 +169,18 @@ async function main(): Promise<void> {
     exploreCooldowns.set(`${guildId}:${userId}`, Date.now() + EXPLORE_COOLDOWN_MS);
   };
 
+  const scheduleManagedThreadExpiry = (thread: ThreadChannel): void => {
+    const existing = managedThreadDeletionTimers.get(thread.id);
+    if (existing) clearTimeout(existing);
+    const remaining = Math.max(0, (thread.createdTimestamp ?? Date.now()) + 5 * 60_000 - Date.now());
+    managedThreadDeletionTimers.set(thread.id, setTimeout(() => {
+      managedThreadDeletionTimers.delete(thread.id);
+      void thread.delete("Managed Pokémon thread expired after five minutes").catch(() => undefined);
+    }, remaining));
+  };
+
   const disableCatch = async (message: { id: string; edit: (options: object) => Promise<unknown> }, state: "caught" | "fled"): Promise<void> => {
-    await message.edit({ components: [catchComponents(message.id, state)] }).catch(() => undefined);
+    await message.edit({ components: [catchComponents(message.id, state), catchNavigationComponents()] }).catch(() => undefined);
   };
 
   const disableSpawnCatch = async (spawn: PokemonSpawn, state: "caught" | "fled"): Promise<void> => {
@@ -214,9 +256,9 @@ async function main(): Promise<void> {
     return ({
     embeds: [new EmbedBuilder()
       .setColor(0x5865f2)
-      .setTitle(selected ? `Arrived at ${selected.name}` : "Pokémon Travel")
+      .setTitle(selected ? `Travel to ${selected.name}` : "Pokémon Travel")
       .setDescription(selected
-        ? `You are at **${selected.name}**.\nRegion: **${displayKey(selected.regionKey)}**\nBiome: **${displayBiomes(selected)}**\n\nPokémon:\n${locationPokemonList(selected) || "None"}`
+        ? `Destination: **${selected.name}**.\nRegion: **${displayKey(selected.regionKey)}**\nBiome: **${displayBiomes(selected)}**\n\nPokémon:\n${locationPokemonList(selected) || "None"}\n\nPress **Go!** to confirm.`
         : "Choose a **Region**, then choose a **Location**. The Biome is determined by the selected location."),
     ],
     components: [
@@ -242,19 +284,40 @@ async function main(): Promise<void> {
         new ButtonBuilder().setCustomId(`pk-travel:page-indicator:${userId}:${regionKey ?? "none"}:${safePage}`).setLabel(`Locations ${safePage + 1}/${pageCount}`).setStyle(ButtonStyle.Secondary).setDisabled(true),
         new ButtonBuilder().setCustomId(`pk-travel:page:${userId}:${regionKey ?? "none"}:${safePage + 1}`).setLabel("Next").setStyle(ButtonStyle.Secondary).setDisabled(!regionKey || safePage >= pageCount - 1),
       ),
-      ...navigationComponents(),
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`pk-travel:go:${userId}`).setLabel("Go!").setEmoji("✈️").setStyle(ButtonStyle.Success).setDisabled(!selected),
+      ),
     ],
     });
   };
 
-  const travelMenuForPlayer = (guildId: string, userId: string) => {
-    const selected = selectedLocationForPlayer(database, guildId, userId);
-    return travelMessage(
-      userId,
-      selected?.regionKey,
-      selected ? locationsForRegion(database, selected.regionKey) : [],
-      selected,
-    );
+  const travelDraftKey = (guildId: string, userId: string, channelId: string): string => `${guildId}:${userId}:${channelId}`;
+
+  const openTravelThread = async (interaction: ButtonInteraction | ChatInputCommandInteraction): Promise<void> => {
+    if (!interaction.guild || !interaction.channel?.isTextBased()) return;
+    await interaction.reply({ content: `<@${interaction.user.id}> is planning a trip.`, allowedMentions: { users: [interaction.user.id] } });
+    const anchor = await interaction.fetchReply();
+    const thread = await anchor.startThread({ name: `Travel · ${interaction.user.username}`.slice(0, 100), autoArchiveDuration: ThreadAutoArchiveDuration.OneHour, reason: "Pokémon travel planning" });
+    scheduleManagedThreadExpiry(thread);
+    const selected = selectedLocationForPlayer(database, interaction.guild.id, interaction.user.id);
+    if (selected) travelDrafts.set(travelDraftKey(interaction.guild.id, interaction.user.id, thread.id), selected);
+    await thread.send({ content: `<@${interaction.user.id}>`, allowedMentions: { users: [interaction.user.id] }, ...travelMessage(interaction.user.id, selected?.regionKey, selected ? locationsForRegion(database, selected.regionKey) : [], selected) });
+  };
+
+  const openInventoryThread = async (interaction: ButtonInteraction | ChatInputCommandInteraction): Promise<void> => {
+    if (!interaction.guild || !interaction.channel?.isTextBased()) return;
+    await interaction.reply({ content: `<@${interaction.user.id}> is opening their Pokémon Inventory.`, allowedMentions: { users: [interaction.user.id] } });
+    const anchor = await interaction.fetchReply();
+    const thread = await anchor.startThread({ name: `Inventory · ${interaction.user.username}`.slice(0, 100), autoArchiveDuration: ThreadAutoArchiveDuration.OneHour, reason: "Pokémon Inventory" });
+    scheduleManagedThreadExpiry(thread);
+    await thread.send({
+      content: `<@${interaction.user.id}>`,
+      allowedMentions: { users: [interaction.user.id] },
+      embeds: [new EmbedBuilder().setColor(0xfbbf24).setTitle("Pokémon Inventory").setDescription("Press **Open Inventory** to view it privately in this Thread.")],
+      components: [new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`pk-inventory:open:${interaction.user.id}`).setLabel("Open Inventory").setEmoji("🎒").setStyle(ButtonStyle.Primary),
+      )],
+    });
   };
 
   const travelAnnouncement = (displayName: string, location: TravelLocation) => ({
@@ -267,18 +330,103 @@ async function main(): Promise<void> {
     components: navigationComponents(),
   });
 
-  const exploreResponse = (pokemon: ExploredPokemon, context: ExploreContext, location: TravelLocation, displayName: string, avatarUrl: string, isRoaming = false) => ({
+  const exploreResponse = (pokemon: ExploredPokemon, context: ExploreContext, location: TravelLocation, displayName: string, avatarUrl: string, appearance: "wild" | "roaming" | "event" = "wild") => ({
     files: [{ attachment: rarityBadgePng(pokemon.rarity.key), name: `rarity-${pokemon.rarity.key}.png` }],
     embeds: [new EmbedBuilder()
       .setColor(pokemon.rarity.color)
       .setAuthor({ name: `${displayName} is exploring`, iconURL: avatarUrl })
       .setTitle(pokemon.nameEn)
-      .setDescription(`*A ${isRoaming ? "Roaming" : "Wild"} Pokémon appeared!*\nType: ${formatTypes(pokemon.types)}\nRegion: ${displayKey(context.regionKey)}\nLocation: ${location.name}\nBiome: ${displayBiomes(location)}\nEncounter Rate: **${pokemon.rarity.label}** · ${(pokemon.rarity.chance * 100).toFixed(1)}%`)
+      .setDescription(`*A ${appearance === "event" ? "Starter Event" : appearance === "roaming" ? "Roaming" : "Wild"} Pokémon appeared!*\nType: ${formatTypes(pokemon.types)}\nRegion: ${displayKey(context.regionKey)}\nLocation: ${location.name}\nBiome: ${displayBiomes(location)}\n${appearance === "event" ? "Encounter Rate: **Starter Event — Unique**" : `Encounter Rate: **${pokemon.rarity.label}** · ${(pokemon.rarity.chance * 100).toFixed(1)}%`}`)
       .setImage(officialArtworkUrl(pokemon.nationalDex))
       .setThumbnail(`attachment://rarity-${pokemon.rarity.key}.png`)
       .setFooter({ text: `#${String(pokemon.nationalDex).padStart(3, "0")} · ${pokemon.slug}` })],
-    components: [catchComponents("pending")],
+    components: [catchComponents("pending"), catchNavigationComponents()],
   });
+
+  const starterEventAnnouncement = () => ({
+    embeds: [new EmbedBuilder()
+      .setColor(0xfbbf24)
+      .setTitle("Starter Event — Lost in Kanto")
+      .setDescription([
+        "*A distress call cuts through Kanto's tall grass.*",
+        "",
+        "Three young partners have wandered far from their Trainers: **Bulbasaur**, **Charmander**, and **Squirtle**.",
+        "",
+        "They are frightened, alert, and ready to run — but a Trainer with quick hands and a steady memory may earn their trust.",
+        "",
+        "Each Starter can be caught **once only across this server**. When another Trainer claims one, that chance is gone for everyone.",
+        "",
+        "Encounter Rate: **Starter Event — Unique**\n\nExplore anywhere in Kanto to find them. Choose your partner. Do not hesitate.",
+      ].join("\n"))
+      .setFooter({ text: "Starter Event · Kanto" })],
+  });
+
+  const starterEventPokemon = (nationalDex: number) => database.prepare(`
+    SELECT s.national_dex AS nationalDex, s.slug, s.name_en AS nameEn,
+      s.go_capture_rate AS goCaptureRate, s.go_flee_rate AS goFleeRate,
+      (SELECT group_concat(type_key, ',') FROM (SELECT type_key FROM pokemon_types WHERE national_dex = s.national_dex ORDER BY slot)) AS typesCsv
+    FROM pokemon_species s WHERE s.national_dex = ?
+  `).get(nationalDex) as (Omit<ExploredPokemon, "types" | "weight" | "minLevel" | "maxLevel" | "level" | "rarity"> & { typesCsv: string }) | undefined;
+
+  const scheduleStarterEventEnd = (guildId: string, channelId: string, expiresAt: number): void => {
+    const existing = starterEventEndTimers.get(guildId);
+    if (existing) clearTimeout(existing);
+    starterEventEndTimers.set(guildId, setTimeout(() => {
+      starterEventEndTimers.delete(guildId);
+      const caught = new Set((database.prepare("SELECT pokemon_national_dex AS nationalDex FROM pokemon_spawns WHERE guild_id = ? AND is_event = 1 AND state = 'caught'").all(guildId) as { nationalDex: number }[]).map((row) => row.nationalDex));
+      const starters: readonly [number, string][] = [[1, "Bulbasaur"], [4, "Charmander"], [7, "Squirtle"]];
+      const returned = starters.filter(([dex]) => !caught.has(dex)).map(([, name]) => `**${name}**`);
+      if (returned.length === 0) return;
+      void client.channels.fetch(channelId).then((target) => {
+        if (!target?.isSendable()) return;
+        void target.send({ embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle("Starter Event Ended").setDescription(`${returned.join(", ")} ${returned.length === 1 ? "has" : "have"} returned to ${returned.length === 1 ? "their Trainer" : "their Trainers"}.\n\nThank you to everyone who answered Kanto's call.`)] }).catch(() => undefined);
+      }).catch(() => undefined);
+    }, Math.max(0, expiresAt - Date.now())));
+  };
+
+  const starterEventPokemonForExplore = (guildId: string): ExploredPokemon | undefined => {
+    const event = database.prepare("SELECT expires_at AS expiresAt FROM pokemon_event_announcements WHERE guild_id = ? AND event_key = 'starter-event'").get(guildId) as { expiresAt: number } | undefined;
+    if (!event || event.expiresAt <= Date.now() || Math.random() >= STARTER_EVENT_ENCOUNTER_RATE) return undefined;
+    const candidates = [1, 4, 7].filter((nationalDex) => !database.prepare("SELECT 1 FROM pokemon_spawns WHERE guild_id = ? AND is_event = 1 AND pokemon_national_dex = ? AND state IN ('active', 'caught')").get(guildId, nationalDex));
+    const nationalDex = candidates[Math.floor(Math.random() * candidates.length)];
+    const raw = nationalDex ? starterEventPokemon(nationalDex) : undefined;
+    return raw ? { ...raw, types: raw.typesCsv.split(",").filter(Boolean), weight: 1, minLevel: 5, maxLevel: 5, level: 5, goCaptureRate: STARTER_EVENT_CATCH_RATE, rarity: { chance: STARTER_EVENT_ENCOUNTER_RATE, color: 0xfbbf24, key: "ultra_rare", label: "Event" } } : undefined;
+  };
+
+  const ensureStarterEvent = async (guild: Guild, channel: import("discord.js").TextChannel): Promise<number> => {
+    const existingAnnouncement = database.prepare("SELECT message_id AS messageId, expires_at AS expiresAt FROM pokemon_event_announcements WHERE guild_id = ? AND event_key = 'starter-event'").get(guild.id) as { messageId: string; expiresAt: number | null } | undefined;
+    let expiresAt: number;
+    if (!existingAnnouncement) {
+      const announcement = await channel.send(starterEventAnnouncement());
+      expiresAt = Date.now() + STARTER_EVENT_LIFETIME_MS;
+      database.prepare("INSERT INTO pokemon_event_announcements (guild_id, event_key, message_id, expires_at) VALUES (?, 'starter-event', ?, ?)").run(guild.id, announcement.id, expiresAt);
+    } else {
+      const existingMessage = await channel.messages.fetch(existingAnnouncement.messageId).catch(() => undefined);
+      if (existingMessage) {
+        await existingMessage.edit(starterEventAnnouncement());
+      } else {
+        const announcement = await channel.send(starterEventAnnouncement());
+        database.prepare("UPDATE pokemon_event_announcements SET message_id = ? WHERE guild_id = ? AND event_key = 'starter-event'").run(announcement.id, guild.id);
+      }
+      expiresAt = existingAnnouncement.expiresAt ?? Date.now() + STARTER_EVENT_LIFETIME_MS;
+      if (existingAnnouncement.expiresAt === null) {
+        database.prepare("UPDATE pokemon_event_announcements SET expires_at = ? WHERE guild_id = ? AND event_key = 'starter-event'").run(expiresAt, guild.id);
+      }
+    }
+    scheduleStarterEventEnd(guild.id, channel.id, expiresAt);
+    const legacySpawns = database.prepare(`
+      SELECT message_id AS messageId, channel_id AS channelId
+      FROM pokemon_spawns
+      WHERE guild_id = ? AND location_key = ? AND state = 'active'
+    `).all(guild.id, STARTER_EVENT_LOCATION_KEY) as { messageId: string; channelId: string }[];
+    database.prepare("UPDATE pokemon_spawns SET state = 'fled', resolved_at = ? WHERE guild_id = ? AND location_key = ? AND state = 'active'").run(Date.now(), guild.id, STARTER_EVENT_LOCATION_KEY);
+    for (const legacy of legacySpawns) {
+      const legacyChannel = await client.channels.fetch(legacy.channelId).catch(() => undefined);
+      const legacyMessage = legacyChannel?.isTextBased() ? await legacyChannel.messages.fetch(legacy.messageId).catch(() => undefined) : undefined;
+      if (legacyMessage) await disableCatch(legacyMessage, "fled");
+    }
+    return 0;
+  };
 
   const warpCandyResponse = (amount: number, userId: string) => ({
     content: `<@${userId}>`,
@@ -304,39 +452,34 @@ async function main(): Promise<void> {
   });
 
   const INVENTORY_PAGE_SIZE = 25;
-  const inventoryMenu = (guildId: string, userId: string, page = 0) => {
-    const caught = caughtPokemonForPlayer(database, guildId, userId);
+  const giftRecipientIds = (guildId: string, senderUserId: string): Set<string> => new Set((database.prepare(`
+    SELECT user_id AS userId FROM player_locations WHERE guild_id = ?
+    UNION
+    SELECT user_id AS userId FROM pokemon_catches WHERE guild_id = ?
+  `).all(guildId, guildId) as { userId: string }[])
+    .map((row) => row.userId)
+    .filter((userId) => userId !== senderUserId));
+
+  const giftRecipientsForGuild = async (guild: Guild, senderUserId: string) => {
+    const ids = [...giftRecipientIds(guild.id, senderUserId)];
+    const members = await Promise.all(ids.map(async (userId) => guild.members.fetch(userId).catch(() => guild.members.cache.get(userId))));
+    return members.filter((member): member is NonNullable<typeof member> => Boolean(member))
+      .sort((left, right) => left.displayName.localeCompare(right.displayName))
+      .slice(0, 25);
+  };
+
+  const inventoryMenu = async (guild: Guild, userId: string, page = 0, selectedDex?: number, recipientUserId?: string) => {
+    const caught = caughtPokemonForPlayer(database, guild.id, userId);
     const pageCount = Math.max(1, Math.ceil(caught.length / INVENTORY_PAGE_SIZE));
     const safePage = Math.max(0, Math.min(page, pageCount - 1));
     const entries = caught.slice(safePage * INVENTORY_PAGE_SIZE, (safePage + 1) * INVENTORY_PAGE_SIZE);
-    const candyCount = warpCandyCount(database, guildId, userId);
-    return {
-      embeds: [new EmbedBuilder()
-        .setColor(0xfbbf24)
-        .setTitle("Pokémon Inventory")
-        .setDescription(`Warp Candy: **${candyCount}**\n\n${caught.length > 0 ? "Choose a Pokémon to preview, then show it off." : "You have not caught any Pokémon yet."}`)],
-      components: [
-        ...(entries.length > 0 ? [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-          new StringSelectMenuBuilder().setCustomId(`pk-showoff:choose:${userId}:${safePage}`).setPlaceholder("Choose a Pokémon to preview").addOptions(entries.map((pokemon) => ({
-            label: pokemon.nameEn,
-            value: String(pokemon.nationalDex),
-            description: `#${String(pokemon.nationalDex).padStart(3, "0")} · Caught ${pokemon.catchCount} time${pokemon.catchCount === 1 ? "" : "s"}`,
-          }))),
-        )] : []),
-        ...(pageCount > 1 ? [new ActionRowBuilder<ButtonBuilder>().addComponents(
-          new ButtonBuilder().setCustomId(`pk-showoff:page:${userId}:${safePage - 1}`).setLabel("Previous").setStyle(ButtonStyle.Secondary).setDisabled(safePage === 0),
-          new ButtonBuilder().setCustomId(`pk-showoff:page-indicator:${userId}:${safePage}`).setLabel(`Page ${safePage + 1}/${pageCount}`).setStyle(ButtonStyle.Secondary).setDisabled(true),
-          new ButtonBuilder().setCustomId(`pk-showoff:page:${userId}:${safePage + 1}`).setLabel("Next").setStyle(ButtonStyle.Secondary).setDisabled(safePage >= pageCount - 1),
-        )] : []),
-      ],
-    };
-  };
-
-  const inventoryPreview = (pokemon: ReturnType<typeof caughtPokemonForPlayer>[number], userId: string, page: number) => ({
-    embeds: [new EmbedBuilder()
-      .setColor(0xfbbf24)
-      .setTitle(pokemon.nameEn)
-      .setDescription([
+    const pokemon = caught.find((entry) => entry.nationalDex === selectedDex);
+    const recipients = await giftRecipientsForGuild(guild, userId);
+    const recipient = recipientUserId ? recipients.find((member) => member.id === recipientUserId) : undefined;
+    const giftRemainingMs = giftCooldownRemaining(database, guild.id, userId);
+    const giftRemainingHours = Math.ceil(giftRemainingMs / 3_600_000);
+    const description = pokemon
+      ? [
         `*You have caught this Pokémon ${pokemon.catchCount} time${pokemon.catchCount === 1 ? "" : "s"}.*`,
         `Type: ${formatTypes(pokemon.typesCsv.split(",").filter(Boolean))}`,
         `Region: **${displayKey(pokemon.regionKey)}**`,
@@ -344,14 +487,39 @@ async function main(): Promise<void> {
         `Encounter Rate: **${encounterRarityLabel(pokemon.encounterRarity)}**${pokemon.encounterRate === null ? "" : ` · ${(pokemon.encounterRate * 100).toFixed(1)}%`}`,
         `Catch Rate: **${catchDifficulty(pokemon.goCaptureRate)}** · ${pokemon.goCaptureRate}%`,
         `Flee Rate: **${fleeDifficulty(pokemon.goFleeRate)}**${pokemon.goFleeRate === null ? "" : ` · ${pokemon.goFleeRate}%`}`,
-      ].join("\n"))
-      .setImage(officialArtworkUrl(pokemon.nationalDex))
-      .setFooter({ text: `#${String(pokemon.nationalDex).padStart(3, "0")} · ${pokemon.slug}` })],
-    components: [new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder().setCustomId(`pk-showoff:publish:${userId}:${pokemon.nationalDex}:${page}`).setLabel("Show Off").setEmoji("✨").setStyle(ButtonStyle.Primary),
-      new ButtonBuilder().setCustomId(`pk-showoff:inventory:${userId}:${page}`).setLabel("Back to Inventory").setStyle(ButtonStyle.Secondary),
-    )],
-  });
+        recipient ? `\nGift recipient: ${recipient}` : "",
+      ].join("\n")
+      : `Warp Candy: **${warpCandyCount(database, guild.id, userId)}**\n\nChoose a Pokémon to view its information.`;
+    return {
+      embeds: [new EmbedBuilder()
+        .setColor(0xfbbf24)
+        .setTitle(pokemon?.nameEn ?? "Pokémon Inventory")
+        .setDescription(description)
+        .setImage(pokemon ? officialArtworkUrl(pokemon.nationalDex) : null)
+        .setFooter(pokemon ? { text: `#${String(pokemon.nationalDex).padStart(3, "0")} · ${pokemon.slug}` } : null)],
+      components: [
+        ...(entries.length > 0 ? [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+          new StringSelectMenuBuilder().setCustomId(`pk-inventory:pokemon:${userId}:${safePage}:${recipient?.id ?? "none"}`).setPlaceholder("Choose a Pokémon").addOptions(entries.map((entry) => ({
+            label: entry.nameEn,
+            value: String(entry.nationalDex),
+            description: `#${String(entry.nationalDex).padStart(3, "0")} · Caught ${entry.catchCount} time${entry.catchCount === 1 ? "" : "s"}`,
+          }))),
+        )] : []),
+        ...(recipients.length > 0 ? [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+          new StringSelectMenuBuilder().setCustomId(`pk-inventory:recipient:${userId}:${pokemon?.nationalDex ?? "none"}:${safePage}`).setPlaceholder("Choose a player to receive a Gift").addOptions(recipients.map((member) => ({ label: member.displayName.slice(0, 100), value: member.id, description: member.user.username.slice(0, 100) }))),
+        )] : []),
+        ...(pageCount > 1 ? [new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder().setCustomId(`pk-inventory:page:${userId}:${safePage - 1}:${pokemon?.nationalDex ?? "none"}:${recipient?.id ?? "none"}`).setLabel("Previous").setStyle(ButtonStyle.Secondary).setDisabled(safePage === 0),
+          new ButtonBuilder().setCustomId(`pk-inventory:page-indicator:${userId}:${safePage}`).setLabel(`Page ${safePage + 1}/${pageCount}`).setStyle(ButtonStyle.Secondary).setDisabled(true),
+          new ButtonBuilder().setCustomId(`pk-inventory:page:${userId}:${safePage + 1}:${pokemon?.nationalDex ?? "none"}:${recipient?.id ?? "none"}`).setLabel("Next").setStyle(ButtonStyle.Secondary).setDisabled(safePage >= pageCount - 1),
+        )] : []),
+        ...(entries.length > 0 ? [new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder().setCustomId(pokemon ? `pk-showoff:publish:${userId}:${pokemon.nationalDex}:${safePage}` : `pk-showoff:unselected:${userId}:${safePage}`).setLabel("Show Off").setEmoji("✨").setStyle(ButtonStyle.Primary).setDisabled(!pokemon),
+          new ButtonBuilder().setCustomId(pokemon && recipient ? `pk-gift:confirm:${userId}:${pokemon.nationalDex}:${recipient.id}:${safePage}` : `pk-gift:unselected:${userId}:${safePage}`).setLabel(giftRemainingMs > 0 ? `Gift · ${giftRemainingHours}h` : "Gift").setEmoji("🎁").setStyle(ButtonStyle.Success).setDisabled(!pokemon || !recipient || giftRemainingMs > 0),
+        )] : []),
+      ],
+    };
+  };
 
   const showOffAnnouncement = (pokemon: ReturnType<typeof caughtPokemonForPlayer>[number], displayName: string, avatarUrl: string) => ({
     embeds: [new EmbedBuilder()
@@ -369,18 +537,39 @@ async function main(): Promise<void> {
       ].join("\n"))
       .setImage(officialArtworkUrl(pokemon.nationalDex))
       .setFooter({ text: `#${String(pokemon.nationalDex).padStart(3, "0")} · ${pokemon.slug}` })],
-    components: navigationComponents(),
   });
 
-  const findExploredPokemon = (guild: Guild, userId: string): { context: ExploreContext; location: TravelLocation; pokemon: ExploredPokemon; isRoaming: boolean } | undefined => {
+  const giftAnnouncement = (pokemon: ReturnType<typeof caughtPokemonForPlayer>[number], senderUserId: string, senderDisplayName: string, senderAvatarUrl: string, recipientUserId: string, recipientDisplayName: string) => ({
+    content: `<@${senderUserId}> gifted **${pokemon.nameEn}** to <@${recipientUserId}>!`,
+    allowedMentions: { users: [senderUserId, recipientUserId] },
+    embeds: [new EmbedBuilder()
+      .setColor(0x57f287)
+      .setAuthor({ name: `${senderDisplayName} gifted a Pokémon to ${recipientDisplayName}`, iconURL: senderAvatarUrl })
+      .setTitle(pokemon.nameEn)
+      .setDescription([
+        `*${pokemon.nameEn} has found a new Trainer.*`,
+        `Type: ${formatTypes(pokemon.typesCsv.split(",").filter(Boolean))}`,
+        `Region: **${displayKey(pokemon.regionKey)}**`,
+        `Location: **${pokemon.locationName}**`,
+        `Encounter Rate: **${encounterRarityLabel(pokemon.encounterRarity)}**${pokemon.encounterRate === null ? "" : ` · ${(pokemon.encounterRate * 100).toFixed(1)}%`}`,
+        `Catch Rate: **${catchDifficulty(pokemon.goCaptureRate)}** · ${pokemon.goCaptureRate}%`,
+        `Flee Rate: **${fleeDifficulty(pokemon.goFleeRate)}**${pokemon.goFleeRate === null ? "" : ` · ${pokemon.goFleeRate}%`}`,
+      ].join("\n"))
+      .setImage(officialArtworkUrl(pokemon.nationalDex))
+      .setFooter({ text: `#${String(pokemon.nationalDex).padStart(3, "0")} · ${pokemon.slug}` })],
+  });
+
+  const findExploredPokemon = (guild: Guild, userId: string): { context: ExploreContext; location: TravelLocation; pokemon: ExploredPokemon; appearance: "wild" | "roaming" | "event" } | undefined => {
     const location = selectedLocationForPlayer(database, guild.id, userId);
     if (!location) return undefined;
     const context: ExploreContext = { regionKey: location.regionKey, biomeKey: location.biomeKeys[0] ?? "location" };
-    const roamingPokemon = roamingPokemonForRegion(database, location.regionKey, roamingChance(database, guild.id));
-    const pokemon = roamingPokemon
+    const eventPokemon = location.regionKey === "kanto" ? starterEventPokemonForExplore(guild.id) : undefined;
+    const roamingPokemon = eventPokemon ? undefined : roamingPokemonForRegion(database, location.regionKey, roamingChance(database, guild.id));
+    const pokemon = eventPokemon
+      ?? roamingPokemon
       ?? explorePokemonAtLocation(database, location.key)
       ?? (location.biomeKeys[0] ? explorePokemon(database, context) : undefined);
-    return pokemon ? { context, location, pokemon, isRoaming: Boolean(roamingPokemon) } : undefined;
+    return pokemon ? { context, location, pokemon, appearance: eventPokemon ? "event" : roamingPokemon ? "roaming" : "wild" } : undefined;
   };
 
   const catchThreadForSpawn = async (spawn: PokemonSpawn, sourceMessage: Message): Promise<ThreadChannel> => {
@@ -397,21 +586,32 @@ async function main(): Promise<void> {
       reason: `Catch lobby for ${spawn.pokemonName}`,
     });
     catchThreads.set(spawn.messageId, thread);
+    scheduleManagedThreadExpiry(thread);
     return thread;
   };
 
   const inviteToCatchThread = async (interaction: ButtonInteraction | ChatInputCommandInteraction, spawn: PokemonSpawn, sourceMessage: Message): Promise<void> => {
+    const reply = async (content: string): Promise<void> => {
+      if (interaction.deferred) await interaction.editReply({ content });
+      else await interaction.reply({ content, ephemeral: true });
+    };
     const playerLocation = selectedLocationForPlayer(database, interaction.guildId!, interaction.user.id);
     if (playerLocation?.key !== spawn.locationKey) {
-      await interaction.reply({ content: `You must be at **${spawn.locationName}** to catch ${spawn.pokemonName}.`, ephemeral: true });
+      await reply(`You must be at **${spawn.locationName}** to catch ${spawn.pokemonName}.`);
       return;
     }
     const key = sessionKey(spawn.messageId, interaction.user.id);
     if (catchInvitations.has(key)) {
-      await interaction.reply({ content: "You already have a Catch invitation for this Pokémon in its Thread.", ephemeral: true });
+      await reply("You already have a Catch invitation for this Pokémon in its Thread.");
       return;
     }
     const thread = await catchThreadForSpawn(spawn, sourceMessage);
+    const currentSpawn = pokemonSpawn(database, spawn.messageId);
+    if (!currentSpawn || currentSpawn.state !== "active" || currentSpawn.expiresAt <= Date.now()) {
+      if (currentSpawn?.state === "active") await expireSpawn(sourceMessage);
+      await reply("This Pokémon has already left.");
+      return;
+    }
     const invitation = await thread.send({
       content: `<@${interaction.user.id}>`,
       allowedMentions: { users: [interaction.user.id] },
@@ -421,7 +621,7 @@ async function main(): Promise<void> {
       )],
     });
     catchInvitations.set(key, invitation);
-    await interaction.reply({ content: `Your Catch invitation is ready in <#${thread.id}>.`, ephemeral: true });
+    await reply(`Your Catch invitation is ready in <#${thread.id}>.`);
     scheduleSpawnExpiry(sourceMessage, spawn.expiresAt);
   };
 
@@ -436,7 +636,8 @@ async function main(): Promise<void> {
       await interaction.reply({ content: "You are already catching this Pokémon.", ephemeral: true });
       return;
     }
-    const session = createCatchSession(spawn.goCaptureRate);
+    const symbols = catchSymbolsForSpawn(spawn);
+    const session = createCatchSession(spawn.goCaptureRate, Math.random, spawn.catchSequenceLength ?? undefined, symbols.length);
     catchSessions.set(key, session);
     session.close = async (content: string): Promise<void> => {
       await interaction.message.edit({ content, embeds: [], components: [] }).catch(() => undefined);
@@ -444,18 +645,26 @@ async function main(): Promise<void> {
     await interaction.update({
       content: `<@${interaction.user.id}>`,
       allowedMentions: { users: [interaction.user.id] },
-      embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle(`Catch ${spawn.pokemonName}`).setDescription(`Memorize this sequence:\n\n${session.sequence.map((index) => CATCH_SYMBOLS[index]).join(" ")}`)],
+      embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle(`Catch ${spawn.pokemonName}`).setDescription(`Memorize this sequence:\n\n${session.sequence.map((index) => symbols[index]).join(" ")}`)],
       components: [],
     });
     setTimeout(() => {
       if (!catchSessions.has(key)) return;
       const current = pokemonSpawn(database, spawn.messageId);
-      if (!current || current.state !== "active" || current.expiresAt <= Date.now()) return;
+      if (!current || current.state !== "active" || current.expiresAt <= Date.now()) {
+        catchSessions.delete(key);
+        void interaction.message.edit({
+          content: `${spawn.pokemonName} fled!`,
+          embeds: [],
+          components: [],
+        }).catch(() => undefined);
+        return;
+      }
       void interaction.message.edit({
         embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle(`Catch ${spawn.pokemonName}`).setDescription(`Repeat the sequence · 0/${session.sequence.length}`)],
-        components: [catchInputComponents(spawn.messageId, interaction.user.id)],
+        components: catchInputComponents(spawn.messageId, interaction.user.id, symbols),
       }).catch(() => catchSessions.delete(key));
-    }, previewDurationMs(session.sequence.length));
+    }, previewDurationMs(session.sequence.length) + (spawn.isEvent ? STARTER_EVENT_PREVIEW_EXTRA_MS : 0));
   };
 
   client.on(Events.GuildCreate, (guild) => {
@@ -523,19 +732,32 @@ async function main(): Promise<void> {
   client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isStringSelectMenu()) {
       const [prefix, action, ownerUserId, regionKey, pageText] = interaction.customId.split(":");
-      if (prefix === "pk-showoff" && action === "choose" && ownerUserId && interaction.guild) {
+      if (prefix === "pk-inventory" && action && ownerUserId && interaction.guild) {
         if (ownerUserId !== interaction.user.id) {
           await interaction.reply({ content: "This Inventory belongs to another player.", ephemeral: true });
           return;
         }
-        const pokemon = caughtPokemonForPlayer(database, interaction.guild.id, interaction.user.id)
-          .find((entry) => entry.nationalDex === Number(interaction.values[0]));
-        if (!pokemon) {
-          await interaction.update({ content: "This Pokémon is no longer in your Inventory.", embeds: [], components: [] });
+        if (action === "pokemon") {
+          const pokemon = caughtPokemonForPlayer(database, interaction.guild.id, interaction.user.id)
+            .find((entry) => entry.nationalDex === Number(interaction.values[0]));
+          if (!pokemon) {
+            await interaction.update({ content: "This Pokémon is no longer in your Inventory.", embeds: [], components: [] });
+            return;
+          }
+          const selectedRecipient = pageText && pageText !== "none" ? pageText : undefined;
+          await interaction.update(await inventoryMenu(interaction.guild, interaction.user.id, Number(regionKey) || 0, pokemon.nationalDex, selectedRecipient));
           return;
         }
-        await interaction.update(inventoryPreview(pokemon, interaction.user.id, Number(regionKey) || 0));
-        return;
+        if (action === "recipient") {
+          const recipient = await interaction.guild.members.fetch(interaction.values[0]).catch(() => undefined);
+          if (!recipient || !giftRecipientIds(interaction.guild.id, interaction.user.id).has(recipient.id)) {
+            await interaction.update({ content: "That player is no longer eligible to receive a Gift.", embeds: [], components: [] });
+            return;
+          }
+          const selectedDex = regionKey && regionKey !== "none" ? Number(regionKey) : undefined;
+          await interaction.update(await inventoryMenu(interaction.guild, interaction.user.id, Number(pageText) || 0, selectedDex, recipient.id));
+          return;
+        }
       }
       if (prefix !== "pk-travel" || !action || !ownerUserId || !interaction.guild) return;
       if (ownerUserId !== interaction.user.id) {
@@ -545,26 +767,34 @@ async function main(): Promise<void> {
       if (action === "region") {
         const selectedRegion = interaction.values[0] as RegionKey;
         const locations = locationsForRegion(database, selectedRegion);
-        await interaction.update(travelMessage(interaction.user.id, selectedRegion, locations));
+        const draft = travelDrafts.get(travelDraftKey(interaction.guild.id, interaction.user.id, interaction.channelId));
+        await interaction.update(travelMessage(interaction.user.id, selectedRegion, locations, draft?.regionKey === selectedRegion ? draft : undefined));
         return;
       }
       if (action === "location" && regionKey && regionKey !== "none") {
-        const previousLocation = selectedLocationForPlayer(database, interaction.guild.id, interaction.user.id);
-        const location = setPlayerLocation(database, interaction.guild.id, interaction.user.id, interaction.values[0]);
+        const location = locationsForRegion(database, regionKey as RegionKey).find((entry) => entry.key === interaction.values[0]);
         if (!location) {
           await interaction.reply({ content: "That Location no longer exists.", ephemeral: true });
           return;
         }
+        travelDrafts.set(travelDraftKey(interaction.guild.id, interaction.user.id, interaction.channelId), location);
         await interaction.update(travelMessage(interaction.user.id, location.regionKey, locationsForRegion(database, location.regionKey), location, Number(pageText) || 0));
-        if (previousLocation?.key !== location.key && interaction.channel?.isSendable()) {
-          const member = await interaction.guild.members.fetch(interaction.user.id);
-          await interaction.channel.send(travelAnnouncement(member.displayName, location));
-        }
       }
       return;
     }
 
     if (interaction.isButton()) {
+      if (interaction.customId === OWNERSHIP_BUTTON_ID && interaction.guild) {
+        const spawn = pokemonSpawn(database, interaction.message.id);
+        if (!spawn) {
+          await interaction.reply({ content: "This Pokémon encounter is no longer available.", ephemeral: true });
+          return;
+        }
+        const owned = database.prepare("SELECT COUNT(*) AS count FROM pokemon_catches WHERE guild_id = ? AND user_id = ? AND pokemon_national_dex = ?").get(interaction.guild.id, interaction.user.id, spawn.pokemonNationalDex) as { count: number };
+        await interaction.reply({ content: owned.count > 0 ? `You own **${spawn.pokemonName}** · ${owned.count} caught.` : `You do not own **${spawn.pokemonName}** yet.`, ephemeral: true });
+        return;
+      }
+
       if (interaction.customId === CATCH_BUTTON_ID && interaction.guild) {
         const spawn = pokemonSpawn(database, interaction.message.id);
         if (!spawn || spawn.state !== "active" || spawn.expiresAt <= Date.now()) {
@@ -572,6 +802,7 @@ async function main(): Promise<void> {
           await interaction.reply({ content: "This Pokémon has already left.", ephemeral: true });
           return;
         }
+        await interaction.deferReply({ ephemeral: true });
         await inviteToCatchThread(interaction, spawn, interaction.message);
         return;
       }
@@ -642,7 +873,7 @@ async function main(): Promise<void> {
           }
           await interaction.update({
             embeds: [new EmbedBuilder().setColor(0xed4245).setTitle(`Catch ${spawn.pokemonName}`).setDescription(`Incorrect — start again from the beginning.\n0/${session.sequence.length}`)],
-            components: [catchInputComponents(spawn.messageId, interaction.user.id)],
+            components: catchInputComponents(spawn.messageId, interaction.user.id, catchSymbolsForSpawn(spawn)),
           });
           return;
         }
@@ -650,7 +881,7 @@ async function main(): Promise<void> {
         if (session.progress < session.sequence.length) {
           await interaction.update({
             embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle(`Catch ${spawn.pokemonName}`).setDescription(`Correct! ${session.progress}/${session.sequence.length}`)],
-            components: [catchInputComponents(spawn.messageId, interaction.user.id)],
+            components: catchInputComponents(spawn.messageId, interaction.user.id, catchSymbolsForSpawn(spawn)),
           });
           return;
         }
@@ -673,6 +904,69 @@ async function main(): Promise<void> {
         return;
       }
 
+      const [inventoryOpenPrefix, inventoryOpenAction, inventoryOpenOwnerUserId] = interaction.customId.split(":");
+      if (inventoryOpenPrefix === "pk-inventory" && inventoryOpenAction === "open" && inventoryOpenOwnerUserId && interaction.guild) {
+        if (inventoryOpenOwnerUserId !== interaction.user.id) {
+          await interaction.reply({ content: "This Inventory belongs to another player.", ephemeral: true });
+          return;
+        }
+        await interaction.reply({ ephemeral: true, ...await inventoryMenu(interaction.guild, interaction.user.id) });
+        return;
+      }
+
+      const [giftPrefix, giftAction, giftOwnerUserId, giftDexText, giftTargetOrPage] = interaction.customId.split(":");
+      if (giftPrefix === "pk-gift" && giftAction && giftOwnerUserId && interaction.guild) {
+        if (giftOwnerUserId !== interaction.user.id) {
+          await interaction.reply({ content: "This Gift menu belongs to another player.", ephemeral: true });
+          return;
+        }
+        const pokemon = caughtPokemonForPlayer(database, interaction.guild.id, interaction.user.id)
+          .find((entry) => entry.nationalDex === Number(giftDexText));
+        if (!pokemon) {
+          await interaction.update({ content: "This Pokémon is no longer in your Inventory.", embeds: [], components: [] });
+          return;
+        }
+        if (giftAction === "confirm" && giftTargetOrPage) {
+          const recipient = await interaction.guild.members.fetch(giftTargetOrPage).catch(() => undefined);
+          if (!recipient || !giftRecipientIds(interaction.guild.id, interaction.user.id).has(recipient.id)) {
+            await interaction.update({ content: "That recipient is no longer eligible.", embeds: [], components: [] });
+            return;
+          }
+          const giftResult = giftCaughtPokemon(database, interaction.guild.id, interaction.user.id, recipient.id, pokemon.nationalDex);
+          if (giftResult === "cooldown") {
+            const remainingMinutes = Math.ceil(giftCooldownRemaining(database, interaction.guild.id, interaction.user.id) / 60_000);
+            await interaction.update({ content: `You can gift again in **${remainingMinutes} minute${remainingMinutes === 1 ? "" : "s"}**.`, embeds: [], components: [] });
+            return;
+          }
+          if (giftResult !== "gifted") {
+            await interaction.update({ content: "That Pokémon is no longer available to gift.", embeds: [], components: [] });
+            return;
+          }
+          const sender = await interaction.guild.members.fetch(interaction.user.id);
+          const giftingChannel = interaction.guild.channels.cache.find((channel) => channel.name === "gifting" && channel.isSendable());
+          if (giftingChannel?.isSendable()) {
+            await giftingChannel.send(giftAnnouncement(pokemon, interaction.user.id, sender.displayName, interaction.user.displayAvatarURL({ size: 128 }), recipient.id, recipient.displayName));
+          }
+          await interaction.update({
+            embeds: [new EmbedBuilder().setColor(0x57f287).setTitle("Gift sent!").setDescription(`You gave **${pokemon.nameEn}** to ${recipient}.`)],
+            components: [],
+          });
+          return;
+        }
+      }
+
+      const [inventoryPrefix, inventoryAction, inventoryOwnerUserId, inventoryPageText, inventoryDexText, inventoryRecipientUserId] = interaction.customId.split(":");
+      if (inventoryPrefix === "pk-inventory" && inventoryAction === "page" && inventoryOwnerUserId && interaction.guild) {
+        if (inventoryOwnerUserId !== interaction.user.id) {
+          await interaction.reply({ content: "This Inventory belongs to another player.", ephemeral: true });
+          return;
+        }
+        const selectedDex = inventoryDexText && inventoryDexText !== "none" ? Number(inventoryDexText) : undefined;
+        const selectedRecipient = inventoryRecipientUserId && inventoryRecipientUserId !== "none" ? inventoryRecipientUserId : undefined;
+        await interaction.update(await inventoryMenu(interaction.guild, interaction.user.id, Number(inventoryPageText) || 0, selectedDex, selectedRecipient));
+        return;
+      }
+
       const [showOffPrefix, showOffAction, showOffOwnerUserId, showOffValue] = interaction.customId.split(":");
       if (showOffPrefix === "pk-showoff" && showOffAction && showOffOwnerUserId && interaction.guild) {
         if (showOffOwnerUserId !== interaction.user.id) {
@@ -680,7 +974,7 @@ async function main(): Promise<void> {
           return;
         }
         if (showOffAction === "page" || showOffAction === "inventory") {
-          await interaction.update(inventoryMenu(interaction.guild.id, interaction.user.id, Number(showOffValue) || 0));
+          await interaction.update(await inventoryMenu(interaction.guild, interaction.user.id, Number(showOffValue) || 0));
           return;
         }
         if (showOffAction === "publish" && showOffValue) {
@@ -691,8 +985,13 @@ async function main(): Promise<void> {
             return;
           }
           const member = await interaction.guild.members.fetch(interaction.user.id);
-          if (interaction.channel?.isSendable()) await interaction.channel.send(showOffAnnouncement(pokemon, member.displayName, interaction.user.displayAvatarURL({ size: 128 })));
-          await interaction.update({ content: `You showed off **${pokemon.nameEn}**!`, embeds: [], components: [] });
+          const showOffChannel = interaction.guild.channels.cache.find((channel) => channel.name === "show-off" && channel.isSendable());
+          if (!showOffChannel?.isSendable()) {
+            await interaction.reply({ content: "The #show-off channel has not been created yet. Ask an admin to run /pk-create.", ephemeral: true });
+            return;
+          }
+          await showOffChannel.send(showOffAnnouncement(pokemon, member.displayName, interaction.user.displayAvatarURL({ size: 128 })));
+          await interaction.update({ content: `You showed off **${pokemon.nameEn}** in <#${showOffChannel.id}>!`, embeds: [], components: [] });
           return;
         }
       }
@@ -737,15 +1036,42 @@ async function main(): Promise<void> {
       }
 
       if (interaction.customId === SHOW_OFF_BUTTON_ID && interaction.guild) {
-        await interaction.reply({ ...inventoryMenu(interaction.guild.id, interaction.user.id), ephemeral: true });
+        await openInventoryThread(interaction);
         return;
       }
 
       if (interaction.customId === TRAVEL_BUTTON_ID && interaction.guild) {
-        await interaction.reply({ ...travelMenuForPlayer(interaction.guild.id, interaction.user.id), ephemeral: true });
+        await openTravelThread(interaction);
         return;
       }
       const [prefix, action, ownerUserId, regionKey, pageText] = interaction.customId.split(":");
+      if (prefix === "pk-travel" && action === "go" && ownerUserId && interaction.guild) {
+        if (ownerUserId !== interaction.user.id) {
+          await interaction.reply({ content: "This Travel menu belongs to another player.", ephemeral: true });
+          return;
+        }
+        const key = travelDraftKey(interaction.guild.id, interaction.user.id, interaction.channelId);
+        const destination = travelDrafts.get(key);
+        if (!destination) {
+          await interaction.reply({ content: "Choose a Location first.", ephemeral: true });
+          return;
+        }
+        setPlayerLocation(database, interaction.guild.id, interaction.user.id, destination.key);
+        travelDrafts.delete(key);
+        const member = await interaction.guild.members.fetch(interaction.user.id);
+        const parent = interaction.channel?.isThread() ? interaction.channel.parent : interaction.channel;
+        if (parent?.isSendable()) await parent.send(travelAnnouncement(member.displayName, destination));
+        await interaction.update({ content: "Travel confirmed.", embeds: [], components: [] });
+        if (interaction.channel?.isThread()) {
+          const existing = travelThreadDeletionTimers.get(interaction.channel.id);
+          if (existing) clearTimeout(existing);
+          travelThreadDeletionTimers.set(interaction.channel.id, setTimeout(() => {
+            travelThreadDeletionTimers.delete(interaction.channelId);
+            void interaction.channel?.delete("Travel confirmed two minutes ago").catch(() => undefined);
+          }, 120_000));
+        }
+        return;
+      }
       if (prefix === "pk-travel" && action === "page" && ownerUserId && regionKey && interaction.guild) {
         if (ownerUserId !== interaction.user.id) {
           await interaction.reply({ content: "Menu Travel này thuộc về người chơi khác.", ephemeral: true });
@@ -784,19 +1110,21 @@ async function main(): Promise<void> {
         result.location,
         member.displayName,
         interaction.user.displayAvatarURL({ size: 128 }),
-        result.isRoaming,
+        result.appearance,
       ));
       const message = await interaction.fetchReply();
       const appearedAt = Date.now();
+      const lifetimeMs = result.appearance === "event" ? STARTER_EVENT_SPAWN_LIFETIME_MS : SPAWN_LIFETIME_MS;
       addPokemonSpawn(database, {
         messageId: message.id, guildId: interaction.guild.id, channelId: message.channelId,
         pokemonNationalDex: result.pokemon.nationalDex, pokemonName: result.pokemon.nameEn,
         regionKey: result.context.regionKey, locationKey: result.location.key, locationName: result.location.name,
         encounterRate: result.pokemon.rarity.chance, encounterRarity: result.pokemon.rarity.key,
         goCaptureRate: result.pokemon.goCaptureRate, goFleeRate: result.pokemon.goFleeRate,
-        appearedAt, expiresAt: appearedAt + SPAWN_LIFETIME_MS,
+        isEvent: result.appearance === "event", catchSequenceLength: result.appearance === "event" ? STARTER_EVENT_SEQUENCE_LENGTH : null,
+        appearedAt, expiresAt: appearedAt + lifetimeMs,
       });
-      scheduleSpawnExpiry(message, appearedAt + SPAWN_LIFETIME_MS);
+      scheduleSpawnExpiry(message, appearedAt + lifetimeMs);
       markExplored(interaction.guild.id, interaction.user.id);
       return;
     }
@@ -837,7 +1165,7 @@ async function main(): Promise<void> {
         await interaction.reply({ content: "Travel can only be used in a server.", ephemeral: true });
         return;
       }
-      await interaction.reply({ ...travelMenuForPlayer(interaction.guild.id, interaction.user.id), ephemeral: true });
+      await openTravelThread(interaction);
       return;
     }
 
@@ -860,12 +1188,12 @@ async function main(): Promise<void> {
       return;
     }
 
-    if (interaction.commandName === "pk-showoff") {
+    if (interaction.commandName === "pk-showoff" || interaction.commandName === "pk-gift") {
       if (!interaction.guild) {
-        await interaction.reply({ content: "Show Off chỉ dùng được trong server.", ephemeral: true });
+        await interaction.reply({ content: "Inventory can only be used in a server.", ephemeral: true });
         return;
       }
-      await interaction.reply({ ...inventoryMenu(interaction.guild.id, interaction.user.id), ephemeral: true });
+      await openInventoryThread(interaction);
       return;
     }
 
@@ -901,19 +1229,21 @@ async function main(): Promise<void> {
         result.location,
         member.displayName,
         interaction.user.displayAvatarURL({ size: 128 }),
-        result.isRoaming,
+        result.appearance,
       ));
       const message = await interaction.fetchReply();
       const appearedAt = Date.now();
+      const lifetimeMs = result.appearance === "event" ? STARTER_EVENT_SPAWN_LIFETIME_MS : SPAWN_LIFETIME_MS;
       addPokemonSpawn(database, {
         messageId: message.id, guildId: interaction.guild.id, channelId: message.channelId,
         pokemonNationalDex: result.pokemon.nationalDex, pokemonName: result.pokemon.nameEn,
         regionKey: result.context.regionKey, locationKey: result.location.key, locationName: result.location.name,
         encounterRate: result.pokemon.rarity.chance, encounterRarity: result.pokemon.rarity.key,
         goCaptureRate: result.pokemon.goCaptureRate, goFleeRate: result.pokemon.goFleeRate,
-        appearedAt, expiresAt: appearedAt + SPAWN_LIFETIME_MS,
+        isEvent: result.appearance === "event", catchSequenceLength: result.appearance === "event" ? STARTER_EVENT_SEQUENCE_LENGTH : null,
+        appearedAt, expiresAt: appearedAt + lifetimeMs,
       });
-      scheduleSpawnExpiry(message, appearedAt + SPAWN_LIFETIME_MS);
+      scheduleSpawnExpiry(message, appearedAt + lifetimeMs);
       markExplored(interaction.guild.id, interaction.user.id);
       return;
     }
@@ -926,7 +1256,8 @@ async function main(): Promise<void> {
       await interaction.deferReply({ ephemeral: true });
       try {
         const result = await provisionExploreChannel(interaction.guild, interaction.client.user.id, POKEMON_EXPLORE_ROLE_ID);
-        await interaction.editReply(`${result.createdCategory ? "Đã tạo" : "Đã dùng"} category Pokémon Ex; ${result.created ? "đã tạo" : "đã chuyển"} private channel #explore vào đó.`);
+        const startersCreated = await ensureStarterEvent(interaction.guild, result.eventChannel);
+        await interaction.editReply(`${result.createdCategory ? "Đã tạo" : "Đã dùng"} category Pokémon Ex; ${result.created ? "đã tạo" : "đã chuyển"} private channel #explore, ${result.eventCreated ? "đã tạo" : "đã dùng"} #event, ${result.giftingCreated ? "đã tạo" : "đã dùng"} #gifting và ${result.showOffCreated ? "đã tạo" : "đã dùng"} #show-off. Starter Event: ${startersCreated} Starter mới.`);
         logger.info("Provisioned Pokémon explore channel", { guildId: interaction.guild.id, userId: interaction.user.id, ...result });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

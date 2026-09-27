@@ -132,6 +132,13 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
       guild_id TEXT PRIMARY KEY,
       chance REAL NOT NULL CHECK (chance >= 0 AND chance <= 1)
     );
+    CREATE TABLE IF NOT EXISTS pokemon_event_announcements (
+      guild_id TEXT NOT NULL,
+      event_key TEXT NOT NULL,
+      message_id TEXT NOT NULL,
+      expires_at INTEGER,
+      PRIMARY KEY (guild_id, event_key)
+    );
     CREATE TABLE IF NOT EXISTS location_area_encounters (
       source_game_key TEXT NOT NULL,
       location_key TEXT NOT NULL REFERENCES pokemon_locations(key) ON DELETE CASCADE,
@@ -159,6 +166,8 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
       encounter_rarity TEXT,
       go_capture_rate REAL NOT NULL,
       go_flee_rate REAL,
+      is_event INTEGER NOT NULL DEFAULT 0,
+      catch_sequence_length INTEGER,
       appeared_at INTEGER NOT NULL,
       expires_at INTEGER NOT NULL,
       state TEXT NOT NULL CHECK (state IN ('active', 'caught', 'fled')),
@@ -176,12 +185,21 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
       location_key TEXT NOT NULL,
       caught_at INTEGER NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS pokemon_gift_cooldowns (
+      guild_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      last_gifted_at INTEGER NOT NULL,
+      PRIMARY KEY (guild_id, user_id)
+    );
     DROP TABLE IF EXISTS game_weather;
   `);
   ensureColumn(database, "pokemon_species", "go_capture_rate REAL NOT NULL DEFAULT 0");
   ensureColumn(database, "pokemon_species", "go_flee_rate REAL");
   ensureColumn(database, "pokemon_spawns", "encounter_rate REAL");
   ensureColumn(database, "pokemon_spawns", "encounter_rarity TEXT");
+  ensureColumn(database, "pokemon_spawns", "is_event INTEGER NOT NULL DEFAULT 0");
+  ensureColumn(database, "pokemon_spawns", "catch_sequence_length INTEGER");
+  ensureColumn(database, "pokemon_event_announcements", "expires_at INTEGER");
   ensureColumn(database, "location_area_encounters", "encounter_label TEXT NOT NULL DEFAULT 'wild'");
 
   const insertRegion = database.prepare("INSERT OR IGNORE INTO regions (key, display_name) VALUES (?, ?)");

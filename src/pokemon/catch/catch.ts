@@ -4,10 +4,12 @@ export const CATCH_BUTTON_ID = "pk-catch";
 export const CATCH_PLAY_PREFIX = "pk-catch-play";
 export const CATCH_INPUT_PREFIX = "pk-catch-input";
 export const CATCH_SYMBOLS = ["🟢", "🟦", "🔶", "⭐"] as const;
+export const EVENT_CATCH_SYMBOLS = ["🟢", "🟦", "🔶", "⭐", "🟣", "🔺"] as const;
 export const SPAWN_LIFETIME_MS = 60_000;
 export const EXPLORE_COOLDOWN_MS = 5_000;
+export const GIFT_COOLDOWN_MS = 24 * 60 * 60 * 1_000;
 
-export type CatchSymbolIndex = 0 | 1 | 2 | 3;
+export type CatchSymbolIndex = 0 | 1 | 2 | 3 | 4 | 5;
 export type CatchSession = {
   sequence: CatchSymbolIndex[];
   progress: number;
@@ -27,6 +29,8 @@ export type PokemonSpawn = {
   encounterRarity: string | null;
   goCaptureRate: number;
   goFleeRate: number | null;
+  isEvent: boolean;
+  catchSequenceLength: number | null;
   appearedAt: number;
   expiresAt: number;
   state: "active" | "caught" | "fled";
@@ -61,8 +65,8 @@ export function previewDurationMs(sequenceLength: number): number {
   return 800 + sequenceLength * 160;
 }
 
-export function createCatchSession(captureRate: number, random = Math.random): CatchSession {
-  const sequence = Array.from({ length: sequenceLengthForCatchRate(captureRate) }, () => Math.floor(random() * CATCH_SYMBOLS.length) as CatchSymbolIndex);
+export function createCatchSession(captureRate: number, random = Math.random, fixedSequenceLength?: number, symbolCount: number = CATCH_SYMBOLS.length): CatchSession {
+  const sequence = Array.from({ length: fixedSequenceLength ?? sequenceLengthForCatchRate(captureRate) }, () => Math.floor(random() * symbolCount) as CatchSymbolIndex);
   return { sequence, progress: 0 };
 }
 
@@ -83,7 +87,7 @@ export function catchInputId(messageId: string, userId: string, symbolIndex: Cat
 export function parseCatchInputId(customId: string): { messageId: string; userId: string; symbolIndex: CatchSymbolIndex } | undefined {
   const [prefix, messageId, userId, symbolText, ...extra] = customId.split(":");
   const symbolIndex = Number(symbolText);
-  if (prefix !== CATCH_INPUT_PREFIX || !messageId || !userId || extra.length > 0 || !Number.isInteger(symbolIndex) || symbolIndex < 0 || symbolIndex >= CATCH_SYMBOLS.length) return undefined;
+  if (prefix !== CATCH_INPUT_PREFIX || !messageId || !userId || extra.length > 0 || !Number.isInteger(symbolIndex) || symbolIndex < 0 || symbolIndex >= EVENT_CATCH_SYMBOLS.length) return undefined;
   return { messageId, userId, symbolIndex: symbolIndex as CatchSymbolIndex };
 }
 
@@ -91,9 +95,9 @@ export function addPokemonSpawn(database: Database.Database, spawn: Omit<Pokemon
   database.prepare(`
     INSERT INTO pokemon_spawns (
       message_id, guild_id, channel_id, pokemon_national_dex, pokemon_name, region_key, location_key, location_name,
-      encounter_rate, encounter_rarity, go_capture_rate, go_flee_rate, appeared_at, expires_at, state
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')
-  `).run(spawn.messageId, spawn.guildId, spawn.channelId, spawn.pokemonNationalDex, spawn.pokemonName, spawn.regionKey, spawn.locationKey, spawn.locationName, spawn.encounterRate, spawn.encounterRarity, spawn.goCaptureRate, spawn.goFleeRate, spawn.appearedAt, spawn.expiresAt);
+      encounter_rate, encounter_rarity, go_capture_rate, go_flee_rate, is_event, catch_sequence_length, appeared_at, expires_at, state
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')
+  `).run(spawn.messageId, spawn.guildId, spawn.channelId, spawn.pokemonNationalDex, spawn.pokemonName, spawn.regionKey, spawn.locationKey, spawn.locationName, spawn.encounterRate, spawn.encounterRarity, spawn.goCaptureRate, spawn.goFleeRate, Number(spawn.isEvent), spawn.catchSequenceLength, spawn.appearedAt, spawn.expiresAt);
 }
 
 export function pokemonSpawn(database: Database.Database, messageId: string): PokemonSpawn | undefined {
@@ -101,7 +105,7 @@ export function pokemonSpawn(database: Database.Database, messageId: string): Po
     SELECT message_id AS messageId, guild_id AS guildId, channel_id AS channelId, pokemon_national_dex AS pokemonNationalDex,
       pokemon_name AS pokemonName, region_key AS regionKey, location_key AS locationKey, location_name AS locationName,
       encounter_rate AS encounterRate, encounter_rarity AS encounterRarity, go_capture_rate AS goCaptureRate, go_flee_rate AS goFleeRate, appeared_at AS appearedAt, expires_at AS expiresAt,
-      state, caught_by_user_id AS caughtByUserId, resolved_at AS resolvedAt
+      is_event AS isEvent, catch_sequence_length AS catchSequenceLength, state, caught_by_user_id AS caughtByUserId, resolved_at AS resolvedAt
     FROM pokemon_spawns WHERE message_id = ?
   `).get(messageId) as PokemonSpawn | undefined;
 }
@@ -111,7 +115,7 @@ export function activeSpawnInChannel(database: Database.Database, guildId: strin
     SELECT message_id AS messageId, guild_id AS guildId, channel_id AS channelId, pokemon_national_dex AS pokemonNationalDex,
       pokemon_name AS pokemonName, region_key AS regionKey, location_key AS locationKey, location_name AS locationName,
       encounter_rate AS encounterRate, encounter_rarity AS encounterRarity, go_capture_rate AS goCaptureRate, go_flee_rate AS goFleeRate, appeared_at AS appearedAt, expires_at AS expiresAt,
-      state, caught_by_user_id AS caughtByUserId, resolved_at AS resolvedAt
+      is_event AS isEvent, catch_sequence_length AS catchSequenceLength, state, caught_by_user_id AS caughtByUserId, resolved_at AS resolvedAt
     FROM pokemon_spawns
     WHERE guild_id = ? AND channel_id = ? AND state = 'active' AND expires_at > ?
     ORDER BY appeared_at DESC LIMIT 1
@@ -132,6 +136,30 @@ export function caughtPokemonForPlayer(database: Database.Database, guildId: str
       AND c.id = (SELECT MAX(latest.id) FROM pokemon_catches latest WHERE latest.guild_id = c.guild_id AND latest.user_id = c.user_id AND latest.pokemon_national_dex = c.pokemon_national_dex)
     ORDER BY caughtAt DESC
   `).all(guildId, userId) as CaughtPokemon[];
+}
+
+export function giftCooldownRemaining(database: Database.Database, guildId: string, userId: string, now = Date.now()): number {
+  const cooldown = database.prepare("SELECT last_gifted_at AS lastGiftedAt FROM pokemon_gift_cooldowns WHERE guild_id = ? AND user_id = ?").get(guildId, userId) as { lastGiftedAt: number } | undefined;
+  return cooldown ? Math.max(0, cooldown.lastGiftedAt + GIFT_COOLDOWN_MS - now) : 0;
+}
+
+/** Transfers exactly one caught copy of a species, preserving its catch record. */
+export function giftCaughtPokemon(database: Database.Database, guildId: string, senderUserId: string, recipientUserId: string, nationalDex: number, now = Date.now()): "gifted" | "not_owned" | "cooldown" {
+  if (senderUserId === recipientUserId) return "not_owned";
+  const transfer = database.transaction(() => {
+    if (giftCooldownRemaining(database, guildId, senderUserId, now) > 0) return "cooldown" as const;
+    const catchRecord = database.prepare(`
+      SELECT id FROM pokemon_catches
+      WHERE guild_id = ? AND user_id = ? AND pokemon_national_dex = ?
+      ORDER BY caught_at DESC, id DESC LIMIT 1
+    `).get(guildId, senderUserId, nationalDex) as { id: number } | undefined;
+    if (!catchRecord) return "not_owned" as const;
+    const transferred = database.prepare("UPDATE pokemon_catches SET user_id = ? WHERE id = ? AND user_id = ?").run(recipientUserId, catchRecord.id, senderUserId).changes === 1;
+    if (!transferred) return "not_owned" as const;
+    database.prepare("INSERT INTO pokemon_gift_cooldowns (guild_id, user_id, last_gifted_at) VALUES (?, ?, ?) ON CONFLICT(guild_id, user_id) DO UPDATE SET last_gifted_at = excluded.last_gifted_at").run(guildId, senderUserId, now);
+    return "gifted" as const;
+  });
+  return transfer();
 }
 
 export function resolvePokemonCaught(database: Database.Database, messageId: string, userId: string, now = Date.now()): PokemonSpawn | undefined {
