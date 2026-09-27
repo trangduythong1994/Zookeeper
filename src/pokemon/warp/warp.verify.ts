@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import Database from "better-sqlite3";
+import { addWarpCandy, consumeWarpCandy, findsWarpCandy, setWarpCandyChance, warpCandyChance, warpCandyCount } from "./warp.js";
+
+const database = new Database(":memory:");
+database.exec("CREATE TABLE pokemon_warp_candies (guild_id TEXT NOT NULL, user_id TEXT NOT NULL, amount INTEGER NOT NULL, PRIMARY KEY (guild_id, user_id))");
+database.exec("CREATE TABLE pokemon_warp_candy_settings (guild_id TEXT PRIMARY KEY, chance REAL NOT NULL)");
+assert.equal(findsWarpCandy(() => 0), true);
+assert.equal(findsWarpCandy(() => 0.001), true);
+assert.equal(findsWarpCandy(() => 0.002), false);
+assert.equal(warpCandyChance(database, "guild"), 0.002);
+setWarpCandyChance(database, "guild", 0.5);
+assert.equal(warpCandyChance(database, "guild"), 0.5);
+assert.equal(warpCandyCount(database, "guild", "user"), 0);
+assert.equal(consumeWarpCandy(database, "guild", "user"), false);
+assert.equal(addWarpCandy(database, "guild", "user"), 1);
+assert.equal(addWarpCandy(database, "guild", "user"), 2);
+assert.equal(consumeWarpCandy(database, "guild", "user"), true);
+assert.equal(warpCandyCount(database, "guild", "user"), 1);
+console.log("Verified Warp Candy inventory rules");

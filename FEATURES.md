@@ -15,6 +15,38 @@
 - Chưa có category/channel mới nào được tạo từ manifest này.
 - Private test subset được chọn là `kanto` và `hoenn` để kiểm tra biome cơ bản lẫn biome đặc biệt.
 
+## #0.2. Generation I–III Pokémon species data
+
+- `src/pokemon/data/kanto-species.json` lưu 151 Pokémon National Dex #001–#151.
+- `src/pokemon/data/johto-hoenn-species.json` lưu #152–#386; tổng master species data hiện là #001–#386 (Kanto, Johto và Hoenn).
+- `scripts/import-pokemon-species.mjs` là importer có thể tái tạo snapshot Johto/Hoenn từ PokeAPI.
+- SQLite tự seed các bảng `pokemon_species`, `pokemon_types`, `pokemon_abilities`, `pokemon_egg_groups` và `pokemon_evolutions` khi bot khởi động.
+- Johto và Hoenn đã có raw Location Area + encounter import: HeartGold cho Johto và Ruby cho Hoenn. Travel hiển thị Location thật theo Region; menu Location được phân trang do một Region có thể có hơn 25 lựa chọn.
+- Biome của Johto/Hoenn chưa được phân loại thủ công; nó hiển thị `Not Classified` và không ảnh hưởng raw Location encounter.
+
+## #0.3. Kanto biome encounters
+
+- `src/pokemon/data/kanto-encounters.json` định nghĩa 288 encounter: 12 biome × 3 mốc thời gian × 8 Pokémon.
+- Mỗi tổ hợp biome/thời gian có tổng trọng số `100`, level range và điều kiện riêng.
+- SQLite tự seed bảng `biome_encounters` để chuẩn bị cho lệnh Explore.
+- Mốc canon cho đợt import encounter kế tiếp là bộ đôi **Pokémon: Let's Go, Pikachu!/Eevee!** — hai game Kanto mới nhất — lấy đồng thời để không mất Pokémon độc quyền bản game. API source, level và encounter method được ghi ở `kanto-encounter-source.ts`; biome rộng là luật riêng của Zookeeper, không gán nhầm là luật của game gốc.
+
+## #0.4. Explore Pokémon `/pk-explore`
+
+- Chỉ Administrator hoặc role `1453575259843461120` có thể dùng.
+- Người chơi chọn điểm đến bằng `/pk-travel`: menu Region → Location. Location hiện tại được lưu riêng theo người chơi và server; biome được suy ra từ mapping location, không còn lấy từ tên channel.
+- Bản pilot có 12 destination Kanto thật để kiểm tra UI; mapping `location → biome` được lưu ở SQLite. Encounter hiện có vẫn là pool biome test cho tới khi import FireRed/LeafGreen location-area hoàn chỉnh.
+- Kết quả là Embed có artwork Pokémon lớn, avatar người chơi ở thumbnail, Region, Location, Biome và nút `🔎 Explore`. Mọi người chơi có role Pokémon hoặc quyền Administrator đều dùng được bất kỳ nút Explore nào.
+- Explore hiện chỉ chọn encounter hoang dã: walk, Surf, Old/Good/Super Rod, Rock Smash, Headbutt và roaming. Gift, Egg, NPC trade, Fossil, static encounter, event và encounter khu vực đặc biệt được lưu trong data nguồn nhưng không xuất hiện qua Explore. Legendary roaming vẫn có thể xuất hiện tự nhiên; độ khó của chúng sẽ nằm ở Catch.
+- Embed hiển thị độ hiếm tính từ tổng weight của Pokémon trong Location hiện tại: Phổ biến (≥20%), Không phổ biến (≥5%), Hiếm (≥1%), Cực hiếm (≥0.1%) và Huyền hiếm (<0.1%). Thumbnail là badge PNG tự tạo theo bậc hiếm; avatar người chơi vẫn nằm ở Author icon.
+- Chưa có cooldown, Capture, inventory hoặc battle; đợt đầu chỉ tập trung vào trải nghiệm gặp Pokémon.
+
+## #0.5. Tạo/xóa Kanto `/pk-create` và `/pk-remove`
+
+- Chỉ Administrator dùng được.
+- `/pk-create` tạo category private `Pokémon Ex` cùng channel `#explore` bên trong; `@everyone` không thấy, role `1453575259843461120` được xem/gửi tin; chạy lại sẽ chuyển `#explore` có sẵn vào category thay vì nhân bản.
+- `/pk-remove` vẫn là lệnh dọn legacy category `Kanto` cùng channel con; nó không tự xóa các channel legacy khi chạy `/pk-create` mới.
+
 ## #1. Text-to-speech trong voice channel
 
 - `-s <nội dung>`: đọc tiếng Việt.
