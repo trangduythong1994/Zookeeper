@@ -1,0 +1,3346 @@
+[
+  {
+    "nationalDex": 252,
+    "name": "Treecko",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Route 101"
+            ],
+            "notes": "First partner Pokémon from Professor Birch on Route 101"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Route 101"
+            ],
+            "notes": "First partner Pokémon from Professor Birch on Route 101"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Route 101"
+            ],
+            "notes": "First partner Pokémon from Professor Birch on Route 101"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Treecko_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 253,
+    "name": "Grovyle",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Treecko at level 16"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Treecko at level 16"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Treecko at level 16"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Treecko at level 16"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Treecko at level 16"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 252,
+      "fromName": "Treecko",
+      "method": "level",
+      "level": 16
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Grovyle_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 254,
+    "name": "Sceptile",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Grovyle at level 36"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Grovyle at level 36"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Grovyle at level 36"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Grovyle at level 36"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Grovyle at level 36"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 253,
+      "fromName": "Grovyle",
+      "method": "level",
+      "level": 36
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Sceptile_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 255,
+    "name": "Torchic",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Route 101"
+            ],
+            "notes": "First partner Pokémon from Professor Birch on Route 101"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Route 101"
+            ],
+            "notes": "First partner Pokémon from Professor Birch on Route 101"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Route 101"
+            ],
+            "notes": "First partner Pokémon from Professor Birch on Route 101"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Torchic_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 256,
+    "name": "Combusken",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Torchic at level 16"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Torchic at level 16"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Torchic at level 16"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Torchic at level 16"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Torchic at level 16"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 255,
+      "fromName": "Torchic",
+      "method": "level",
+      "level": 16
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Combusken_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 257,
+    "name": "Blaziken",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Combusken at level 36"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Combusken at level 36"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Combusken at level 36"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 256,
+      "fromName": "Combusken",
+      "method": "level",
+      "level": 36
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Blaziken_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 258,
+    "name": "Mudkip",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Route 101"
+            ],
+            "notes": "First partner Pokémon from Professor Birch on Route 101"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Route 101"
+            ],
+            "notes": "First partner Pokémon from Professor Birch on Route 101"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Route 101"
+            ],
+            "notes": "First partner Pokémon from Professor Birch on Route 101"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Mudkip_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 259,
+    "name": "Marshtomp",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Mudkip at level 16"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Mudkip at level 16"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Mudkip at level 16"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Mudkip at level 16"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Mudkip at level 16"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 258,
+      "fromName": "Mudkip",
+      "method": "level",
+      "level": 16
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Marshtomp_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 260,
+    "name": "Swampert",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Marshtomp at level 36"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Marshtomp at level 36"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Marshtomp at level 36"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Marshtomp at level 36"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Marshtomp at level 36"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 259,
+      "fromName": "Marshtomp",
+      "method": "level",
+      "level": 36
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Swampert_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 261,
+    "name": "Poochyena",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 101",
+              "Route 102",
+              "Route 103"
+            ],
+            "notes": "Routes 101, 102, and 103"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 101",
+              "Route 102",
+              "Route 103"
+            ],
+            "notes": "Routes 101, 102, and 103"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 101",
+              "Route 102",
+              "Route 103",
+              "Route 104",
+              "Route 110",
+              "Route 116",
+              "Route 117",
+              "Route 120",
+              "Route 121",
+              "Route 123",
+              "Petalburg Woods"
+            ],
+            "notes": "Routes 101, 102, 103, 104, 110, 116, 117, 120, 121, and 123, Petalburg Woods"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Poochyena_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 262,
+    "name": "Mightyena",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Poochyena at level 18"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Poochyena at level 18"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 120",
+              "Route 121",
+              "Route 123"
+            ],
+            "notes": "Routes 120, 121, and 123"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 261,
+      "fromName": "Poochyena",
+      "method": "level",
+      "level": 18
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Mightyena_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 263,
+    "name": "Zigzagoon",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 101",
+              "Route 102",
+              "Route 103",
+              "Route 104",
+              "Route 110",
+              "Route 116",
+              "Route 117",
+              "Route 118",
+              "Route 119",
+              "Route 120",
+              "Route 121",
+              "Route 123",
+              "Petalburg Woods"
+            ],
+            "notes": "Routes 101, 102, 103, 104, 110, 116, 117, 118, 119, 120, 121, and 123, Petalburg Woods"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 101",
+              "Route 102",
+              "Route 103",
+              "Route 104",
+              "Route 110",
+              "Route 116",
+              "Route 117",
+              "Route 118",
+              "Route 119",
+              "Route 120",
+              "Route 121",
+              "Route 123",
+              "Petalburg Woods"
+            ],
+            "notes": "Routes 101, 102, 103, 104, 110, 116, 117, 118, 119, 120, 121, and 123, Petalburg Woods"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 101",
+              "Route 102",
+              "Route 103",
+              "Route 118",
+              "Route 119"
+            ],
+            "notes": "Routes 101, 102, 103, 118, and 119"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Zigzagoon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 264,
+    "name": "Linoone",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 118",
+              "Route 119",
+              "Route 120",
+              "Route 121",
+              "Route 123"
+            ],
+            "notes": "Routes 118, 119, 120, 121, and 123"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 118",
+              "Route 119",
+              "Route 120",
+              "Route 121",
+              "Route 123"
+            ],
+            "notes": "Routes 118, 119, 120, 121, and 123"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Zigzagoon at level 20"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Zigzagoon at level 20"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 118",
+              "Route 119"
+            ],
+            "notes": "Routes 118 and 119"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 263,
+      "fromName": "Zigzagoon",
+      "method": "level",
+      "level": 20
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Linoone_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 265,
+    "name": "Wurmple",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 101",
+              "Route 102",
+              "Route 104",
+              "Petalburg Woods"
+            ],
+            "notes": "Routes 101, 102, and 104, Petalburg Woods"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 101",
+              "Route 102",
+              "Route 104",
+              "Petalburg Woods"
+            ],
+            "notes": "Routes 101, 102, and 104, Petalburg Woods"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 101",
+              "Route 102",
+              "Route 104",
+              "Petalburg Woods"
+            ],
+            "notes": "Routes 101, 102, and 104, Petalburg Woods"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Wurmple_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 266,
+    "name": "Silcoon",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 265,
+      "fromName": "Wurmple",
+      "method": "level",
+      "level": 7,
+      "condition": "personality value determines Silcoon"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Silcoon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 267,
+    "name": "Beautifly",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Silcoon at level 10"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Silcoon at level 10"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Silcoon at level 10"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 266,
+      "fromName": "Silcoon",
+      "method": "level",
+      "level": 10
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Beautifly_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 268,
+    "name": "Cascoon",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 265,
+      "fromName": "Wurmple",
+      "method": "level",
+      "level": 7,
+      "condition": "personality value determines Cascoon"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Cascoon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 269,
+    "name": "Dustox",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Cascoon at level 10"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Cascoon at level 10"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Cascoon at level 10"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 268,
+      "fromName": "Cascoon",
+      "method": "level",
+      "level": 10
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Dustox_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 270,
+    "name": "Lotad",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 102",
+              "Route 114"
+            ],
+            "notes": "Routes 102 and 114"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 102",
+              "Route 114"
+            ],
+            "notes": "Routes 102 and 114"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Lotad_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 271,
+    "name": "Lombre",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Lotad at level 14"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 114"
+            ],
+            "notes": "Route 114"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Lotad at level 14"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Lotad at level 14"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 114"
+            ],
+            "notes": "Route 114"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 270,
+      "fromName": "Lotad",
+      "method": "level",
+      "level": 14
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Lombre_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 272,
+    "name": "Ludicolo",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Lombre using a Water Stone"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Lombre using a Water Stone"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Lombre using a Water Stone"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Lombre using a Water Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 271,
+      "fromName": "Lombre",
+      "method": "item",
+      "item": "Water Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ludicolo_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 273,
+    "name": "Seedot",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 102",
+              "Route 114"
+            ],
+            "notes": "Routes 102 and 114"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "CCS",
+        "acquisitionMethods": [
+          {
+            "label": "swarm",
+            "locations": [
+              "Route 102",
+              "Route 117",
+              "Route 120"
+            ],
+            "notes": "Routes 102, 117, and 120 (Swarm; after mixing records with Emerald)"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 102",
+              "Route 117",
+              "Route 120"
+            ],
+            "notes": "Routes 102, 117, and 120"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Rustboro City"
+            ],
+            "notes": "Trade Ralts in Rustboro City"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Seedot_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 274,
+    "name": "Nuzleaf",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 114"
+            ],
+            "notes": "Route 114"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "CCS",
+        "acquisitionMethods": [
+          {
+            "label": "swarm",
+            "locations": [
+              "Route 114"
+            ],
+            "notes": "Route 114 (Swarm; after mixing records with Emerald)"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Seedot at level 14"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Seedot at level 14"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 114"
+            ],
+            "notes": "Route 114"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 273,
+      "fromName": "Seedot",
+      "method": "level",
+      "level": 14
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Nuzleaf_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 275,
+    "name": "Shiftry",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nuzleaf using a Leaf Stone"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "CCE",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nuzleaf using a Leaf Stone"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nuzleaf using a Leaf Stone"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nuzleaf using a Leaf Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 274,
+      "fromName": "Nuzleaf",
+      "method": "item",
+      "item": "Leaf Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Shiftry_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 276,
+    "name": "Taillow",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 104",
+              "Route 115",
+              "Route 116",
+              "Petalburg Woods"
+            ],
+            "notes": "Routes 104, 115, and 116, Petalburg Woods"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 104",
+              "Route 115",
+              "Route 116",
+              "Petalburg Woods"
+            ],
+            "notes": "Routes 104, 115, and 116, Petalburg Woods"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 104",
+              "Route 115",
+              "Route 116",
+              "Petalburg Woods"
+            ],
+            "notes": "Routes 104, 115, and 116, Petalburg Woods"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Taillow_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 277,
+    "name": "Swellow",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 115"
+            ],
+            "notes": "Route 115"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 115"
+            ],
+            "notes": "Route 115"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Taillow at level 22"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Taillow at level 22"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 115"
+            ],
+            "notes": "Route 115"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 276,
+      "fromName": "Taillow",
+      "method": "level",
+      "level": 22
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Swellow_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 278,
+    "name": "Wingull",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 103",
+              "Route 104",
+              "Route 110",
+              "Route 115",
+              "Route 118",
+              "Route 121",
+              "Route 123",
+              "Mt. Pyre"
+            ],
+            "notes": "Routes 103, 104, 110, 115, 118, 121, and 123, outside Mt. Pyre (Grass)"
+          },
+          {
+            "label": "surf",
+            "locations": [
+              "Route 103",
+              "Route 104",
+              "Route 105",
+              "Route 106",
+              "Route 107",
+              "Route 108",
+              "Route 109",
+              "Route 110",
+              "Route 115",
+              "Route 118",
+              "Route 119",
+              "Route 121",
+              "Route 122",
+              "Route 123",
+              "Route 124",
+              "Route 125",
+              "Route 126",
+              "Route 127",
+              "Route 128",
+              "Route 129",
+              "Route 130",
+              "Route 131",
+              "Route 132",
+              "Route 133",
+              "Route 134",
+              "Dewford Town",
+              "Ever Grande City",
+              "Lilycove City",
+              "Mossdeep City",
+              "Pacifidlog Town",
+              "Slateport City"
+            ],
+            "notes": "Routes 103, 104, 105, 106, 107, 108, 109, 110, 115, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, and 134, Dewford Town, Ever Grande City, Lilycove City, Mossdeep City, Pacifidlog Town, Slateport City (Surfing)"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 103",
+              "Route 104",
+              "Route 110",
+              "Route 115",
+              "Route 118",
+              "Route 121",
+              "Route 123",
+              "Mt. Pyre"
+            ],
+            "notes": "Routes 103, 104, 110, 115, 118, 121, and 123, outside Mt. Pyre (Grass)"
+          },
+          {
+            "label": "surf",
+            "locations": [
+              "Route 103",
+              "Route 104",
+              "Route 105",
+              "Route 106",
+              "Route 107",
+              "Route 108",
+              "Route 109",
+              "Route 110",
+              "Route 115",
+              "Route 118",
+              "Route 119",
+              "Route 121",
+              "Route 122",
+              "Route 123",
+              "Route 124",
+              "Route 125",
+              "Route 126",
+              "Route 127",
+              "Route 128",
+              "Route 129",
+              "Route 130",
+              "Route 131",
+              "Route 132",
+              "Route 133",
+              "Route 134",
+              "Dewford Town",
+              "Ever Grande City",
+              "Lilycove City",
+              "Mossdeep City",
+              "Pacifidlog Town",
+              "Slateport City"
+            ],
+            "notes": "Routes 103, 104, 105, 106, 107, 108, 109, 110, 115, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, and 134, Dewford Town, Ever Grande City, Lilycove City, Mossdeep City, Pacifidlog Town, Slateport City (Surfing)"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 103",
+              "Route 104",
+              "Route 110",
+              "Route 115",
+              "Route 118",
+              "Route 121",
+              "Route 123",
+              "Mt. Pyre"
+            ],
+            "notes": "Routes 103, 104, 110, 115, 118, 121, and 123, outside Mt. Pyre (Grass)"
+          },
+          {
+            "label": "surf",
+            "locations": [
+              "Route 103",
+              "Route 104",
+              "Route 105",
+              "Route 106",
+              "Route 107",
+              "Route 108",
+              "Route 109",
+              "Route 110",
+              "Route 115",
+              "Route 118",
+              "Route 119",
+              "Route 121",
+              "Route 122",
+              "Route 123",
+              "Route 124",
+              "Route 125",
+              "Route 126",
+              "Route 127",
+              "Route 128",
+              "Route 129",
+              "Route 130",
+              "Route 131",
+              "Route 132",
+              "Route 133",
+              "Route 134",
+              "Dewford Town",
+              "Ever Grande City",
+              "Lilycove City",
+              "Mossdeep City",
+              "Pacifidlog Town",
+              "Slateport City"
+            ],
+            "notes": "Routes 103, 104, 105, 106, 107, 108, 109, 110, 115, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, and 134, Dewford Town, Ever Grande City, Lilycove City, Mossdeep City, Pacifidlog Town, Slateport City (Surfing)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Wingull_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 279,
+    "name": "Pelipper",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "surf",
+            "locations": [
+              "Route 103",
+              "Route 104",
+              "Route 105",
+              "Route 106",
+              "Route 107",
+              "Route 108",
+              "Route 109",
+              "Route 110",
+              "Route 115",
+              "Route 118",
+              "Route 119",
+              "Route 121",
+              "Route 122",
+              "Route 123",
+              "Route 124",
+              "Route 125",
+              "Route 126",
+              "Route 127",
+              "Route 128",
+              "Route 129",
+              "Route 130",
+              "Route 131",
+              "Route 132",
+              "Route 133",
+              "Route 134",
+              "Dewford Town",
+              "Ever Grande City",
+              "Lilycove City",
+              "Mossdeep City",
+              "Pacifidlog Town",
+              "Slateport City"
+            ],
+            "notes": "Routes 103, 104, 105, 106, 107, 108, 109, 110, 115, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, and 134, Dewford Town, Ever Grande City, Lilycove City, Mossdeep City, Pacifidlog Town, Slateport City (Surfing)"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "surf",
+            "locations": [
+              "Route 103",
+              "Route 104",
+              "Route 105",
+              "Route 106",
+              "Route 107",
+              "Route 108",
+              "Route 109",
+              "Route 110",
+              "Route 115",
+              "Route 118",
+              "Route 119",
+              "Route 121",
+              "Route 122",
+              "Route 123",
+              "Route 124",
+              "Route 125",
+              "Route 126",
+              "Route 127",
+              "Route 128",
+              "Route 129",
+              "Route 130",
+              "Route 131",
+              "Route 132",
+              "Route 133",
+              "Route 134",
+              "Dewford Town",
+              "Ever Grande City",
+              "Lilycove City",
+              "Mossdeep City",
+              "Pacifidlog Town",
+              "Slateport City"
+            ],
+            "notes": "Routes 103, 104, 105, 106, 107, 108, 109, 110, 115, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, and 134, Dewford Town, Ever Grande City, Lilycove City, Mossdeep City, Pacifidlog Town, Slateport City (Surfing)"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "surf",
+            "locations": [
+              "Route 103",
+              "Route 104",
+              "Route 105",
+              "Route 106",
+              "Route 107",
+              "Route 108",
+              "Route 109",
+              "Route 110",
+              "Route 115",
+              "Route 118",
+              "Route 119",
+              "Route 121",
+              "Route 122",
+              "Route 123",
+              "Route 124",
+              "Route 125",
+              "Route 126",
+              "Route 127",
+              "Route 128",
+              "Route 129",
+              "Route 130",
+              "Route 131",
+              "Route 132",
+              "Route 133",
+              "Route 134",
+              "Dewford Town",
+              "Ever Grande City",
+              "Lilycove City",
+              "Mossdeep City",
+              "Pacifidlog Town",
+              "Slateport City"
+            ],
+            "notes": "Routes 103, 104, 105, 106, 107, 108, 109, 110, 115, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, and 134, Dewford Town, Ever Grande City, Lilycove City, Mossdeep City, Pacifidlog Town, Slateport City (Surfing)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 278,
+      "fromName": "Wingull",
+      "method": "level",
+      "level": 25
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Pelipper_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 280,
+    "name": "Ralts",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 102"
+            ],
+            "notes": "Route 102"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 102"
+            ],
+            "notes": "Route 102"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 102"
+            ],
+            "notes": "Route 102"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ralts_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 281,
+    "name": "Kirlia",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Ralts at level 20"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Ralts at level 20"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Ralts at level 20"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 280,
+      "fromName": "Ralts",
+      "method": "level",
+      "level": 20
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Kirlia_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 282,
+    "name": "Gardevoir",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kirlia at level 30"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kirlia at level 30"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kirlia at level 30"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 281,
+      "fromName": "Kirlia",
+      "method": "level",
+      "level": 30
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Gardevoir_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 283,
+    "name": "Surskit",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 102",
+              "Route 111",
+              "Route 114",
+              "Route 117",
+              "Route 120"
+            ],
+            "notes": "Routes 102, 111, 114, 117, and 120"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 102",
+              "Route 111",
+              "Route 114",
+              "Route 117",
+              "Route 120"
+            ],
+            "notes": "Routes 102, 111, 114, 117, and 120"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "CCS",
+        "acquisitionMethods": [
+          {
+            "label": "swarm",
+            "locations": [
+              "Route 102",
+              "Route 114",
+              "Route 117",
+              "Route 120"
+            ],
+            "notes": "Routes 102, 114, 117, and 120 (Swarm; after mixing records with Ruby or Sapphire)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Surskit_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 284,
+    "name": "Masquerain",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Surskit at level 22"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Surskit at level 22"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Surskit at level 22"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Surskit at level 22"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "CCE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Surskit at level 22"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 283,
+      "fromName": "Surskit",
+      "method": "level",
+      "level": 22
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Masquerain_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 285,
+    "name": "Shroomish",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Shroomish_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 286,
+    "name": "Breloom",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Shroomish at level 23"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Shroomish at level 23"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Shroomish at level 23"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 285,
+      "fromName": "Shroomish",
+      "method": "level",
+      "level": 23
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Breloom_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 287,
+    "name": "Slakoth",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Petalburg Woods"
+            ],
+            "notes": "Petalburg Woods"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Slakoth_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 288,
+    "name": "Vigoroth",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Slakoth at level 18"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Slakoth at level 18"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Slakoth at level 18"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 287,
+      "fromName": "Slakoth",
+      "method": "level",
+      "level": 18
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Vigoroth_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 289,
+    "name": "Slaking",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Vigoroth at level 36"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Vigoroth at level 36"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Vigoroth at level 36"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 288,
+      "fromName": "Vigoroth",
+      "method": "level",
+      "level": 36
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Slaking_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 290,
+    "name": "Nincada",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 116"
+            ],
+            "notes": "Route 116"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 116"
+            ],
+            "notes": "Route 116"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 116"
+            ],
+            "notes": "Route 116"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Nincada_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 291,
+    "name": "Ninjask",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nincada at level 20"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nincada at level 20"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nincada at level 20"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 290,
+      "fromName": "Nincada",
+      "method": "level",
+      "level": 20
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ninjask_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 292,
+    "name": "Shedinja",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nincada at level 20 when a spare slot is present in the party"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nincada at level 20 when a spare slot is present in the party"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nincada at level 20 when a spare slot is present in the party"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 290,
+      "fromName": "Nincada",
+      "method": "level",
+      "level": 20,
+      "condition": "a spare slot is present in the party"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Shedinja_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 293,
+    "name": "Whismur",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 116",
+              "Rusturf Tunnel",
+              "Victory Road"
+            ],
+            "notes": "Route 116, Rusturf Tunnel, Victory Road"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 116",
+              "Rusturf Tunnel",
+              "Victory Road"
+            ],
+            "notes": "Route 116, Rusturf Tunnel, Victory Road"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 116",
+              "Desert Underpass",
+              "Rusturf Tunnel",
+              "Victory Road"
+            ],
+            "notes": "Route 116, Desert Underpass, Rusturf Tunnel, Victory Road"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Whismur_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 294,
+    "name": "Loudred",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Victory Road"
+            ],
+            "notes": "Victory Road"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Victory Road"
+            ],
+            "notes": "Victory Road"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Whismur at level 20"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Whismur at level 20"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Victory Road",
+              "Desert Underpass"
+            ],
+            "notes": "Victory Road, Desert Underpass"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 293,
+      "fromName": "Whismur",
+      "method": "level",
+      "level": 20
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Loudred_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 295,
+    "name": "Exploud",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Loudred at level 40"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Loudred at level 40"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Loudred at level 40"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Loudred at level 40"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Loudred at level 40"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 294,
+      "fromName": "Loudred",
+      "method": "level",
+      "level": 40
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Exploud_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 296,
+    "name": "Makuhita",
+    "versions": {
+      "ruby": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Granite Cave",
+              "Victory Road"
+            ],
+            "notes": "Granite Cave, Victory Road"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Rustboro City"
+            ],
+            "notes": "Trade Slakoth in Rustboro City"
+          }
+        ]
+      },
+      "sapphire": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Granite Cave",
+              "Victory Road"
+            ],
+            "notes": "Granite Cave, Victory Road"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Rustboro City"
+            ],
+            "notes": "Trade Slakoth in Rustboro City"
+          }
+        ]
+      },
+      "firered": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "leafgreen": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "emerald": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Granite Cave",
+              "Victory Road"
+            ],
+            "notes": "Granite Cave, Victory Road"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Makuhita_(Pok%C3%A9mon)"
+  }
+]

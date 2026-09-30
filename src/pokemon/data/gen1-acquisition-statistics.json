@@ -1,0 +1,94 @@
+{
+  "red": {
+    "wildEncounter": 86,
+    "evolutionOnly": 33,
+    "trade": 21,
+    "giftStarterStaticGameCornerFossilEvent": 23,
+    "completelyUnobtainable": 0,
+    "byMethod": {
+      "wild_walk": 77,
+      "surf": 1,
+      "old_rod": 1,
+      "good_rod": 2,
+      "super_rod": 16,
+      "static": 5,
+      "starter": 3,
+      "gift": 5,
+      "evolution": 33,
+      "trade": 21,
+      "game_corner": 6,
+      "fossil": 3,
+      "event": 1,
+      "unavailable": 0
+    }
+  },
+  "green_blue_en": {
+    "wildEncounter": 86,
+    "evolutionOnly": 33,
+    "trade": 21,
+    "giftStarterStaticGameCornerFossilEvent": 23,
+    "completelyUnobtainable": 0,
+    "byMethod": {
+      "wild_walk": 77,
+      "surf": 1,
+      "old_rod": 1,
+      "good_rod": 2,
+      "super_rod": 16,
+      "static": 5,
+      "starter": 3,
+      "gift": 5,
+      "evolution": 33,
+      "trade": 21,
+      "game_corner": 6,
+      "fossil": 3,
+      "event": 1,
+      "unavailable": 0
+    }
+  },
+  "blue_japan": {
+    "wildEncounter": 86,
+    "evolutionOnly": 29,
+    "trade": 22,
+    "giftStarterStaticGameCornerFossilEvent": 23,
+    "completelyUnobtainable": 0,
+    "byMethod": {
+      "wild_walk": 77,
+      "surf": 1,
+      "old_rod": 1,
+      "good_rod": 2,
+      "super_rod": 16,
+      "static": 5,
+      "starter": 3,
+      "gift": 5,
+      "evolution": 29,
+      "trade": 22,
+      "game_corner": 6,
+      "fossil": 3,
+      "event": 1,
+      "unavailable": 0
+    }
+  },
+  "yellow": {
+    "wildEncounter": 86,
+    "evolutionOnly": 31,
+    "trade": 20,
+    "giftStarterStaticGameCornerFossilEvent": 24,
+    "completelyUnobtainable": 0,
+    "byMethod": {
+      "wild_walk": 70,
+      "surf": 6,
+      "old_rod": 1,
+      "good_rod": 2,
+      "super_rod": 16,
+      "static": 5,
+      "starter": 1,
+      "gift": 8,
+      "evolution": 31,
+      "trade": 20,
+      "game_corner": 6,
+      "fossil": 3,
+      "event": 1,
+      "unavailable": 0
+    }
+  }
+}

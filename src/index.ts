@@ -1,11 +1,11 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, Events, GatewayIntentBits, PermissionFlagsBits, SlashCommandBuilder, StringSelectMenuBuilder, ThreadAutoArchiveDuration, type ButtonInteraction, type ChatInputCommandInteraction, type Guild, type Message, type ThreadChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, Events, GatewayIntentBits, PermissionFlagsBits, SlashCommandBuilder, StringSelectMenuBuilder, ThreadAutoArchiveDuration, type ButtonInteraction, type ChatInputCommandInteraction, type Guild, type Message, type TextChannel, type ThreadChannel } from "discord.js";
 import { rollChance } from "./chance/command.js";
 import { colorInteger, isColorRoleName, normalizeHexColor } from "./color/command.js";
 import { loadEnvironment } from "./config/environment.js";
 import { provisionPrivateTestWorld, removePrivateTestWorld } from "./pokemon/setup/test-world.js";
 import { removeKantoWorld } from "./pokemon/setup/kanto-world.js";
 import { initializeRegionBiomeDatabase } from "./pokemon/persistence/region-biome-database.js";
-import { explorePokemon, explorePokemonAtLocation, officialArtworkUrl, type ExploreContext, type ExploredPokemon } from "./pokemon/explore/explore.js";
+import { explorePokemonAtLocation, officialArtworkUrl, type ExploredPokemon } from "./pokemon/explore/explore.js";
 import { type RegionKey } from "./pokemon/data/regions.js";
 import { locationsForRegion, pokemonForLocation, regionsWithLocations, selectedLocationForPlayer, setPlayerLocation, type TravelLocation } from "./pokemon/travel/travel.js";
 import { provisionExploreChannel } from "./pokemon/setup/explore-channel.js";
@@ -13,6 +13,7 @@ import { rarityBadgePng } from "./pokemon/explore/rarity-badge.js";
 import { CATCH_BUTTON_ID, CATCH_SYMBOLS, EVENT_CATCH_SYMBOLS, EXPLORE_COOLDOWN_MS, SPAWN_LIFETIME_MS, activeSpawnInChannel, addPokemonSpawn, catchInputId, catchPlayId, caughtPokemonForPlayer, createCatchSession, giftCaughtPokemon, giftCooldownRemaining, parseCatchInputId, parseCatchPlayId, pokemonSpawn, previewDurationMs, resolvePokemonCaught, resolvePokemonFled, type CatchSession, type CatchSymbolIndex, type PokemonSpawn } from "./pokemon/catch/catch.js";
 import { addWarpCandy, consumeWarpCandy, findsWarpCandy, setWarpCandyChance, warpCandyChance, warpCandyCount } from "./pokemon/warp/warp.js";
 import { roamingChance, roamingPokemonForRegion, setRoamingChance } from "./pokemon/roaming/roaming.js";
+import { createThunderTrailPath, renderThunderTrailPath, THUNDER_DIRECTIONS, type ThunderDirectionIndex, type ThunderTrailPath } from "./pokemon/event/thunder-trail.js";
 import { logger } from "./utils/logger.js";
 import { SpeechIntroductionTracker, speechRequestFromMessage } from "./voice/command.js";
 import { shouldAnnouncePresenceBoundary, shouldSpeakMemberArrival, shouldWelcomeFirstVoiceMember, watchedVoiceTransition } from "./voice/arrival.js";
@@ -35,6 +36,32 @@ const STARTER_EVENT_LIFETIME_MS = 6.5 * 60 * 60 * 1_000;
 const STARTER_EVENT_ENCOUNTER_RATE = 0.02;
 const STARTER_EVENT_PREVIEW_EXTRA_MS = 2_000;
 const STARTER_EVENT_SPAWN_LIFETIME_MS = 90_000;
+const THUNDER_TRAIL_EVENT_KEY = "thunder-trail";
+const THUNDER_TRAIL_LIFETIME_MS = 8 * 60 * 60 * 1_000;
+const THUNDER_TRAIL_DISCOVERY_CHANCE = 0.1;
+const THUNDER_TRAIL_DURATION_MS = 2 * 60_000;
+const THUNDER_TRAIL_READY_DELAY_MS = 3_000;
+const THUNDER_TRAIL_PREVIEW_MS = 5_000;
+const THUNDER_RAIKOU_ENCOUNTER_CHANCE = 0.1;
+
+type ThunderTrail = {
+  messageId: string;
+  guildId: string;
+  channelId: string;
+  locationKey: string;
+  targetLocationKey: string;
+  expiresAt: number;
+  state: "active" | "lost" | "resolved";
+};
+
+type ThunderTrackSession = {
+  trailMessageId: string;
+  userId: string;
+  path: ThunderTrailPath;
+  progress: number;
+  phase: "ready" | "preview" | "input";
+  close?: (content: string) => Promise<void>;
+};
 
 async function main(): Promise<void> {
   const environment = loadEnvironment();
@@ -55,6 +82,9 @@ async function main(): Promise<void> {
   const travelThreadDeletionTimers = new Map<string, NodeJS.Timeout>();
   const managedThreadDeletionTimers = new Map<string, NodeJS.Timeout>();
   const starterEventEndTimers = new Map<string, NodeJS.Timeout>();
+  const thunderTrailEventEndTimers = new Map<string, NodeJS.Timeout>();
+  const thunderTrailExpiryTimers = new Map<string, NodeJS.Timeout>();
+  const thunderTrackSessions = new Map<string, ThunderTrackSession>();
   let shuttingDown = false;
 
   const chanceCommand = new SlashCommandBuilder()
@@ -77,7 +107,7 @@ async function main(): Promise<void> {
   const pokemonCatchCommand = new SlashCommandBuilder().setName("pk-catch").setDescription("Catch the Pokémon appearing here");
   const pokemonTravelCommand = new SlashCommandBuilder().setName("pk-travel").setDescription("Choose a Region and Location");
   const pokemonShowOffCommand = new SlashCommandBuilder().setName("pk-showoff").setDescription("Show off a Pokémon you caught");
-  const pokemonGiftCommand = new SlashCommandBuilder().setName("pk-gift").setDescription("Gift a Pokémon from your Inventory");
+  const pokemonGiftCommand = new SlashCommandBuilder().setName("pk-gift").setDescription("Gift a Pokémon from your Pokédex");
   const pokemonWarpCandyCommand = new SlashCommandBuilder()
     .setName("pk-candy-warp-up")
     .setDescription("Set the Warp Candy discovery rate")
@@ -104,9 +134,28 @@ async function main(): Promise<void> {
       const event = database.prepare("SELECT expires_at AS expiresAt FROM pokemon_event_announcements WHERE guild_id = ? AND event_key = 'starter-event'").get(guild.id) as { expiresAt: number | null } | undefined;
       const eventChannel = guild.channels.cache.find((channel) => channel.isTextBased() && channel.name === "event");
       if (event?.expiresAt && eventChannel?.isTextBased()) scheduleStarterEventEnd(guild.id, eventChannel.id, event.expiresAt);
+      if (eventChannel?.isTextBased()) await ensureThunderTrailEvent(guild, eventChannel as TextChannel);
+      const activeTrails = database.prepare(`
+        SELECT message_id AS messageId, guild_id AS guildId, channel_id AS channelId, location_key AS locationKey,
+          target_location_key AS targetLocationKey, expires_at AS expiresAt, state
+        FROM pokemon_thunder_trails WHERE guild_id = ? AND state = 'active'
+      `).all(guild.id) as ThunderTrail[];
+      for (const trail of activeTrails) {
+        const channel = await client.channels.fetch(trail.channelId).catch(() => undefined);
+        const message = channel?.isTextBased() ? await channel.messages.fetch(trail.messageId).catch(() => undefined) : undefined;
+        if (message) scheduleThunderTrailExpiry(message, trail);
+      }
       const activeThreads = await guild.channels.fetchActiveThreads().catch(() => undefined);
       for (const thread of activeThreads?.threads.values() ?? []) {
-        if (/^(Catch |Travel ·|Inventory ·)/u.test(thread.name)) scheduleManagedThreadExpiry(thread);
+        if (/^(Catch |Travel ·|Pokédex ·|Track ·)/u.test(thread.name)) scheduleManagedThreadExpiry(thread);
+      }
+      const notices = database.prepare("SELECT user_id AS userId, old_location_name AS oldLocationName FROM pokemon_location_migration_notices WHERE guild_id = ?").all(guild.id) as { userId: string; oldLocationName: string }[];
+      const exploreChannel = guild.channels.cache.find((channel) => channel.isTextBased() && channel.name === "explore");
+      if (exploreChannel?.isTextBased()) {
+        for (const notice of notices) {
+          await exploreChannel.send({ content: `<@${notice.userId}> Your previous location (**${notice.oldLocationName}**) is no longer available. Please use \`/pk-travel\` to choose a new Location.`, allowedMentions: { users: [notice.userId] } });
+        }
+        if (notices.length > 0) database.prepare("DELETE FROM pokemon_location_migration_notices WHERE guild_id = ?").run(guild.id);
       }
     }
   });
@@ -117,7 +166,6 @@ async function main(): Promise<void> {
   };
 
   const displayKey = (key: string): string => key.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
-  const displayBiomes = (location: TravelLocation): string => location.biomeKeys.length > 0 ? location.biomeKeys.map(displayKey).join(", ") : "Not Classified";
   const encounterRarityLabel = (rarity: string | null): string => ({ common: "Common", uncommon: "Uncommon", rare: "Rare", ultra_rare: "Ultra Rare", mythic_rare: "Mythic Rare" }[rarity ?? ""] ?? "Unknown");
   const catchDifficulty = (rate: number): string => rate >= 40 ? "Easy" : rate >= 20 ? "Normal" : rate >= 10 ? "Challenging" : rate >= 5 ? "Hard" : "Very Hard";
   const fleeDifficulty = (rate: number | null): string => rate === null ? "Does not flee" : rate <= 5 ? "Low" : rate <= 10 ? "Medium" : rate <= 20 ? "High" : "Very High";
@@ -137,14 +185,14 @@ async function main(): Promise<void> {
 
   const catchNavigationComponents = () => new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder().setCustomId(TRAVEL_BUTTON_ID).setLabel("Travel").setEmoji("🧭").setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId(SHOW_OFF_BUTTON_ID).setLabel("Inventory").setEmoji("🎒").setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId(SHOW_OFF_BUTTON_ID).setLabel("Pokédex").setEmoji("📖").setStyle(ButtonStyle.Secondary),
     new ButtonBuilder().setCustomId(OWNERSHIP_BUTTON_ID).setLabel("Owned?").setEmoji("📦").setStyle(ButtonStyle.Secondary),
   );
 
   const navigationComponents = () => [new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder().setCustomId(LOCATION_EXPLORE_BUTTON_ID).setLabel("Explore").setEmoji("🔎").setStyle(ButtonStyle.Primary),
     new ButtonBuilder().setCustomId(TRAVEL_BUTTON_ID).setLabel("Travel").setEmoji("🧭").setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId(SHOW_OFF_BUTTON_ID).setLabel("Inventory").setEmoji("🎒").setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId(SHOW_OFF_BUTTON_ID).setLabel("Pokédex").setEmoji("📖").setStyle(ButtonStyle.Secondary),
   )];
 
   const catchInputComponents = (messageId: string, userId: string, symbols: readonly string[] = CATCH_SYMBOLS) => Array.from(
@@ -239,6 +287,7 @@ async function main(): Promise<void> {
     await closeCatchSessions(message.id, `${fled.pokemonName} fled!`);
     await disableCatch(message, "fled");
     closeCatchThreadAfterResolution(message.id);
+    await onThunderRaikouFled(fled);
   };
 
   const scheduleSpawnExpiry = (message: { id: string; edit: (options: object) => Promise<unknown> }, expiresAt: number): void => {
@@ -252,14 +301,14 @@ async function main(): Promise<void> {
     const safePage = Math.max(0, Math.min(page, pageCount - 1));
     const locationOptions: TravelLocation[] = locations.length > 0
       ? locations.slice(safePage * LOCATION_PAGE_SIZE, (safePage + 1) * LOCATION_PAGE_SIZE)
-      : [{ key: "unavailable", name: "Chưa có location", biomeKeys: [], regionKey: "kanto" }];
+      : [{ key: "unavailable", name: "No available locations", regionKey: "kanto" }];
     return ({
     embeds: [new EmbedBuilder()
       .setColor(0x5865f2)
       .setTitle(selected ? `Travel to ${selected.name}` : "Pokémon Travel")
       .setDescription(selected
-        ? `Destination: **${selected.name}**.\nRegion: **${displayKey(selected.regionKey)}**\nBiome: **${displayBiomes(selected)}**\n\nPokémon:\n${locationPokemonList(selected) || "None"}\n\nPress **Go!** to confirm.`
-        : "Choose a **Region**, then choose a **Location**. The Biome is determined by the selected location."),
+        ? `Destination: **${selected.name}**.\nRegion: **${displayKey(selected.regionKey)}**\n\nPokémon:\n${locationPokemonList(selected) || "None"}\n\nPress **Go!** to confirm.`
+        : "Choose a **Region**, then choose a **Location**."),
     ],
     components: [
       new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
@@ -276,7 +325,7 @@ async function main(): Promise<void> {
           .setPlaceholder(regionKey ? "Choose a Location" : "Choose a Region first")
           .setDisabled(!regionKey || locations.length === 0)
           .addOptions(locationOptions.map((location) => ({
-            label: location.name, value: location.key, description: location.biomeKeys.length > 0 ? `Biome: ${displayBiomes(location)}` : "Sắp có",
+            label: location.name, value: location.key, description: `Region: ${displayKey(location.regionKey)}`,
           }))),
       ),
       new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -306,16 +355,16 @@ async function main(): Promise<void> {
 
   const openInventoryThread = async (interaction: ButtonInteraction | ChatInputCommandInteraction): Promise<void> => {
     if (!interaction.guild || !interaction.channel?.isTextBased()) return;
-    await interaction.reply({ content: `<@${interaction.user.id}> is opening their Pokémon Inventory.`, allowedMentions: { users: [interaction.user.id] } });
+    await interaction.reply({ content: `<@${interaction.user.id}> is opening their Pokédex.`, allowedMentions: { users: [interaction.user.id] } });
     const anchor = await interaction.fetchReply();
-    const thread = await anchor.startThread({ name: `Inventory · ${interaction.user.username}`.slice(0, 100), autoArchiveDuration: ThreadAutoArchiveDuration.OneHour, reason: "Pokémon Inventory" });
+    const thread = await anchor.startThread({ name: `Pokédex · ${interaction.user.username}`.slice(0, 100), autoArchiveDuration: ThreadAutoArchiveDuration.OneHour, reason: "Pokémon Pokédex" });
     scheduleManagedThreadExpiry(thread);
     await thread.send({
       content: `<@${interaction.user.id}>`,
       allowedMentions: { users: [interaction.user.id] },
-      embeds: [new EmbedBuilder().setColor(0xfbbf24).setTitle("Pokémon Inventory").setDescription("Press **Open Inventory** to view it privately in this Thread.")],
+      embeds: [new EmbedBuilder().setColor(0xfbbf24).setTitle("Pokédex").setDescription("Press **Open Pokédex** to view it privately in this Thread.")],
       components: [new ActionRowBuilder<ButtonBuilder>().addComponents(
-        new ButtonBuilder().setCustomId(`pk-inventory:open:${interaction.user.id}`).setLabel("Open Inventory").setEmoji("🎒").setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId(`pk-inventory:open:${interaction.user.id}`).setLabel("Open Pokédex").setEmoji("📖").setStyle(ButtonStyle.Primary),
       )],
     });
   };
@@ -325,18 +374,18 @@ async function main(): Promise<void> {
       .setColor(0x57f287)
       .setAuthor({ name: `${displayName} traveled` })
       .setTitle(`Arrived at ${location.name}`)
-      .setDescription(`Region: ${displayKey(location.regionKey)}\nBiome: ${displayBiomes(location)}`),
+      .setDescription(`Region: ${displayKey(location.regionKey)}`),
     ],
     components: navigationComponents(),
   });
 
-  const exploreResponse = (pokemon: ExploredPokemon, context: ExploreContext, location: TravelLocation, displayName: string, avatarUrl: string, appearance: "wild" | "roaming" | "event" = "wild") => ({
+  const exploreResponse = (pokemon: ExploredPokemon, location: TravelLocation, displayName: string, avatarUrl: string, appearance: "wild" | "roaming" | "event" | "thunder" = "wild") => ({
     files: [{ attachment: rarityBadgePng(pokemon.rarity.key), name: `rarity-${pokemon.rarity.key}.png` }],
     embeds: [new EmbedBuilder()
       .setColor(pokemon.rarity.color)
       .setAuthor({ name: `${displayName} is exploring`, iconURL: avatarUrl })
       .setTitle(pokemon.nameEn)
-      .setDescription(`*A ${appearance === "event" ? "Starter Event" : appearance === "roaming" ? "Roaming" : "Wild"} Pokémon appeared!*\nType: ${formatTypes(pokemon.types)}\nRegion: ${displayKey(context.regionKey)}\nLocation: ${location.name}\nBiome: ${displayBiomes(location)}\n${appearance === "event" ? "Encounter Rate: **Starter Event — Unique**" : `Encounter Rate: **${pokemon.rarity.label}** · ${(pokemon.rarity.chance * 100).toFixed(1)}%`}`)
+      .setDescription(`*${appearance === "thunder" ? "Raikou appeared!" : `A ${appearance === "event" ? "Starter Event" : appearance === "roaming" ? "Roaming" : "Wild"} Pokémon appeared!`}*\nType: ${formatTypes(pokemon.types)}\nRegion: ${displayKey(location.regionKey)}\nLocation: ${location.name}\n${appearance === "event" ? "Encounter Rate: **Starter Event — Unique**" : appearance === "thunder" ? "Encounter Rate: **The Thunder Trail — 10%**" : `Encounter Rate: **${pokemon.rarity.label}** · ${(pokemon.rarity.chance * 100).toFixed(1)}%`}`)
       .setImage(officialArtworkUrl(pokemon.nationalDex))
       .setThumbnail(`attachment://rarity-${pokemon.rarity.key}.png`)
       .setFooter({ text: `#${String(pokemon.nationalDex).padStart(3, "0")} · ${pokemon.slug}` })],
@@ -428,6 +477,236 @@ async function main(): Promise<void> {
     return 0;
   };
 
+  const thunderTrailAnnouncement = () => ({
+    content: `<@&${POKEMON_EXPLORE_ROLE_ID}>`,
+    allowedMentions: { roles: [POKEMON_EXPLORE_ROLE_ID] },
+    embeds: [new EmbedBuilder()
+      .setColor(0xfbbf24)
+      .setTitle("⚡ The Thunder Trail")
+      .setDescription("An uncharted surge of electricity is moving through **Johto**.\n\nSomething powerful has left a fleeting trail behind. Explore Johto, uncover its signs, and discover where they lead.\n\nThe hunt has begun.")
+      .setFooter({ text: "The Thunder Trail remains active for 8 hours." })],
+  });
+
+  const thunderEventRow = (guildId: string) => database.prepare(`
+    SELECT expires_at AS expiresAt FROM pokemon_event_announcements
+    WHERE guild_id = ? AND event_key = ?
+  `).get(guildId, THUNDER_TRAIL_EVENT_KEY) as { expiresAt: number | null } | undefined;
+
+  const thunderEventIsActive = (guildId: string): boolean => {
+    const event = thunderEventRow(guildId);
+    if (!event?.expiresAt || event.expiresAt <= Date.now()) return false;
+    const caught = database.prepare("SELECT 1 FROM pokemon_spawns WHERE guild_id = ? AND event_key = ? AND state = 'caught' LIMIT 1").get(guildId, THUNDER_TRAIL_EVENT_KEY);
+    return !caught;
+  };
+
+  const thunderTrailComponents = (state: "active" | "lost" | "resolved" = "active") => [
+    new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder().setCustomId("pk-thunder-track").setLabel(state === "active" ? "Track" : state === "lost" ? "Trail Lost" : "Trail Resolved").setEmoji("⚡").setStyle(ButtonStyle.Primary).setDisabled(state !== "active"),
+    ),
+    ...navigationComponents(),
+  ];
+
+  const thunderTrailMessage = (location: TravelLocation) => ({
+    embeds: [new EmbedBuilder()
+      .setColor(0xf1c40f)
+      .setTitle("⚡ A Thunder Trail Appeared!")
+      .setDescription(`Static crackles through **${location.name}**.\n\nA fleeting trail of lightning points somewhere across Johto. Trainers at this Location can Track it before it fades.`)
+      .setFooter({ text: "Trail fades in 2 minutes." })],
+    components: thunderTrailComponents(),
+  });
+
+  const thunderTrailFromMessage = (messageId: string): ThunderTrail | undefined => database.prepare(`
+    SELECT message_id AS messageId, guild_id AS guildId, channel_id AS channelId,
+      location_key AS locationKey, target_location_key AS targetLocationKey,
+      expires_at AS expiresAt, state
+    FROM pokemon_thunder_trails WHERE message_id = ?
+  `).get(messageId) as ThunderTrail | undefined;
+
+  const scheduleThunderTrailExpiry = (message: Message, trail: ThunderTrail): void => {
+    const existing = thunderTrailExpiryTimers.get(trail.messageId);
+    if (existing) clearTimeout(existing);
+    thunderTrailExpiryTimers.set(trail.messageId, setTimeout(() => {
+      thunderTrailExpiryTimers.delete(trail.messageId);
+      const active = database.prepare("UPDATE pokemon_thunder_trails SET state = 'lost' WHERE message_id = ? AND state = 'active' AND expires_at <= ?").run(trail.messageId, Date.now());
+      if (active.changes !== 1) return;
+      for (const [key, session] of thunderTrackSessions.entries()) {
+        if (session.trailMessageId !== trail.messageId) continue;
+        thunderTrackSessions.delete(key);
+        void session.close?.("The Thunder Trail faded before you could finish tracking it.");
+      }
+      void message.edit({ components: thunderTrailComponents("lost") }).catch(() => undefined);
+    }, Math.max(0, trail.expiresAt - Date.now())));
+  };
+
+  const scheduleThunderTrailEventEnd = (guildId: string, channelId: string, expiresAt: number): void => {
+    const existing = thunderTrailEventEndTimers.get(guildId);
+    if (existing) clearTimeout(existing);
+    thunderTrailEventEndTimers.set(guildId, setTimeout(() => {
+      thunderTrailEventEndTimers.delete(guildId);
+      if (database.prepare("SELECT 1 FROM pokemon_spawns WHERE guild_id = ? AND event_key = ? AND state = 'caught'").get(guildId, THUNDER_TRAIL_EVENT_KEY)) return;
+      void (async () => {
+        const channel = await client.channels.fetch(channelId).catch(() => undefined);
+        if (channel?.isSendable()) await channel.send({ embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle("The Thunder Trail Ended").setDescription("The thunder has faded from Johto. The unknown presence can no longer be found.")] });
+      })().catch(() => undefined);
+    }, Math.max(0, expiresAt - Date.now())));
+  };
+
+  const ensureThunderTrailEvent = async (guild: Guild, channel: TextChannel): Promise<boolean> => {
+    const existing = thunderEventRow(guild.id);
+    if (existing) {
+      const existingAnnouncement = database.prepare("SELECT message_id AS messageId FROM pokemon_event_announcements WHERE guild_id = ? AND event_key = ?").get(guild.id, THUNDER_TRAIL_EVENT_KEY) as { messageId: string } | undefined;
+      const existingMessage = existingAnnouncement ? await channel.messages.fetch(existingAnnouncement.messageId).catch(() => undefined) : undefined;
+      if (!existingMessage && thunderEventIsActive(guild.id)) {
+        const replacement = await channel.send(thunderTrailAnnouncement());
+        database.prepare("UPDATE pokemon_event_announcements SET message_id = ? WHERE guild_id = ? AND event_key = ?").run(replacement.id, guild.id, THUNDER_TRAIL_EVENT_KEY);
+        if (existing.expiresAt) scheduleThunderTrailEventEnd(guild.id, channel.id, existing.expiresAt);
+        return true;
+      }
+      if (existing.expiresAt && existing.expiresAt > Date.now()) scheduleThunderTrailEventEnd(guild.id, channel.id, existing.expiresAt);
+      return false;
+    }
+    const announcement = await channel.send(thunderTrailAnnouncement());
+    const expiresAt = Date.now() + THUNDER_TRAIL_LIFETIME_MS;
+    database.prepare("INSERT INTO pokemon_event_announcements (guild_id, event_key, message_id, expires_at) VALUES (?, ?, ?, ?)").run(guild.id, THUNDER_TRAIL_EVENT_KEY, announcement.id, expiresAt);
+    scheduleThunderTrailEventEnd(guild.id, channel.id, expiresAt);
+    return true;
+  };
+
+  const targetLocationForThunderTrail = (sourceLocationKey: string): TravelLocation | undefined => {
+    const locations = locationsForRegion(database, "johto").filter((location) => location.key !== sourceLocationKey);
+    return locations.length > 0 ? locations[Math.floor(Math.random() * locations.length)] : undefined;
+  };
+
+  const createThunderTrail = async (guild: Guild, channel: TextChannel, location: TravelLocation): Promise<Message | undefined> => {
+    const target = targetLocationForThunderTrail(location.key);
+    if (!target) return undefined;
+    const message = await channel.send(thunderTrailMessage(location));
+    const trail: ThunderTrail = { messageId: message.id, guildId: guild.id, channelId: channel.id, locationKey: location.key, targetLocationKey: target.key, expiresAt: Date.now() + THUNDER_TRAIL_DURATION_MS, state: "active" };
+    database.prepare(`INSERT INTO pokemon_thunder_trails (message_id, guild_id, channel_id, location_key, target_location_key, expires_at, state) VALUES (?, ?, ?, ?, ?, ?, 'active')`).run(trail.messageId, trail.guildId, trail.channelId, trail.locationKey, trail.targetLocationKey, trail.expiresAt);
+    scheduleThunderTrailExpiry(message, trail);
+    return message;
+  };
+
+  const thunderTrailForExplore = async (guild: Guild, userId: string): Promise<boolean> => {
+    const location = selectedLocationForPlayer(database, guild.id, userId);
+    if (!location || location.regionKey !== "johto" || !thunderEventIsActive(guild.id) || Math.random() >= THUNDER_TRAIL_DISCOVERY_CHANCE) return false;
+    const channel = guild.channels.cache.find((candidate) => candidate.name === "explore" && candidate.isTextBased()) as TextChannel | undefined;
+    if (!channel) return false;
+    return Boolean(await createThunderTrail(guild, channel, location));
+  };
+
+  const thunderTrackKey = (trailMessageId: string, userId: string): string => `${trailMessageId}:${userId}`;
+  const thunderTrackPlayId = (trailMessageId: string, userId: string): string => `pk-thunder:play:${trailMessageId}:${userId}`;
+  const thunderTrackInputId = (trailMessageId: string, userId: string, index: ThunderDirectionIndex): string => `pk-thunder:input:${trailMessageId}:${userId}:${index}`;
+
+  const thunderTrackInputComponents = (trailMessageId: string, userId: string) => {
+    const button = (index: ThunderDirectionIndex) => new ButtonBuilder().setCustomId(thunderTrackInputId(trailMessageId, userId, index)).setLabel(THUNDER_DIRECTIONS[index].label).setStyle(ButtonStyle.Secondary);
+    return [
+      new ActionRowBuilder<ButtonBuilder>().addComponents(button(0), button(1), button(2)),
+      new ActionRowBuilder<ButtonBuilder>().addComponents(button(3), new ButtonBuilder().setCustomId(`pk-thunder:center:${trailMessageId}:${userId}`).setLabel("⏹️").setStyle(ButtonStyle.Secondary).setDisabled(true), button(4)),
+      new ActionRowBuilder<ButtonBuilder>().addComponents(button(5), button(6), button(7)),
+    ];
+  };
+
+  const playerIsAtTrailLocation = (guildId: string, userId: string, trail: ThunderTrail): boolean => selectedLocationForPlayer(database, guildId, userId)?.key === trail.locationKey;
+
+  const openThunderTrack = async (interaction: ButtonInteraction, trail: ThunderTrail): Promise<void> => {
+    if (!thunderEventIsActive(interaction.guildId!) || trail.state !== "active" || trail.expiresAt <= Date.now()) {
+      await interaction.reply({ content: "This Thunder Trail has already faded.", ephemeral: true });
+      return;
+    }
+    if (!playerIsAtTrailLocation(interaction.guildId!, interaction.user.id, trail)) {
+      await interaction.reply({ content: "You must be at the same Location as this Thunder Trail to Track it.", ephemeral: true });
+      return;
+    }
+    const key = thunderTrackKey(trail.messageId, interaction.user.id);
+    if (thunderTrackSessions.has(key)) {
+      await interaction.reply({ content: "You already have a Track attempt for this Trail.", ephemeral: true });
+      return;
+    }
+    const parent = await client.channels.fetch(trail.channelId).catch(() => undefined) as TextChannel | undefined;
+    if (!parent?.isTextBased()) {
+      await interaction.reply({ content: "The Explore channel is no longer available.", ephemeral: true });
+      return;
+    }
+    const thread = await parent.threads.create({ name: `Track · ${interaction.user.username}`.slice(0, 100), autoArchiveDuration: ThreadAutoArchiveDuration.OneHour, reason: "Thunder Trail tracking attempt" });
+    scheduleManagedThreadExpiry(thread);
+    const path = createThunderTrailPath();
+    const session: ThunderTrackSession = { trailMessageId: trail.messageId, userId: interaction.user.id, path, progress: 0, phase: "ready" };
+    thunderTrackSessions.set(key, session);
+    const invitation = await thread.send({
+      content: `<@${interaction.user.id}>`,
+      allowedMentions: { users: [interaction.user.id] },
+      embeds: [new EmbedBuilder().setColor(0xf1c40f).setTitle("Track the Thunder Trail").setDescription("Press **Play** when you are ready. The trail will be visible only briefly.")],
+      components: [new ActionRowBuilder<ButtonBuilder>().addComponents(new ButtonBuilder().setCustomId(thunderTrackPlayId(trail.messageId, interaction.user.id)).setLabel("Play").setEmoji("▶️").setStyle(ButtonStyle.Success))],
+    });
+    session.close = async (content: string): Promise<void> => { await invitation.edit({ content, embeds: [], components: [] }).catch(() => undefined); };
+    await interaction.reply({ content: `Your Track attempt is ready in <#${thread.id}>.`, ephemeral: true });
+  };
+
+  const beginThunderTrack = async (interaction: ButtonInteraction, trail: ThunderTrail, session: ThunderTrackSession): Promise<void> => {
+    if (!playerIsAtTrailLocation(interaction.guildId!, interaction.user.id, trail)) {
+      thunderTrackSessions.delete(thunderTrackKey(trail.messageId, interaction.user.id));
+      await interaction.update({ content: "You left the Trail's Location, so the signal is gone.", embeds: [], components: [] });
+      return;
+    }
+    session.phase = "preview";
+    await interaction.update({
+      content: `<@${interaction.user.id}>`,
+      allowedMentions: { users: [interaction.user.id] },
+      embeds: [new EmbedBuilder().setColor(0xf1c40f).setTitle("Track the Thunder Trail").setDescription("The signal is forming…")],
+      components: [],
+    });
+    setTimeout(() => {
+      if (thunderTrackSessions.get(thunderTrackKey(trail.messageId, interaction.user.id)) !== session) return;
+      void interaction.message.edit({ embeds: [new EmbedBuilder().setColor(0xf1c40f).setTitle("Track the Thunder Trail").setDescription(`Memorize the route:\n\n${renderThunderTrailPath(session.path)}`)], components: [] }).then(() => {
+        setTimeout(() => {
+          if (thunderTrackSessions.get(thunderTrackKey(trail.messageId, interaction.user.id)) !== session) return;
+          session.phase = "input";
+          void interaction.message.edit({ embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle("Track the Thunder Trail").setDescription(`Repeat the route · 0/${session.path.directions.length}\n\n🟢 Start and ⚡ End are guide markers — do not press them. Press only the direction buttons between them.`)], components: thunderTrackInputComponents(trail.messageId, interaction.user.id) }).catch(() => thunderTrackSessions.delete(thunderTrackKey(trail.messageId, interaction.user.id)));
+        }, THUNDER_TRAIL_PREVIEW_MS);
+      }).catch(() => thunderTrackSessions.delete(thunderTrackKey(trail.messageId, interaction.user.id)));
+    }, THUNDER_TRAIL_READY_DELAY_MS);
+  };
+
+  const clearThunderTrailClues = (guildId: string): void => {
+    database.prepare("DELETE FROM pokemon_thunder_clues WHERE guild_id = ?").run(guildId);
+  };
+
+  const onThunderRaikouFled = async (spawn: PokemonSpawn): Promise<void> => {
+    if (spawn.eventKey !== THUNDER_TRAIL_EVENT_KEY) return;
+    clearThunderTrailClues(spawn.guildId);
+    const trails = database.prepare(`
+      SELECT message_id AS messageId, guild_id AS guildId, channel_id AS channelId, location_key AS locationKey,
+        target_location_key AS targetLocationKey, expires_at AS expiresAt, state
+      FROM pokemon_thunder_trails WHERE guild_id = ? AND state = 'active'
+    `).all(spawn.guildId) as ThunderTrail[];
+    database.prepare("UPDATE pokemon_thunder_trails SET state = 'resolved' WHERE guild_id = ? AND state = 'active'").run(spawn.guildId);
+    for (const trail of trails) {
+      const timer = thunderTrailExpiryTimers.get(trail.messageId);
+      if (timer) clearTimeout(timer);
+      thunderTrailExpiryTimers.delete(trail.messageId);
+      const channel = await client.channels.fetch(trail.channelId).catch(() => undefined);
+      const message = channel?.isTextBased() ? await channel.messages.fetch(trail.messageId).catch(() => undefined) : undefined;
+      if (message) await message.edit({ components: thunderTrailComponents("resolved") }).catch(() => undefined);
+    }
+    void (async () => {
+      const channel = await client.channels.fetch(spawn.channelId).catch(() => undefined);
+      if (channel?.isSendable()) await channel.send({ embeds: [new EmbedBuilder().setColor(0xed4245).setTitle("Raikou Escaped").setDescription("The thunder has moved. Follow a new Trail in Johto to find it again.")] });
+    })().catch(() => undefined);
+  };
+
+  const onThunderRaikouCaught = async (spawn: PokemonSpawn): Promise<void> => {
+    if (spawn.eventKey !== THUNDER_TRAIL_EVENT_KEY) return;
+    clearThunderTrailClues(spawn.guildId);
+    const timer = thunderTrailEventEndTimers.get(spawn.guildId);
+    if (timer) clearTimeout(timer);
+    const event = database.prepare("SELECT message_id AS messageId FROM pokemon_event_announcements WHERE guild_id = ? AND event_key = ?").get(spawn.guildId, THUNDER_TRAIL_EVENT_KEY) as { messageId: string } | undefined;
+    if (!event) return;
+    const channel = await client.channels.fetch(spawn.channelId).catch(() => undefined);
+    if (channel?.isSendable()) await channel.send({ embeds: [new EmbedBuilder().setColor(0xf1c40f).setTitle("The Thunder Trail Completed").setDescription("Raikou has been found and caught. The thunder over Johto grows quiet.")] }).catch(() => undefined);
+  };
+
   const warpCandyResponse = (amount: number, userId: string) => ({
     content: `<@${userId}>`,
     allowedMentions: { users: [userId] },
@@ -493,14 +772,14 @@ async function main(): Promise<void> {
     return {
       embeds: [new EmbedBuilder()
         .setColor(0xfbbf24)
-        .setTitle(pokemon?.nameEn ?? "Pokémon Inventory")
+        .setTitle(pokemon?.nameEn ?? "Pokédex")
         .setDescription(description)
         .setImage(pokemon ? officialArtworkUrl(pokemon.nationalDex) : null)
         .setFooter(pokemon ? { text: `#${String(pokemon.nationalDex).padStart(3, "0")} · ${pokemon.slug}` } : null)],
       components: [
         ...(entries.length > 0 ? [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
           new StringSelectMenuBuilder().setCustomId(`pk-inventory:pokemon:${userId}:${safePage}:${recipient?.id ?? "none"}`).setPlaceholder("Choose a Pokémon").addOptions(entries.map((entry) => ({
-            label: entry.nameEn,
+            label: `#${String(entry.nationalDex).padStart(3, "0")} ${entry.nameEn}`,
             value: String(entry.nationalDex),
             description: `#${String(entry.nationalDex).padStart(3, "0")} · Caught ${entry.catchCount} time${entry.catchCount === 1 ? "" : "s"}`,
           }))),
@@ -559,17 +838,35 @@ async function main(): Promise<void> {
       .setFooter({ text: `#${String(pokemon.nationalDex).padStart(3, "0")} · ${pokemon.slug}` })],
   });
 
-  const findExploredPokemon = (guild: Guild, userId: string): { context: ExploreContext; location: TravelLocation; pokemon: ExploredPokemon; appearance: "wild" | "roaming" | "event" } | undefined => {
+  const thunderRaikouForExplore = (guildId: string, userId: string, location: TravelLocation): ExploredPokemon | undefined => {
+    if (location.regionKey !== "johto" || !thunderEventIsActive(guildId)) return undefined;
+    const clue = database.prepare("SELECT target_location_key AS targetLocationKey FROM pokemon_thunder_clues WHERE guild_id = ? AND user_id = ?").get(guildId, userId) as { targetLocationKey: string } | undefined;
+    if (!clue || clue.targetLocationKey !== location.key) return undefined;
+    if (database.prepare("SELECT 1 FROM pokemon_spawns WHERE guild_id = ? AND event_key = ? AND state = 'active' LIMIT 1").get(guildId, THUNDER_TRAIL_EVENT_KEY)) return undefined;
+    if (Math.random() >= THUNDER_RAIKOU_ENCOUNTER_CHANCE) return undefined;
+    const raw = starterEventPokemon(243);
+    return raw ? {
+      ...raw,
+      types: raw.typesCsv.split(",").filter(Boolean),
+      weight: 1,
+      minLevel: 40,
+      maxLevel: 40,
+      level: 40,
+      rarity: { chance: THUNDER_RAIKOU_ENCOUNTER_CHANCE, color: 0xf1c40f, key: "ultra_rare", label: "Event" },
+    } : undefined;
+  };
+
+  const findExploredPokemon = (guild: Guild, userId: string): { location: TravelLocation; pokemon: ExploredPokemon; appearance: "wild" | "roaming" | "event" | "thunder" } | undefined => {
     const location = selectedLocationForPlayer(database, guild.id, userId);
     if (!location) return undefined;
-    const context: ExploreContext = { regionKey: location.regionKey, biomeKey: location.biomeKeys[0] ?? "location" };
+    const thunderPokemon = thunderRaikouForExplore(guild.id, userId, location);
     const eventPokemon = location.regionKey === "kanto" ? starterEventPokemonForExplore(guild.id) : undefined;
-    const roamingPokemon = eventPokemon ? undefined : roamingPokemonForRegion(database, location.regionKey, roamingChance(database, guild.id));
-    const pokemon = eventPokemon
+    const roamingPokemon = thunderPokemon || eventPokemon ? undefined : roamingPokemonForRegion(database, location.regionKey, roamingChance(database, guild.id));
+    const pokemon = thunderPokemon
+      ?? eventPokemon
       ?? roamingPokemon
-      ?? explorePokemonAtLocation(database, location.key)
-      ?? (location.biomeKeys[0] ? explorePokemon(database, context) : undefined);
-    return pokemon ? { context, location, pokemon, appearance: eventPokemon ? "event" : roamingPokemon ? "roaming" : "wild" } : undefined;
+      ?? explorePokemonAtLocation(database, location.key);
+    return pokemon ? { location, pokemon, appearance: thunderPokemon ? "thunder" : eventPokemon ? "event" : roamingPokemon ? "roaming" : "wild" } : undefined;
   };
 
   const catchThreadForSpawn = async (spawn: PokemonSpawn, sourceMessage: Message): Promise<ThreadChannel> => {
@@ -734,14 +1031,14 @@ async function main(): Promise<void> {
       const [prefix, action, ownerUserId, regionKey, pageText] = interaction.customId.split(":");
       if (prefix === "pk-inventory" && action && ownerUserId && interaction.guild) {
         if (ownerUserId !== interaction.user.id) {
-          await interaction.reply({ content: "This Inventory belongs to another player.", ephemeral: true });
+          await interaction.reply({ content: "This Pokédex belongs to another player.", ephemeral: true });
           return;
         }
         if (action === "pokemon") {
           const pokemon = caughtPokemonForPlayer(database, interaction.guild.id, interaction.user.id)
             .find((entry) => entry.nationalDex === Number(interaction.values[0]));
           if (!pokemon) {
-            await interaction.update({ content: "This Pokémon is no longer in your Inventory.", embeds: [], components: [] });
+            await interaction.update({ content: "This Pokémon is no longer in your Pokédex.", embeds: [], components: [] });
             return;
           }
           const selectedRecipient = pageText && pageText !== "none" ? pageText : undefined;
@@ -784,6 +1081,89 @@ async function main(): Promise<void> {
     }
 
     if (interaction.isButton()) {
+      if (interaction.customId === "pk-thunder-track" && interaction.guild) {
+        const trail = thunderTrailFromMessage(interaction.message.id);
+        if (!trail) {
+          await interaction.reply({ content: "This Thunder Trail is no longer available.", ephemeral: true });
+          return;
+        }
+        await openThunderTrack(interaction, trail);
+        return;
+      }
+
+      const thunderParts = interaction.customId.split(":");
+      const [thunderPrefix, thunderAction, thunderTrailMessageId, thunderUserId, thunderDirectionText] = thunderParts[0] === "pk-thunder"
+        ? thunderParts
+        : thunderParts[0] === "pk-thunder-play"
+          ? ["pk-thunder", "play", thunderParts[1], thunderParts[2]]
+          : thunderParts[0] === "pk-thunder-input"
+            ? ["pk-thunder", "input", thunderParts[1], thunderParts[2], thunderParts[3]]
+            : thunderParts;
+      if (thunderPrefix === "pk-thunder" && thunderAction && thunderTrailMessageId && thunderUserId && interaction.guild) {
+        if (thunderUserId !== interaction.user.id) {
+          await interaction.reply({ content: "This Track attempt belongs to another player.", ephemeral: true });
+          return;
+        }
+        const trail = thunderTrailFromMessage(thunderTrailMessageId);
+        const key = thunderTrackKey(thunderTrailMessageId, interaction.user.id);
+        const session = thunderTrackSessions.get(key);
+        if (!trail || !session || trail.state !== "active" || trail.expiresAt <= Date.now() || !thunderEventIsActive(interaction.guild.id)) {
+          thunderTrackSessions.delete(key);
+          await interaction.update({ content: "The Thunder Trail has faded.", embeds: [], components: [] });
+          return;
+        }
+        if (thunderAction === "play") {
+          if (session.phase !== "ready") {
+            await interaction.reply({ content: "Your Track attempt is already in progress.", ephemeral: true });
+            return;
+          }
+          await beginThunderTrack(interaction, trail, session);
+          return;
+        }
+        if (thunderAction === "input") {
+          const directionIndex = Number(thunderDirectionText);
+          if (session.phase !== "input" || !Number.isInteger(directionIndex) || directionIndex < 0 || directionIndex >= THUNDER_DIRECTIONS.length) {
+            await interaction.reply({ content: "The direction controls are not ready yet.", ephemeral: true });
+            return;
+          }
+          if (!playerIsAtTrailLocation(interaction.guild.id, interaction.user.id, trail)) {
+            thunderTrackSessions.delete(key);
+            await interaction.update({ content: "You left the Trail's Location, so the signal is gone.", embeds: [], components: [] });
+            return;
+          }
+          if (session.path.directions[session.progress] !== directionIndex) {
+            session.progress = 0;
+            await interaction.update({
+              embeds: [new EmbedBuilder().setColor(0xed4245).setTitle("Track the Thunder Trail").setDescription(`Incorrect — start again from the beginning.\n\n🟢 Start and ⚡ End are guide markers — do not press them.\n0/${session.path.directions.length}`)],
+              components: thunderTrackInputComponents(trail.messageId, interaction.user.id),
+            });
+            return;
+          }
+          session.progress += 1;
+          if (session.progress < session.path.directions.length) {
+            await interaction.update({
+              embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle("Track the Thunder Trail").setDescription(`Correct! ${session.progress}/${session.path.directions.length}`)],
+              components: thunderTrackInputComponents(trail.messageId, interaction.user.id),
+            });
+            return;
+          }
+          thunderTrackSessions.delete(key);
+          database.prepare(`
+            INSERT INTO pokemon_thunder_clues (guild_id, user_id, target_location_key, obtained_at)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(guild_id, user_id) DO UPDATE SET target_location_key = excluded.target_location_key, obtained_at = excluded.obtained_at
+          `).run(interaction.guild.id, interaction.user.id, trail.targetLocationKey, Date.now());
+          const target = locationsForRegion(database, "johto").find((location) => location.key === trail.targetLocationKey);
+          await interaction.update({
+            content: `<@${interaction.user.id}>`,
+            allowedMentions: { users: [interaction.user.id] },
+            embeds: [new EmbedBuilder().setColor(0x57f287).setTitle("Trail Deciphered!").setDescription(`The signal leads to **${target?.name ?? "an unknown Location"}** in **Johto**.\n\nTravel there and Explore to discover what awaits.`)],
+            components: [],
+          });
+          return;
+        }
+      }
+
       if (interaction.customId === OWNERSHIP_BUTTON_ID && interaction.guild) {
         const spawn = pokemonSpawn(database, interaction.message.id);
         if (!spawn) {
@@ -821,6 +1201,7 @@ async function main(): Promise<void> {
               await closeCatchSessions(fled.messageId, `${fled.pokemonName} fled!`);
               await disableSpawnCatch(fled, "fled");
               closeCatchThreadAfterResolution(fled.messageId);
+              await onThunderRaikouFled(fled);
             }
           }
           await interaction.update({ content: "This Pokémon has already left.", embeds: [], components: [] });
@@ -847,6 +1228,7 @@ async function main(): Promise<void> {
               await closeCatchSessions(spawn.messageId, `${fled.pokemonName} fled!`);
               await disableSpawnCatch(fled, "fled");
               closeCatchThreadAfterResolution(fled.messageId);
+              await onThunderRaikouFled(fled);
             }
           }
           await interaction.update({ content: "This Pokémon has already left.", embeds: [], components: [] });
@@ -868,6 +1250,7 @@ async function main(): Promise<void> {
             await closeCatchSessions(spawn.messageId, `${spawn.pokemonName} fled!`, interaction.user.id);
             await disableSpawnCatch(fled, "fled");
             closeCatchThreadAfterResolution(fled.messageId);
+            await onThunderRaikouFled(fled);
             await interaction.update({ content: `${spawn.pokemonName} fled!`, embeds: [], components: [] });
             return;
           }
@@ -897,6 +1280,7 @@ async function main(): Promise<void> {
         spawnTimers.delete(spawn.messageId);
         await disableSpawnCatch(caught, "caught");
         closeCatchThreadAfterResolution(caught.messageId);
+        await onThunderRaikouCaught(caught);
         const member = await interaction.guild.members.fetch(interaction.user.id);
         const spawnChannel = await client.channels.fetch(caught.channelId).catch(() => undefined);
         if (spawnChannel?.isSendable()) await spawnChannel.send(caughtAnnouncement(caught, member.displayName, interaction.user.displayAvatarURL({ size: 128 })));
@@ -907,7 +1291,7 @@ async function main(): Promise<void> {
       const [inventoryOpenPrefix, inventoryOpenAction, inventoryOpenOwnerUserId] = interaction.customId.split(":");
       if (inventoryOpenPrefix === "pk-inventory" && inventoryOpenAction === "open" && inventoryOpenOwnerUserId && interaction.guild) {
         if (inventoryOpenOwnerUserId !== interaction.user.id) {
-          await interaction.reply({ content: "This Inventory belongs to another player.", ephemeral: true });
+          await interaction.reply({ content: "This Pokédex belongs to another player.", ephemeral: true });
           return;
         }
         await interaction.reply({ ephemeral: true, ...await inventoryMenu(interaction.guild, interaction.user.id) });
@@ -923,7 +1307,7 @@ async function main(): Promise<void> {
         const pokemon = caughtPokemonForPlayer(database, interaction.guild.id, interaction.user.id)
           .find((entry) => entry.nationalDex === Number(giftDexText));
         if (!pokemon) {
-          await interaction.update({ content: "This Pokémon is no longer in your Inventory.", embeds: [], components: [] });
+          await interaction.update({ content: "This Pokémon is no longer in your Pokédex.", embeds: [], components: [] });
           return;
         }
         if (giftAction === "confirm" && giftTargetOrPage) {
@@ -958,7 +1342,7 @@ async function main(): Promise<void> {
       const [inventoryPrefix, inventoryAction, inventoryOwnerUserId, inventoryPageText, inventoryDexText, inventoryRecipientUserId] = interaction.customId.split(":");
       if (inventoryPrefix === "pk-inventory" && inventoryAction === "page" && inventoryOwnerUserId && interaction.guild) {
         if (inventoryOwnerUserId !== interaction.user.id) {
-          await interaction.reply({ content: "This Inventory belongs to another player.", ephemeral: true });
+          await interaction.reply({ content: "This Pokédex belongs to another player.", ephemeral: true });
           return;
         }
         const selectedDex = inventoryDexText && inventoryDexText !== "none" ? Number(inventoryDexText) : undefined;
@@ -970,7 +1354,7 @@ async function main(): Promise<void> {
       const [showOffPrefix, showOffAction, showOffOwnerUserId, showOffValue] = interaction.customId.split(":");
       if (showOffPrefix === "pk-showoff" && showOffAction && showOffOwnerUserId && interaction.guild) {
         if (showOffOwnerUserId !== interaction.user.id) {
-          await interaction.reply({ content: "This Inventory belongs to another player.", ephemeral: true });
+          await interaction.reply({ content: "This Pokédex belongs to another player.", ephemeral: true });
           return;
         }
         if (showOffAction === "page" || showOffAction === "inventory") {
@@ -981,7 +1365,7 @@ async function main(): Promise<void> {
           const pokemon = caughtPokemonForPlayer(database, interaction.guild.id, interaction.user.id)
             .find((entry) => entry.nationalDex === Number(showOffValue));
           if (!pokemon) {
-            await interaction.update({ content: "This Pokémon is no longer in your Inventory.", embeds: [], components: [] });
+            await interaction.update({ content: "This Pokémon is no longer in your Pokédex.", embeds: [], components: [] });
             return;
           }
           const member = await interaction.guild.members.fetch(interaction.user.id);
@@ -1097,6 +1481,11 @@ async function main(): Promise<void> {
         await interaction.reply({ content: `Wait ${(cooldownMs / 1000).toFixed(1)} seconds before exploring again.`, ephemeral: true });
         return;
       }
+      if (result.appearance !== "thunder" && await thunderTrailForExplore(interaction.guild, interaction.user.id)) {
+        await interaction.reply({ content: "⚡ A Thunder Trail has appeared in #explore!", ephemeral: true });
+        markExplored(interaction.guild.id, interaction.user.id);
+        return;
+      }
       if (findsWarpCandy(Math.random, warpCandyChance(database, interaction.guild.id))) {
         const amount = addWarpCandy(database, interaction.guild.id, interaction.user.id);
         await interaction.reply(warpCandyResponse(amount, interaction.user.id));
@@ -1106,7 +1495,6 @@ async function main(): Promise<void> {
       const member = await interaction.guild.members.fetch(interaction.user.id);
       await interaction.reply(exploreResponse(
         result.pokemon,
-        result.context,
         result.location,
         member.displayName,
         interaction.user.displayAvatarURL({ size: 128 }),
@@ -1118,10 +1506,11 @@ async function main(): Promise<void> {
       addPokemonSpawn(database, {
         messageId: message.id, guildId: interaction.guild.id, channelId: message.channelId,
         pokemonNationalDex: result.pokemon.nationalDex, pokemonName: result.pokemon.nameEn,
-        regionKey: result.context.regionKey, locationKey: result.location.key, locationName: result.location.name,
+        regionKey: result.location.regionKey, locationKey: result.location.key, locationName: result.location.name,
         encounterRate: result.pokemon.rarity.chance, encounterRarity: result.pokemon.rarity.key,
         goCaptureRate: result.pokemon.goCaptureRate, goFleeRate: result.pokemon.goFleeRate,
-        isEvent: result.appearance === "event", catchSequenceLength: result.appearance === "event" ? STARTER_EVENT_SEQUENCE_LENGTH : null,
+        isEvent: result.appearance === "event", eventKey: result.appearance === "thunder" ? THUNDER_TRAIL_EVENT_KEY : result.appearance === "event" ? "starter-event" : null,
+        catchSequenceLength: result.appearance === "event" ? STARTER_EVENT_SEQUENCE_LENGTH : null,
         appearedAt, expiresAt: appearedAt + lifetimeMs,
       });
       scheduleSpawnExpiry(message, appearedAt + lifetimeMs);
@@ -1190,7 +1579,7 @@ async function main(): Promise<void> {
 
     if (interaction.commandName === "pk-showoff" || interaction.commandName === "pk-gift") {
       if (!interaction.guild) {
-        await interaction.reply({ content: "Inventory can only be used in a server.", ephemeral: true });
+        await interaction.reply({ content: "Pokédex can only be used in a server.", ephemeral: true });
         return;
       }
       await openInventoryThread(interaction);
@@ -1216,6 +1605,11 @@ async function main(): Promise<void> {
         await interaction.reply({ content: `Wait ${(cooldownMs / 1000).toFixed(1)} seconds before exploring again.`, ephemeral: true });
         return;
       }
+      if (result.appearance !== "thunder" && await thunderTrailForExplore(interaction.guild, interaction.user.id)) {
+        await interaction.reply({ content: "⚡ A Thunder Trail has appeared in #explore!", ephemeral: true });
+        markExplored(interaction.guild.id, interaction.user.id);
+        return;
+      }
       if (findsWarpCandy(Math.random, warpCandyChance(database, interaction.guild.id))) {
         const amount = addWarpCandy(database, interaction.guild.id, interaction.user.id);
         await interaction.reply(warpCandyResponse(amount, interaction.user.id));
@@ -1225,7 +1619,6 @@ async function main(): Promise<void> {
       const member = await interaction.guild.members.fetch(interaction.user.id);
       await interaction.reply(exploreResponse(
         result.pokemon,
-        result.context,
         result.location,
         member.displayName,
         interaction.user.displayAvatarURL({ size: 128 }),
@@ -1237,10 +1630,11 @@ async function main(): Promise<void> {
       addPokemonSpawn(database, {
         messageId: message.id, guildId: interaction.guild.id, channelId: message.channelId,
         pokemonNationalDex: result.pokemon.nationalDex, pokemonName: result.pokemon.nameEn,
-        regionKey: result.context.regionKey, locationKey: result.location.key, locationName: result.location.name,
+        regionKey: result.location.regionKey, locationKey: result.location.key, locationName: result.location.name,
         encounterRate: result.pokemon.rarity.chance, encounterRarity: result.pokemon.rarity.key,
         goCaptureRate: result.pokemon.goCaptureRate, goFleeRate: result.pokemon.goFleeRate,
-        isEvent: result.appearance === "event", catchSequenceLength: result.appearance === "event" ? STARTER_EVENT_SEQUENCE_LENGTH : null,
+        isEvent: result.appearance === "event", eventKey: result.appearance === "thunder" ? THUNDER_TRAIL_EVENT_KEY : result.appearance === "event" ? "starter-event" : null,
+        catchSequenceLength: result.appearance === "event" ? STARTER_EVENT_SEQUENCE_LENGTH : null,
         appearedAt, expiresAt: appearedAt + lifetimeMs,
       });
       scheduleSpawnExpiry(message, appearedAt + lifetimeMs);
@@ -1257,7 +1651,8 @@ async function main(): Promise<void> {
       try {
         const result = await provisionExploreChannel(interaction.guild, interaction.client.user.id, POKEMON_EXPLORE_ROLE_ID);
         const startersCreated = await ensureStarterEvent(interaction.guild, result.eventChannel);
-        await interaction.editReply(`${result.createdCategory ? "Đã tạo" : "Đã dùng"} category Pokémon Ex; ${result.created ? "đã tạo" : "đã chuyển"} private channel #explore, ${result.eventCreated ? "đã tạo" : "đã dùng"} #event, ${result.giftingCreated ? "đã tạo" : "đã dùng"} #gifting và ${result.showOffCreated ? "đã tạo" : "đã dùng"} #show-off. Starter Event: ${startersCreated} Starter mới.`);
+        const thunderCreated = await ensureThunderTrailEvent(interaction.guild, result.eventChannel);
+        await interaction.editReply(`${result.createdCategory ? "Đã tạo" : "Đã dùng"} category Pokémon Ex; ${result.created ? "đã tạo" : "đã chuyển"} private channel #explore, ${result.eventCreated ? "đã tạo" : "đã dùng"} #event, ${result.giftingCreated ? "đã tạo" : "đã dùng"} #gifting và ${result.showOffCreated ? "đã tạo" : "đã dùng"} #show-off. Starter Event: ${startersCreated} Starter mới. Thunder Trail: ${thunderCreated ? "started" : "already configured"}.`);
         logger.info("Provisioned Pokémon explore channel", { guildId: interaction.guild.id, userId: interaction.user.id, ...result });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

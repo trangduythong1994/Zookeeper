@@ -1,0 +1,3208 @@
+[
+  {
+    "nationalDex": 1,
+    "name": "Bulbasaur",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First partner Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First partner Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First partner Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Cerulean City"
+            ],
+            "notes": "Received from a girl in Cerulean City if the partner Pikachu's friendship is 147 or higher"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Bulbasaur_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 2,
+    "name": "Ivysaur",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Bulbasaur at level 16"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Bulbasaur at level 16"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Bulbasaur at level 16"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Bulbasaur at level 16"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 1,
+      "fromName": "Bulbasaur",
+      "method": "level",
+      "level": 16
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ivysaur_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 3,
+    "name": "Venusaur",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Ivysaur at level 32"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Ivysaur at level 32"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Ivysaur at level 32"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Ivysaur at level 32"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 2,
+      "fromName": "Ivysaur",
+      "method": "level",
+      "level": 32
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Venusaur_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 4,
+    "name": "Charmander",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First partner Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First partner Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First partner Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Route 24"
+            ],
+            "notes": "Received from a boy on Route 24"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Charmander_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 5,
+    "name": "Charmeleon",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Charmander at level 16"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Charmander at level 16"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Charmander at level 16"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Charmander at level 16"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 4,
+      "fromName": "Charmander",
+      "method": "level",
+      "level": 16
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Charmeleon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 6,
+    "name": "Charizard",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Charmeleon at level 36"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Charmeleon at level 36"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Charmeleon at level 36"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Charmeleon at level 36"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 5,
+      "fromName": "Charmeleon",
+      "method": "level",
+      "level": 36
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Charizard_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 7,
+    "name": "Squirtle",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First partner Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First partner Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First partner Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Vermilion City"
+            ],
+            "notes": "Received from Officer Jenny in Vermilion City after receiving the Thunder Badge"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Squirtle_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 8,
+    "name": "Wartortle",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Squirtle at level 16"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Squirtle at level 16"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Squirtle at level 16"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Squirtle at level 16"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 7,
+      "fromName": "Squirtle",
+      "method": "level",
+      "level": 16
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Wartortle_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 9,
+    "name": "Blastoise",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Wartortle at level 36"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Wartortle at level 36"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Wartortle at level 36"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Wartortle at level 36"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 8,
+      "fromName": "Wartortle",
+      "method": "level",
+      "level": 36
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Blastoise_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 10,
+    "name": "Caterpie",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Route 25, Viridian Forest"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 24",
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Routes 2, 24, and 25, Viridian Forest"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 24",
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Routes 2, 24, and 25, Viridian Forest"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Viridian Forest"
+            ],
+            "notes": "Viridian Forest"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Caterpie_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 11,
+    "name": "Metapod",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Route 25, Viridian Forest"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 24",
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Routes 24 and 25, Viridian Forest"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 24",
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Routes 24 and 25, Viridian Forest"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Viridian Forest"
+            ],
+            "notes": "Viridian Forest"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 10,
+      "fromName": "Caterpie",
+      "method": "level",
+      "level": 7
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Metapod_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 12,
+    "name": "Butterfree",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Metapod at level 10"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Metapod at level 10"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Metapod at level 10"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Metapod at level 10"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 11,
+      "fromName": "Metapod",
+      "method": "level",
+      "level": 10
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Butterfree_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 13,
+    "name": "Weedle",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 24",
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Routes 2, 24, and 25, Viridian Forest"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Route 25, Viridian Forest"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Route 25, Viridian Forest"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Weedle_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 14,
+    "name": "Kakuna",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 24",
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Routes 24 and 25, Viridian Forest"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Route 25, Viridian Forest"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Route 25, Viridian Forest"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 13,
+      "fromName": "Weedle",
+      "method": "level",
+      "level": 7
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Kakuna_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 15,
+    "name": "Beedrill",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kakuna at level 10"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kakuna at level 10"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kakuna at level 10"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 14,
+      "fromName": "Kakuna",
+      "method": "level",
+      "level": 10
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Beedrill_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 16,
+    "name": "Pidgey",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 3",
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 8",
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 21",
+              "Route 24",
+              "Route 25"
+            ],
+            "notes": "Routes 1, 2, 3, 5, 6, 7, 8, 12, 13, 14, 15, 21, 24, and 25"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 3",
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 8",
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 21",
+              "Route 24",
+              "Route 25"
+            ],
+            "notes": "Routes 1, 2, 3, 5, 6, 7, 8, 12, 13, 14, 15, 21, 24, and 25"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 3",
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 8",
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 21",
+              "Route 24",
+              "Route 25"
+            ],
+            "notes": "Routes 1, 2, 3, 5, 6, 7, 8, 12, 13, 14, 15, 21, 24, and 25"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 8",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 21",
+              "Route 24",
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Routes 1, 2, 5, 6, 7, 8, 11, 12, 13, 21, 24, and 25, Viridian Forest"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Pidgey_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 17,
+    "name": "Pidgeotto",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 14",
+              "Route 15",
+              "Route 21"
+            ],
+            "notes": "Routes 14, 15, and 21"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 14",
+              "Route 15",
+              "Route 21"
+            ],
+            "notes": "Routes 14, 15, and 21"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 14",
+              "Route 15",
+              "Route 21"
+            ],
+            "notes": "Routes 14, 15, and 21"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 8",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 21",
+              "Route 24",
+              "Route 25",
+              "Viridian Forest"
+            ],
+            "notes": "Routes 5, 6, 7, 8, 11, 12, 13, 14, 15, 21, 24, and 25, Viridian Forest"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 16,
+      "fromName": "Pidgey",
+      "method": "level",
+      "level": 18
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Pidgeotto_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 18,
+    "name": "Pidgeot",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pidgeotto at level 36"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pidgeotto at level 36"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pidgeotto at level 36"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pidgeotto at level 36"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 17,
+      "fromName": "Pidgeotto",
+      "method": "level",
+      "level": 36
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Pidgeot_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 19,
+    "name": "Rattata",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 4",
+              "Route 9",
+              "Route 16",
+              "Route 21",
+              "Route 22"
+            ],
+            "notes": "Routes 1, 2, 4, 9, 16, 21, and 22"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 4",
+              "Route 9",
+              "Route 16",
+              "Route 21",
+              "Route 22"
+            ],
+            "notes": "Routes 1, 2, 4, 9, 16, 21, and 22"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 4",
+              "Route 9",
+              "Route 16",
+              "Route 21",
+              "Route 22"
+            ],
+            "notes": "Routes 1, 2, 4, 9, 16, 21, and 22"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 3",
+              "Route 4",
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 8",
+              "Route 9",
+              "Route 10",
+              "Route 11",
+              "Route 16",
+              "Route 18",
+              "Route 21",
+              "Route 22",
+              "Pokémon Mansion"
+            ],
+            "notes": "Routes 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16, 18, 21, and 22, Pokémon Mansion"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Rattata_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 20,
+    "name": "Raticate",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 16",
+              "Route 17",
+              "Route 18",
+              "Route 21"
+            ],
+            "notes": "Routes 16, 17, 18, and 21"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 16",
+              "Route 17",
+              "Route 18",
+              "Route 21"
+            ],
+            "notes": "Routes 16, 17, 18, and 21"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 16",
+              "Route 17",
+              "Route 18",
+              "Route 21",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 16, 17, 18, and 21, Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 9",
+              "Route 10",
+              "Route 11",
+              "Route 16",
+              "Route 18",
+              "Route 21",
+              "Pokémon Mansion"
+            ],
+            "notes": "Routes 9, 10, 11, 16, 18, and 21, Pokémon Mansion"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 19,
+      "fromName": "Rattata",
+      "method": "level",
+      "level": 20
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Raticate_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 21,
+    "name": "Spearow",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 3",
+              "Route 4",
+              "Route 9",
+              "Route 10",
+              "Route 11",
+              "Route 16",
+              "Route 17",
+              "Route 18",
+              "Route 22",
+              "Route 23"
+            ],
+            "notes": "Routes 3, 4, 9, 10, 11, 16, 17, 18, 22, and 23"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 3",
+              "Route 4",
+              "Route 9",
+              "Route 10",
+              "Route 11",
+              "Route 16",
+              "Route 17",
+              "Route 18",
+              "Route 22",
+              "Route 23"
+            ],
+            "notes": "Routes 3, 4, 9, 10, 11, 16, 17, 18, 22, and 23"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 3",
+              "Route 4",
+              "Route 9",
+              "Route 10",
+              "Route 11",
+              "Route 16",
+              "Route 17",
+              "Route 18",
+              "Route 22",
+              "Route 23"
+            ],
+            "notes": "Routes 3, 4, 9, 10, 11, 16, 17, 18, 22, and 23"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 3",
+              "Route 4",
+              "Route 9",
+              "Route 16",
+              "Route 18",
+              "Route 22"
+            ],
+            "notes": "Routes 3, 4, 9, 16, 18, and 22"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Spearow_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 22,
+    "name": "Fearow",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 17",
+              "Route 18",
+              "Route 23"
+            ],
+            "notes": "Routes 17, 18, and 23"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 17",
+              "Route 18",
+              "Route 23"
+            ],
+            "notes": "Routes 17, 18, and 23"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 17",
+              "Route 18",
+              "Route 23"
+            ],
+            "notes": "Routes 17, 18, and 23"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 9",
+              "Route 16",
+              "Route 17",
+              "Route 18",
+              "Route 23"
+            ],
+            "notes": "Routes 9, 16, 17, 18, and 23"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 21,
+      "fromName": "Spearow",
+      "method": "level",
+      "level": 20
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Fearow_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 23,
+    "name": "Ekans",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 4",
+              "Route 8",
+              "Route 9",
+              "Route 10",
+              "Route 11",
+              "Route 23"
+            ],
+            "notes": "Routes 4, 8, 9, 10, 11, and 23"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ekans_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 24,
+    "name": "Arbok",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 23",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 23 and Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 23,
+      "fromName": "Ekans",
+      "method": "level",
+      "level": 22
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Arbok_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 25,
+    "name": "Pikachu",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Viridian Forest",
+              "Power Plant"
+            ],
+            "notes": "Viridian Forest, Power Plant"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Viridian Forest",
+              "Power Plant"
+            ],
+            "notes": "Viridian Forest, Power Plant"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Viridian Forest",
+              "Power Plant"
+            ],
+            "notes": "Viridian Forest, Power Plant, Rocket Game Corner"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner"
+            ],
+            "notes": "Viridian Forest, Power Plant, Rocket Game Corner"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "Pallet Town"
+            ],
+            "notes": "First Pokémon from Professor Oak in Pallet Town"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Pikachu_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 26,
+    "name": "Raichu",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Power Plant",
+              "Cerulean Cave"
+            ],
+            "notes": "Power Plant, Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Power Plant",
+              "Cerulean Cave"
+            ],
+            "notes": "Power Plant, Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pikachu using a Thunder Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 25,
+      "fromName": "Pikachu",
+      "method": "item",
+      "item": "Thunder Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Raichu_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 27,
+    "name": "Sandshrew",
+    "versions": {
+      "red": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 4",
+              "Route 8",
+              "Route 9",
+              "Route 10",
+              "Route 11",
+              "Route 23"
+            ],
+            "notes": "Routes 4, 8, 9, 10, 11, and 23"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 4",
+              "Route 8",
+              "Route 9",
+              "Route 10",
+              "Route 11",
+              "Route 23"
+            ],
+            "notes": "Routes 4, 8, 9, 10, 11, and 23"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 3",
+              "Route 4",
+              "Mt. Moon"
+            ],
+            "notes": "Routes 3 and 4, Mt. Moon"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Sandshrew_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 28,
+    "name": "Sandslash",
+    "versions": {
+      "red": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 23",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 23, Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 23",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 23, Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 27,
+      "fromName": "Sandshrew",
+      "method": "level",
+      "level": 22
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Sandslash_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 29,
+    "name": "Nidoran♀",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 22",
+              "Safari Zone"
+            ],
+            "notes": "Route 22, Safari Zone"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Underground Path (Kanto Routes 5–6)"
+            ],
+            "notes": "Trade Nidoran♂ in Underground Path (Kanto Routes 5–6) (Western languages only)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 22",
+              "Safari Zone"
+            ],
+            "notes": "Route 22, Safari Zone"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Underground Path (Kanto Routes 5–6)"
+            ],
+            "notes": "Trade Nidoran♂ in Underground Path (Kanto Routes 5–6) (Western languages only)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 22",
+              "Safari Zone"
+            ],
+            "notes": "Route 22, Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 9",
+              "Route 10",
+              "Route 22",
+              "Safari Zone"
+            ],
+            "notes": "Routes 2, 9, 10, and 22, Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Nidoran%E2%99%80_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 30,
+    "name": "Nidorina",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone, Celadon City (Rocket Game Corner)"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon City",
+              "Rocket Game Corner"
+            ],
+            "notes": "Safari Zone, Celadon City (Rocket Game Corner)"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Route 11"
+            ],
+            "notes": "Trade Nidorino on Route 11"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Route 11"
+            ],
+            "notes": "Trade Nidorino on Route 11"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 9",
+              "Route 23",
+              "Safari Zone"
+            ],
+            "notes": "Routes 9 and 23, Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 29,
+      "fromName": "Nidoran♀",
+      "method": "level",
+      "level": 16
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Nidorina_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 31,
+    "name": "Nidoqueen",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nidorina using a Moon Stone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nidorina using a Moon Stone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nidorina using a Moon Stone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nidorina using a Moon Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 30,
+      "fromName": "Nidorina",
+      "method": "item",
+      "item": "Moon Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Nidoqueen_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 32,
+    "name": "Nidoran♂",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 22",
+              "Safari Zone"
+            ],
+            "notes": "Route 22, Safari Zone"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Underground Path (Kanto Routes 5–6)"
+            ],
+            "notes": "Trade Nidoran♀ in Underground Path (Kanto Routes 5–6) (Japanese games only)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 22",
+              "Safari Zone"
+            ],
+            "notes": "Route 22, Safari Zone"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Underground Path (Kanto Routes 5–6)"
+            ],
+            "notes": "Trade Nidoran♀ in Underground Path (Kanto Routes 5–6) (Japanese games only)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 22",
+              "Safari Zone"
+            ],
+            "notes": "Route 22, Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 9",
+              "Route 10",
+              "Route 22",
+              "Safari Zone"
+            ],
+            "notes": "Routes 2, 9, 10, and 22, Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Nidoran%E2%99%82_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 33,
+    "name": "Nidorino",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone, Celadon Game Corner"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon Game Corner"
+            ],
+            "notes": "Safari Zone, Celadon Game Corner"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 9",
+              "Route 23",
+              "Safari Zone"
+            ],
+            "notes": "Routes 9 and 23, Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 32,
+      "fromName": "Nidoran♂",
+      "method": "level",
+      "level": 16
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Nidorino_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 34,
+    "name": "Nidoking",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nidorino using a Moon Stone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nidorino using a Moon Stone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nidorino using a Moon Stone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Nidorino using a Moon Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 33,
+      "fromName": "Nidorino",
+      "method": "item",
+      "item": "Moon Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Nidoking_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 35,
+    "name": "Clefairy",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon"
+            ],
+            "notes": "Mt. Moon, Celadon City (Rocket Game Corner)"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon City",
+              "Rocket Game Corner"
+            ],
+            "notes": "Mt. Moon, Celadon City (Rocket Game Corner)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon"
+            ],
+            "notes": "Mt. Moon, Celadon City (Rocket Game Corner)"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon City",
+              "Rocket Game Corner"
+            ],
+            "notes": "Mt. Moon, Celadon City (Rocket Game Corner)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon",
+              "Cerulean Cave"
+            ],
+            "notes": "Mt. Moon, Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon"
+            ],
+            "notes": "Mt. Moon"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Clefairy_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 36,
+    "name": "Clefable",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Clefairy using a Moon Stone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Clefairy using a Moon Stone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner"
+            ],
+            "notes": "Rocket Game Corner"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Clefairy using a Moon Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 35,
+      "fromName": "Clefairy",
+      "method": "item",
+      "item": "Moon Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Clefable_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 37,
+    "name": "Vulpix",
+    "versions": {
+      "red": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 7",
+              "Route 8",
+              "Pokémon Mansion"
+            ],
+            "notes": "Routes 7 and 8, Pokémon Mansion"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon City",
+              "Rocket Game Corner"
+            ],
+            "notes": "Celadon City (Rocket Game Corner)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Vulpix_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 38,
+    "name": "Ninetales",
+    "versions": {
+      "red": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Vulpix using a Fire Stone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Vulpix using a Fire Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 37,
+      "fromName": "Vulpix",
+      "method": "item",
+      "item": "Fire Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ninetales_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 39,
+    "name": "Jigglypuff",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 3"
+            ],
+            "notes": "Route 3"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 3"
+            ],
+            "notes": "Route 3"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 3"
+            ],
+            "notes": "Route 3"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 8"
+            ],
+            "notes": "Routes 5, 6, 7, and 8"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Jigglypuff_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 40,
+    "name": "Wigglytuff",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon City",
+              "Rocket Game Corner"
+            ],
+            "notes": "Celadon City (Rocket Game Corner)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 39,
+      "fromName": "Jigglypuff",
+      "method": "item",
+      "item": "Moon Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Wigglytuff_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 41,
+    "name": "Zubat",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon",
+              "Rock Tunnel",
+              "Seafoam Islands",
+              "Victory Road"
+            ],
+            "notes": "Mt. Moon, Rock Tunnel, Seafoam Islands, Victory Road"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon",
+              "Rock Tunnel",
+              "Seafoam Islands",
+              "Victory Road"
+            ],
+            "notes": "Mt. Moon, Rock Tunnel, Seafoam Islands, Victory Road"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon",
+              "Rock Tunnel",
+              "Seafoam Islands",
+              "Victory Road"
+            ],
+            "notes": "Mt. Moon, Rock Tunnel, Seafoam Islands, Victory Road"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon",
+              "Rock Tunnel",
+              "Seafoam Islands",
+              "Victory Road"
+            ],
+            "notes": "Mt. Moon, Rock Tunnel, Seafoam Islands, Victory Road"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Zubat_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 42,
+    "name": "Golbat",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands",
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Seafoam Islands, Victory Road, Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands",
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Seafoam Islands, Victory Road, Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands",
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Seafoam Islands, Victory Road, Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands",
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Seafoam Islands, Victory Road, Cerulean Cave"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 41,
+      "fromName": "Zubat",
+      "method": "level",
+      "level": 22
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Golbat_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 43,
+    "name": "Oddish",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 24",
+              "Route 25"
+            ],
+            "notes": "Routes 5, 6, 7, 12, 13, 14, 15, 24, and 25"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 24",
+              "Route 25"
+            ],
+            "notes": "Routes 5, 6, 7, 12, 13, 14, 15, 24, and 25"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 24",
+              "Route 25"
+            ],
+            "notes": "Routes 12, 13, 14, 15, 24, and 25"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Oddish_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 44,
+    "name": "Gloom",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15"
+            ],
+            "notes": "Routes 12, 13, 14, and 15"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15"
+            ],
+            "notes": "Routes 12, 13, 14, and 15"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 12, 13, 14, and 15, Cerulean Cave"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 43,
+      "fromName": "Oddish",
+      "method": "level",
+      "level": 21
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Gloom_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 45,
+    "name": "Vileplume",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Gloom using a Leaf Stone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Gloom using a Leaf Stone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Gloom using a Leaf Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 44,
+      "fromName": "Gloom",
+      "method": "item",
+      "item": "Leaf Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Vileplume_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 46,
+    "name": "Paras",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon",
+              "Safari Zone"
+            ],
+            "notes": "Mt. Moon, Safari Zone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon",
+              "Safari Zone"
+            ],
+            "notes": "Mt. Moon, Safari Zone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon",
+              "Safari Zone"
+            ],
+            "notes": "Mt. Moon, Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Moon",
+              "Safari Zone"
+            ],
+            "notes": "Mt. Moon, Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Paras_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 47,
+    "name": "Parasect",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Cerulean Cave"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Route 18"
+            ],
+            "notes": "Trade for Tangela on Route 18"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 46,
+      "fromName": "Paras",
+      "method": "level",
+      "level": 24
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Parasect_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 48,
+    "name": "Venonat",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Safari Zone"
+            ],
+            "notes": "Routes 12, 13, 14, and 15, Safari Zone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Safari Zone"
+            ],
+            "notes": "Routes 12, 13, 14, and 15, Safari Zone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Safari Zone"
+            ],
+            "notes": "Routes 12, 13, 14, and 15, Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 14",
+              "Route 15",
+              "Route 24",
+              "Route 25"
+            ],
+            "notes": "Routes 14, 15, 24, and 25"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Venonat_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 49,
+    "name": "Venomoth",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Victory Road, Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Victory Road, Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Victory Road, Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 14",
+              "Route 15",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 14 and 15, Cerulean Cave"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 48,
+      "fromName": "Venonat",
+      "method": "level",
+      "level": 31
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Venomoth_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 50,
+    "name": "Diglett",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Diglett's Cave"
+            ],
+            "notes": "Diglett's Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Diglett's Cave"
+            ],
+            "notes": "Diglett's Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Diglett's Cave"
+            ],
+            "notes": "Diglett's Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Diglett's Cave"
+            ],
+            "notes": "Diglett's Cave"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Diglett_(Pok%C3%A9mon)"
+  }
+]

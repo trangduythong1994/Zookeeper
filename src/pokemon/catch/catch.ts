@@ -30,6 +30,7 @@ export type PokemonSpawn = {
   goCaptureRate: number;
   goFleeRate: number | null;
   isEvent: boolean;
+  eventKey: string | null;
   catchSequenceLength: number | null;
   appearedAt: number;
   expiresAt: number;
@@ -95,9 +96,9 @@ export function addPokemonSpawn(database: Database.Database, spawn: Omit<Pokemon
   database.prepare(`
     INSERT INTO pokemon_spawns (
       message_id, guild_id, channel_id, pokemon_national_dex, pokemon_name, region_key, location_key, location_name,
-      encounter_rate, encounter_rarity, go_capture_rate, go_flee_rate, is_event, catch_sequence_length, appeared_at, expires_at, state
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')
-  `).run(spawn.messageId, spawn.guildId, spawn.channelId, spawn.pokemonNationalDex, spawn.pokemonName, spawn.regionKey, spawn.locationKey, spawn.locationName, spawn.encounterRate, spawn.encounterRarity, spawn.goCaptureRate, spawn.goFleeRate, Number(spawn.isEvent), spawn.catchSequenceLength, spawn.appearedAt, spawn.expiresAt);
+      encounter_rate, encounter_rarity, go_capture_rate, go_flee_rate, is_event, event_key, catch_sequence_length, appeared_at, expires_at, state
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')
+  `).run(spawn.messageId, spawn.guildId, spawn.channelId, spawn.pokemonNationalDex, spawn.pokemonName, spawn.regionKey, spawn.locationKey, spawn.locationName, spawn.encounterRate, spawn.encounterRarity, spawn.goCaptureRate, spawn.goFleeRate, Number(spawn.isEvent), spawn.eventKey, spawn.catchSequenceLength, spawn.appearedAt, spawn.expiresAt);
 }
 
 export function pokemonSpawn(database: Database.Database, messageId: string): PokemonSpawn | undefined {
@@ -105,7 +106,7 @@ export function pokemonSpawn(database: Database.Database, messageId: string): Po
     SELECT message_id AS messageId, guild_id AS guildId, channel_id AS channelId, pokemon_national_dex AS pokemonNationalDex,
       pokemon_name AS pokemonName, region_key AS regionKey, location_key AS locationKey, location_name AS locationName,
       encounter_rate AS encounterRate, encounter_rarity AS encounterRarity, go_capture_rate AS goCaptureRate, go_flee_rate AS goFleeRate, appeared_at AS appearedAt, expires_at AS expiresAt,
-      is_event AS isEvent, catch_sequence_length AS catchSequenceLength, state, caught_by_user_id AS caughtByUserId, resolved_at AS resolvedAt
+      is_event AS isEvent, event_key AS eventKey, catch_sequence_length AS catchSequenceLength, state, caught_by_user_id AS caughtByUserId, resolved_at AS resolvedAt
     FROM pokemon_spawns WHERE message_id = ?
   `).get(messageId) as PokemonSpawn | undefined;
 }
@@ -115,7 +116,7 @@ export function activeSpawnInChannel(database: Database.Database, guildId: strin
     SELECT message_id AS messageId, guild_id AS guildId, channel_id AS channelId, pokemon_national_dex AS pokemonNationalDex,
       pokemon_name AS pokemonName, region_key AS regionKey, location_key AS locationKey, location_name AS locationName,
       encounter_rate AS encounterRate, encounter_rarity AS encounterRarity, go_capture_rate AS goCaptureRate, go_flee_rate AS goFleeRate, appeared_at AS appearedAt, expires_at AS expiresAt,
-      is_event AS isEvent, catch_sequence_length AS catchSequenceLength, state, caught_by_user_id AS caughtByUserId, resolved_at AS resolvedAt
+      is_event AS isEvent, event_key AS eventKey, catch_sequence_length AS catchSequenceLength, state, caught_by_user_id AS caughtByUserId, resolved_at AS resolvedAt
     FROM pokemon_spawns
     WHERE guild_id = ? AND channel_id = ? AND state = 'active' AND expires_at > ?
     ORDER BY appeared_at DESC LIMIT 1
@@ -134,7 +135,7 @@ export function caughtPokemonForPlayer(database: Database.Database, guildId: str
     JOIN pokemon_spawns p ON p.message_id = c.spawn_message_id
     WHERE c.guild_id = ? AND c.user_id = ?
       AND c.id = (SELECT MAX(latest.id) FROM pokemon_catches latest WHERE latest.guild_id = c.guild_id AND latest.user_id = c.user_id AND latest.pokemon_national_dex = c.pokemon_national_dex)
-    ORDER BY caughtAt DESC
+    ORDER BY c.pokemon_national_dex ASC
   `).all(guildId, userId) as CaughtPokemon[];
 }
 

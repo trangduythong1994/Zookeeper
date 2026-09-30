@@ -1,0 +1,1702 @@
+[
+  {
+    "nationalDex": 186,
+    "name": "Politoed",
+    "versions": {
+      "gold": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Poliwhirl when traded while holding a King's Rock"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Poliwhirl when traded while holding a King's Rock"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Poliwhirl when traded while holding a King's Rock"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 61,
+      "fromName": "Poliwhirl",
+      "method": "trade",
+      "heldItem": "King's Rock"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Politoed_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 187,
+    "name": "Hoppip",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 32",
+              "Route 33"
+            ],
+            "notes": "Routes 13, 14, 15, 32, and 33 (Morning) (Day)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 32",
+              "Route 33"
+            ],
+            "notes": "Routes 13, 14, 15, 32, and 33 (Morning) (Day)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 11",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 32",
+              "Route 33"
+            ],
+            "notes": "Routes 11, 13, 14, 15, 29, 30, 31, 32, and 33 (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Hoppip_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 188,
+    "name": "Skiploom",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 14"
+            ],
+            "notes": "Route 14 (Morning) (Day)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 14"
+            ],
+            "notes": "Route 14 (Morning) (Day)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 14"
+            ],
+            "notes": "Route 14 (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 187,
+      "fromName": "Hoppip",
+      "method": "level",
+      "level": 18
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Skiploom_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 189,
+    "name": "Jumpluff",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Skiploom at level 27"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Skiploom at level 27"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Skiploom at level 27"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 188,
+      "fromName": "Skiploom",
+      "method": "level",
+      "level": 27
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Jumpluff_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 190,
+    "name": "Aipom",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 32",
+              "Route 33",
+              "Route 42",
+              "Route 43",
+              "Route 44"
+            ],
+            "notes": "Routes 29, 30, 31, 32, 33, 42, 43, and 44 (Headbutt trees)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 32",
+              "Route 33",
+              "Route 42",
+              "Route 43",
+              "Route 44"
+            ],
+            "notes": "Routes 29, 30, 31, 32, 33, 42, 43, and 44 (Headbutt trees)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 33",
+              "Route 42",
+              "Route 44",
+              "Azalea Town"
+            ],
+            "notes": "Routes 33, 42, and 44, Azalea Town (Headbutt trees)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Aipom_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 191,
+    "name": "Sunkern",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 24",
+              "National Park"
+            ],
+            "notes": "Route 24, National Park (Day)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 24",
+              "National Park"
+            ],
+            "notes": "Route 24, National Park (Day)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 24",
+              "National Park"
+            ],
+            "notes": "Route 24, National Park (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Sunkern_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 192,
+    "name": "Sunflora",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Sunkern using a Sun Stone"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Sunkern using a Sun Stone"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Sunkern using a Sun Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 191,
+      "fromName": "Sunkern",
+      "method": "item",
+      "item": "Sun Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Sunflora_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 193,
+    "name": "Yanma",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 35"
+            ],
+            "notes": "Route 35"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 35"
+            ],
+            "notes": "Route 35"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 35"
+            ],
+            "notes": "Route 35"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Yanma_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 194,
+    "name": "Wooper",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 32"
+            ],
+            "notes": "Route 32 (Night)"
+          },
+          {
+            "label": "surf",
+            "locations": [
+              "Ruins of Alph",
+              "Union Cave"
+            ],
+            "notes": "Ruins of Alph, Union Cave (Surfing)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 32"
+            ],
+            "notes": "Route 32 (Night)"
+          },
+          {
+            "label": "surf",
+            "locations": [
+              "Ruins of Alph",
+              "Union Cave"
+            ],
+            "notes": "Ruins of Alph, Union Cave (Surfing)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 32",
+              "Ruins of Alph",
+              "Union Cave"
+            ],
+            "notes": "Route 32, Ruins of Alph, Union Cave (Night)"
+          },
+          {
+            "label": "surf",
+            "locations": [
+              "Ruins of Alph",
+              "Union Cave"
+            ],
+            "notes": "Ruins of Alph, Union Cave (Surfing)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Wooper_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 195,
+    "name": "Quagsire",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 10",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 26",
+              "Route 27"
+            ],
+            "notes": "Routes 10, 13, 14, 15, 26, and 27 (tall grass) (Day) (Night)"
+          },
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Silver Cave"
+            ],
+            "notes": "Mt. Silver Cave (2F and chambers)"
+          },
+          {
+            "label": "surf",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 32",
+              "Ruins of Alph",
+              "Union Cave"
+            ],
+            "notes": "Routes 12, 13, and 32, Ruins of Alph, Union Cave (Surfing)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 10",
+              "Route 13",
+              "Route 14",
+              "Route 15"
+            ],
+            "notes": "Routes 10, 13, 14, and 15 (tall grass) (Day) (Night)"
+          },
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 26",
+              "Route 27"
+            ],
+            "notes": "Routes 26 and 27 (tall grass) (Day)"
+          },
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Silver Cave"
+            ],
+            "notes": "Mt. Silver Cave (2F and chambers)"
+          },
+          {
+            "label": "surf",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 32",
+              "Ruins of Alph",
+              "Union Cave"
+            ],
+            "notes": "Routes 12, 13, and 32, Ruins of Alph, Union Cave (Surfing)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 26",
+              "Route 27",
+              "Ruins of Alph",
+              "Union Cave"
+            ],
+            "notes": "Routes 13, 14, 15, 26, and 27, Ruins of Alph, Union Cave (Night)"
+          },
+          {
+            "label": "surf",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 32",
+              "Ruins of Alph",
+              "Union Cave"
+            ],
+            "notes": "Routes 12, 13, and 32, Ruins of Alph, Union Cave (Surfing)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 194,
+      "fromName": "Wooper",
+      "method": "level",
+      "level": 20
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Quagsire_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 196,
+    "name": "Espeon",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee by leveling up with friendship of at least 220 during the day"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee by leveling up with friendship of at least 220 during the day"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee by leveling up with friendship of at least 220 during the day"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 133,
+      "fromName": "Eevee",
+      "method": "level",
+      "friendship": 220,
+      "timeOfDay": "day"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Espeon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 197,
+    "name": "Umbreon",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee by leveling up with friendship of at least 220 during the night"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee by leveling up with friendship of at least 220 during the night"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee by leveling up with friendship of at least 220 during the night"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 133,
+      "fromName": "Eevee",
+      "method": "level",
+      "friendship": 220,
+      "timeOfDay": "night"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Umbreon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 198,
+    "name": "Murkrow",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 7",
+              "Route 16"
+            ],
+            "notes": "Routes 7, 16 (Night)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 7",
+              "Route 16"
+            ],
+            "notes": "Routes 7, 16 (Night)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 7",
+              "Route 16"
+            ],
+            "notes": "Routes 7, 16 (Night)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Murkrow_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 199,
+    "name": "Slowking",
+    "versions": {
+      "gold": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Slowpoke when traded while holding a King's Rock"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Slowpoke when traded while holding a King's Rock"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Slowpoke when traded while holding a King's Rock"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 79,
+      "fromName": "Slowpoke",
+      "method": "trade",
+      "heldItem": "King's Rock"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Slowking_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 200,
+    "name": "Misdreavus",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Silver Cave"
+            ],
+            "notes": "Mt. Silver Cave (Night)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Silver Cave"
+            ],
+            "notes": "Mt. Silver Cave (Night)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Silver Cave"
+            ],
+            "notes": "Mt. Silver Cave (Night)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Misdreavus_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 201,
+    "name": "Unown",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ruins of Alph"
+            ],
+            "notes": "Inside Ruins of Alph (different forms appear when puzzles are solved)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ruins of Alph"
+            ],
+            "notes": "Inside Ruins of Alph (different forms appear when puzzles are solved)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ruins of Alph"
+            ],
+            "notes": "Inside Ruins of Alph (different forms appear when puzzles are solved)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Unown_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 202,
+    "name": "Wobbuffet",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Dark Cave"
+            ],
+            "notes": "Dark Cave (Blackthorn City side)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Dark Cave"
+            ],
+            "notes": "Dark Cave (Blackthorn City side)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Dark Cave"
+            ],
+            "notes": "Dark Cave (Blackthorn City side) (Night), Goldenrod Game Corner"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Goldenrod Game Corner"
+            ],
+            "notes": "Dark Cave (Blackthorn City side) (Night), Goldenrod Game Corner"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Wobbuffet_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 203,
+    "name": "Girafarig",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 43"
+            ],
+            "notes": "Route 43"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 43"
+            ],
+            "notes": "Route 43"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Girafarig_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 204,
+    "name": "Pineco",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 26",
+              "Route 27",
+              "Route 34",
+              "Route 35",
+              "Route 36",
+              "Route 37",
+              "Route 38",
+              "Route 39",
+              "Azalea Town",
+              "Ilex Forest",
+              "Lake of Rage"
+            ],
+            "notes": "Routes 26, 27, 34, 35, 36, 37, 38, and 39, Azalea Town, Ilex Forest, Lake of Rage (Headbutt trees) (only high-encounter trees)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 26",
+              "Route 27",
+              "Route 34",
+              "Route 35",
+              "Route 36",
+              "Route 37",
+              "Route 38",
+              "Route 39",
+              "Azalea Town",
+              "Ilex Forest",
+              "Lake of Rage"
+            ],
+            "notes": "Routes 26, 27, 34, 35, 36, 37, 38, and 39, Azalea Town, Ilex Forest, Lake of Rage (Headbutt trees) (only high-encounter trees)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 26",
+              "Route 27",
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 32",
+              "Route 34",
+              "Route 35",
+              "Route 36",
+              "Route 37",
+              "Route 38",
+              "Route 39",
+              "Route 43",
+              "Lake of Rage",
+              "Ilex Forest"
+            ],
+            "notes": "Routes 26, 27, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, and 43, Lake of Rage, Ilex Forest (Headbutt trees)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Pineco_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 205,
+    "name": "Forretress",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pineco at level 31"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pineco at level 31"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pineco at level 31"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 204,
+      "fromName": "Pineco",
+      "method": "level",
+      "level": 31
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Forretress_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 206,
+    "name": "Dunsparce",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Dark Cave"
+            ],
+            "notes": "Dark Cave (Violet City side)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Dark Cave"
+            ],
+            "notes": "Dark Cave (Violet City side)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Dark Cave"
+            ],
+            "notes": "Dark Cave (Violet City side)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Dunsparce_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 207,
+    "name": "Gligar",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 45"
+            ],
+            "notes": "Route 45"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 45"
+            ],
+            "notes": "Route 45"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Gligar_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 208,
+    "name": "Steelix",
+    "versions": {
+      "gold": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Onix when traded while holding a Metal Coat"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Onix when traded while holding a Metal Coat"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Onix when traded while holding a Metal Coat"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 95,
+      "fromName": "Onix",
+      "method": "trade",
+      "heldItem": "Metal Coat"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Steelix_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 209,
+    "name": "Snubbull",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 38"
+            ],
+            "notes": "Route 38"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 38"
+            ],
+            "notes": "Route 38"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 5",
+              "Route 6",
+              "Route 7",
+              "Route 8",
+              "Route 34",
+              "Route 35"
+            ],
+            "notes": "Routes 5, 6, 7, 8, 34, and 35 (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Snubbull_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 210,
+    "name": "Granbull",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Snubbull at level 23"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Snubbull at level 23"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 6"
+            ],
+            "notes": "Route 6 (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 209,
+      "fromName": "Snubbull",
+      "method": "level",
+      "level": 23
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Granbull_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 211,
+    "name": "Qwilfish",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 32"
+            ],
+            "notes": "Routes 12, 13, and 32 (Super Rod (During swarm on Route 32, it can be caught there with all rods))"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 32"
+            ],
+            "notes": "Routes 12, 13, and 32 (Super Rod (During swarm on Route 32, it can be caught there with all rods))"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 32"
+            ],
+            "notes": "Routes 12, 13, and 32 (Super Rod (During swarm on Route 32, it can be caught there with all rods))"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Qwilfish_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 212,
+    "name": "Scizor",
+    "versions": {
+      "gold": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Scyther when traded while holding a Metal Coat"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Scyther when traded while holding a Metal Coat"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Scyther when traded while holding a Metal Coat"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 123,
+      "fromName": "Scyther",
+      "method": "trade",
+      "heldItem": "Metal Coat"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Scizor_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 213,
+    "name": "Shuckle",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Cianwood City"
+            ],
+            "notes": "Received from a PokéManiac in Cianwood City"
+          },
+          {
+            "label": "rock_smash",
+            "locations": [
+              "Route 40",
+              "Cianwood City",
+              "Dark Cave"
+            ],
+            "notes": "Route 40, Cianwood City, Dark Cave (Rock Smash)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Cianwood City"
+            ],
+            "notes": "Received from a PokéManiac in Cianwood City"
+          },
+          {
+            "label": "rock_smash",
+            "locations": [
+              "Route 40",
+              "Cianwood City",
+              "Dark Cave"
+            ],
+            "notes": "Route 40, Cianwood City, Dark Cave (Rock Smash)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Cianwood City"
+            ],
+            "notes": "Received from a PokéManiac in Cianwood City"
+          },
+          {
+            "label": "rock_smash",
+            "locations": [
+              "Route 40",
+              "Cianwood City",
+              "Dark Cave"
+            ],
+            "notes": "Route 40, Cianwood City, Dark Cave (Rock Smash)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Shuckle_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 214,
+    "name": "Heracross",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 32",
+              "Route 33",
+              "Route 42",
+              "Route 43",
+              "Route 44"
+            ],
+            "notes": "Routes 29, 30, 31, 32, 33, 42, 43, and 44 (Headbutt trees) (only high-encounter trees)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 32",
+              "Route 33",
+              "Route 42",
+              "Route 43",
+              "Route 44"
+            ],
+            "notes": "Routes 29, 30, 31, 32, 33, 42, 43, and 44 (Headbutt trees) (only high-encounter trees)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "headbutt",
+            "locations": [
+              "Azalea Town",
+              "Route 33",
+              "Route 42",
+              "Route 44"
+            ],
+            "notes": "Azalea Town, Routes 33, 42, and 44 (Headbutt trees)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Heracross_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 215,
+    "name": "Sneasel",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 28",
+              "Mt. Silver"
+            ],
+            "notes": "Route 28, Mt. Silver (Night)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 28",
+              "Mt. Silver"
+            ],
+            "notes": "Route 28, Mt. Silver (Night)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ice Path"
+            ],
+            "notes": "Ice Path (Night)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Sneasel_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 216,
+    "name": "Teddiursa",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 45"
+            ],
+            "notes": "Route 45 (Exclusive to Silver in Japanese and Korean games)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Dark Cave"
+            ],
+            "notes": "Dark Cave (Morning)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Teddiursa_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 217,
+    "name": "Ursaring",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 28",
+              "Victory Road",
+              "Mt. Silver",
+              "Mt. Silver Cave"
+            ],
+            "notes": "Route 28, Victory Road, Mt. Silver, Mt. Silver Cave (Exclusive to Silver in Japanese and Korean games)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Teddiursa at level 30"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Dark Cave",
+              "Mt. Silver Cave"
+            ],
+            "notes": "Dark Cave (Blackthorn City side), Mt. Silver Cave (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 216,
+      "fromName": "Teddiursa",
+      "method": "level",
+      "level": 30
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ursaring_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 218,
+    "name": "Slugma",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 16",
+              "Route 17",
+              "Route 18"
+            ],
+            "notes": "Routes 16, 17, and 18"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 16",
+              "Route 17",
+              "Route 18"
+            ],
+            "notes": "Routes 16, 17, and 18"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 16",
+              "Route 17",
+              "Route 18"
+            ],
+            "notes": "Routes 16, 17, and 18 (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Slugma_(Pok%C3%A9mon)"
+  }
+]

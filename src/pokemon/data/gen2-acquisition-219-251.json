@@ -1,0 +1,1569 @@
+[
+  {
+    "nationalDex": 219,
+    "name": "Magcargo",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Slugma at level 38"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Slugma at level 38"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Slugma at level 38"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 218,
+      "fromName": "Slugma",
+      "method": "level",
+      "level": 38
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Magcargo_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 220,
+    "name": "Swinub",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ice Path"
+            ],
+            "notes": "Ice Path"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ice Path"
+            ],
+            "notes": "Ice Path"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ice Path"
+            ],
+            "notes": "Ice Path (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Swinub_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 221,
+    "name": "Piloswine",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Swinub at level 33"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Swinub at level 33"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Swinub at level 33"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 220,
+      "fromName": "Swinub",
+      "method": "level",
+      "level": 33
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Piloswine_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 222,
+    "name": "Corsola",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 19",
+              "Route 34",
+              "Route 40",
+              "Olivine City",
+              "Cianwood City",
+              "Cerulean City",
+              "Cerulean Gym",
+              "Cherrygrove City",
+              "Union Cave"
+            ],
+            "notes": "Routes 19, 34, 40, Olivine City, Cianwood City, Cerulean City and Gym, Cherrygrove City, Union Cave (Good Rod or Super Rod) (Morning) (Day)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 34",
+              "Route 40",
+              "Olivine City",
+              "Cianwood City",
+              "Cerulean City",
+              "Cerulean Gym",
+              "Cherrygrove City",
+              "Union Cave"
+            ],
+            "notes": "Routes 19, 34, 40, Olivine City, Cianwood City, Cerulean City and Gym, Cherrygrove City, Union Cave (Good Rod or Super Rod) (Morning) (Day)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 19",
+              "Route 34",
+              "Route 40",
+              "Olivine City",
+              "Cianwood City",
+              "Cerulean City",
+              "Cerulean Gym",
+              "Cherrygrove City",
+              "Union Cave"
+            ],
+            "notes": "Routes 19, 34, 40, Olivine City, Cianwood City, Cerulean City and Gym, Cherrygrove City, Union Cave (Good Rod or Super Rod) (Morning) (Day)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 34",
+              "Route 40",
+              "Olivine City",
+              "Cianwood City",
+              "Cerulean City",
+              "Cerulean Gym",
+              "Cherrygrove City",
+              "Union Cave"
+            ],
+            "notes": "Routes 19, 34, 40, Olivine City, Cianwood City, Cerulean City and Gym, Cherrygrove City, Union Cave (Good Rod or Super Rod) (Morning) (Day)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 19",
+              "Route 34",
+              "Route 40",
+              "Olivine City",
+              "Cianwood City",
+              "Cerulean City",
+              "Cherrygrove City",
+              "Union Cave"
+            ],
+            "notes": "Routes 19, 34, 40, Olivine City, Cianwood City, Cerulean City, Cherrygrove City, Union Cave (Good Rod or Super Rod) (Morning) (Day)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 34",
+              "Route 40",
+              "Olivine City",
+              "Cianwood City",
+              "Cerulean City",
+              "Cherrygrove City",
+              "Union Cave"
+            ],
+            "notes": "Routes 19, 34, 40, Olivine City, Cianwood City, Cerulean City, Cherrygrove City, Union Cave (Good Rod or Super Rod) (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Corsola_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 223,
+    "name": "Remoraid",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 44"
+            ],
+            "notes": "Route 44 (Super Rod (Any Fishing Rod during a swarm))"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 44"
+            ],
+            "notes": "Route 44 (Super Rod (Any Fishing Rod during a swarm))"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Remoraid_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 224,
+    "name": "Octillery",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Remoraid at level 25"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Remoraid at level 25"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Remoraid at level 25"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 223,
+      "fromName": "Remoraid",
+      "method": "level",
+      "level": 25
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Octillery_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 225,
+    "name": "Delibird",
+    "versions": {
+      "gold": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ice Path"
+            ],
+            "notes": "Ice Path"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ice Path"
+            ],
+            "notes": "Ice Path (Night)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Delibird_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 226,
+    "name": "Mantine",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 41"
+            ],
+            "notes": "Route 41"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 41"
+            ],
+            "notes": "Route 41"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Mantine_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 227,
+    "name": "Skarmory",
+    "versions": {
+      "gold": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 45"
+            ],
+            "notes": "Route 45"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 45"
+            ],
+            "notes": "Route 45 (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Skarmory_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 228,
+    "name": "Houndour",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 7"
+            ],
+            "notes": "Route 7 (Night)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 7"
+            ],
+            "notes": "Route 7 (Night)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 7"
+            ],
+            "notes": "Route 7 (Night)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Houndour_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 229,
+    "name": "Houndoom",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Houndour at level 24"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Houndour at level 24"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Houndour at level 24"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 228,
+      "fromName": "Houndour",
+      "method": "level",
+      "level": 24
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Houndoom_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 230,
+    "name": "Kingdra",
+    "versions": {
+      "gold": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Seadra when traded while holding a Dragon Scale"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Seadra when traded while holding a Dragon Scale"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Seadra when traded while holding a Dragon Scale"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 117,
+      "fromName": "Seadra",
+      "method": "trade",
+      "heldItem": "Dragon Scale"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Kingdra_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 231,
+    "name": "Phanpy",
+    "versions": {
+      "gold": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 45"
+            ],
+            "notes": "Route 45 (Exclusive to Gold in Japanese and Korean games)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 45",
+              "Route 46"
+            ],
+            "notes": "Routes 45 and 46 (Morning)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Phanpy_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 232,
+    "name": "Donphan",
+    "versions": {
+      "gold": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Evolve Event Phanpy"
+          },
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Phanpy at level 25"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 28",
+              "Mt. Silver",
+              "Mt. Silver Cave",
+              "Victory Road"
+            ],
+            "notes": "Route 28, Mt. Silver, Mt. Silver Cave, Victory Road (Exclusive to Gold in Japanese and Korean games)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 45"
+            ],
+            "notes": "Route 45 (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 231,
+      "fromName": "Phanpy",
+      "method": "level",
+      "level": 25
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Donphan_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 233,
+    "name": "Porygon2",
+    "versions": {
+      "gold": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Porygon when traded while holding an Upgrade"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Porygon when traded while holding an Upgrade"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "ET",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Porygon when traded while holding an Upgrade"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 137,
+      "fromName": "Porygon",
+      "method": "trade",
+      "heldItem": "Upgrade"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Porygon2_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 234,
+    "name": "Stantler",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 36",
+              "Route 37"
+            ],
+            "notes": "Routes 36 and 37"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 36",
+              "Route 37"
+            ],
+            "notes": "Routes 36 and 37"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 37"
+            ],
+            "notes": "Route 37 (Night)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Stantler_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 235,
+    "name": "Smeargle",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ruins of Alph"
+            ],
+            "notes": "Ruins of Alph"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ruins of Alph"
+            ],
+            "notes": "Ruins of Alph"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ruins of Alph"
+            ],
+            "notes": "Ruins of Alph (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Smeargle_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 236,
+    "name": "Tyrogue",
+    "versions": {
+      "gold": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Mt. Mortar"
+            ],
+            "notes": "Received from Kiyo in Mt. Mortar"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Mt. Mortar"
+            ],
+            "notes": "Received from Kiyo in Mt. Mortar"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Mt. Mortar"
+            ],
+            "notes": "Received from Kiyo in Mt. Mortar"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 34"
+            ],
+            "notes": "Route 34 (Odd Egg (The Pokémon in the Egg is random))"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Tyrogue_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 237,
+    "name": "Hitmontop",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Tyrogue at level 20 when Attack equals Defense"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Tyrogue at level 20 when Attack equals Defense"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Tyrogue at level 20 when Attack equals Defense"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 236,
+      "fromName": "Tyrogue",
+      "method": "level",
+      "level": 20,
+      "condition": "Attack equals Defense"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Hitmontop_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 238,
+    "name": "Smoochum",
+    "versions": {
+      "gold": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Jynx"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Jynx"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Jynx"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 34"
+            ],
+            "notes": "Route 34 (Odd Egg (The Pokémon in the Egg is random))"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Smoochum_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 239,
+    "name": "Elekid",
+    "versions": {
+      "gold": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Electabuzz"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Electabuzz"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Electabuzz"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 34"
+            ],
+            "notes": "Route 34 (Odd Egg (The Pokémon in the Egg is random))"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Elekid_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 240,
+    "name": "Magby",
+    "versions": {
+      "gold": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Magmar"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Magmar"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Magmar"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 34"
+            ],
+            "notes": "Route 34 (Odd Egg (The Pokémon in the Egg is random))"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Magby_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 241,
+    "name": "Miltank",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 38",
+              "Route 39"
+            ],
+            "notes": "Routes 38 and 39"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 38",
+              "Route 39"
+            ],
+            "notes": "Routes 38 and 39"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 38",
+              "Route 39"
+            ],
+            "notes": "Routes 38 and 39 (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Miltank_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 242,
+    "name": "Blissey",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Chansey by leveling up with friendship of at least 220"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Chansey by leveling up with friendship of at least 220"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Chansey by leveling up with friendship of at least 220"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 113,
+      "fromName": "Chansey",
+      "method": "level",
+      "friendship": 220
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Blissey_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 243,
+    "name": "Raikou",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "roaming",
+            "locations": [
+              "Johto"
+            ],
+            "notes": "Roaming Johto (Only one)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "roaming",
+            "locations": [
+              "Johto"
+            ],
+            "notes": "Roaming Johto (Only one)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "roaming",
+            "locations": [
+              "Johto"
+            ],
+            "notes": "Roaming Johto (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Raikou_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 244,
+    "name": "Entei",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "roaming",
+            "locations": [
+              "Johto"
+            ],
+            "notes": "Roaming Johto (Only one)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "roaming",
+            "locations": [
+              "Johto"
+            ],
+            "notes": "Roaming Johto (Only one)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "roaming",
+            "locations": [
+              "Johto"
+            ],
+            "notes": "Roaming Johto (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Entei_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 245,
+    "name": "Suicune",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "roaming",
+            "locations": [
+              "Johto"
+            ],
+            "notes": "Roaming Johto (Only one)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "roaming",
+            "locations": [
+              "Johto"
+            ],
+            "notes": "Roaming Johto (Only one)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Tin Tower"
+            ],
+            "notes": "Tin Tower (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Suicune_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 246,
+    "name": "Larvitar",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Silver Cave"
+            ],
+            "notes": "Mt. Silver Cave"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Silver Cave"
+            ],
+            "notes": "Mt. Silver Cave"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Silver Cave"
+            ],
+            "notes": "Mt. Silver Cave (Morning) (Day)"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon Game Corner"
+            ],
+            "notes": "Celadon Game Corner"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Larvitar_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 247,
+    "name": "Pupitar",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Larvitar at level 30"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Larvitar at level 30"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Silver Cave"
+            ],
+            "notes": "Mt. Silver Cave (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 246,
+      "fromName": "Larvitar",
+      "method": "level",
+      "level": 30
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Pupitar_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 248,
+    "name": "Tyranitar",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pupitar at level 55"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pupitar at level 55"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Pupitar at level 55"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 247,
+      "fromName": "Pupitar",
+      "method": "level",
+      "level": 55
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Tyranitar_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 249,
+    "name": "Lugia",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Whirl Islands"
+            ],
+            "notes": "Whirl Islands (requires Silver Wing) (Only one)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Whirl Islands"
+            ],
+            "notes": "Whirl Islands (requires Silver Wing) (Only one)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Whirl Islands"
+            ],
+            "notes": "Whirl Islands (requires Silver Wing) (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Lugia_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 250,
+    "name": "Ho-Oh",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Tin Tower"
+            ],
+            "notes": "Tin Tower (requires Rainbow Wing) (Only one)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Tin Tower"
+            ],
+            "notes": "Tin Tower (requires Rainbow Wing) (Only one)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Tin Tower"
+            ],
+            "notes": "Tin Tower (requires Rainbow Wing) (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ho-Oh_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 251,
+    "name": "Celebi",
+    "versions": {
+      "gold": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Trade, Event"
+          },
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Trade, Event"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Ilex Forest"
+            ],
+            "notes": "Ilex Forest (requires GS Ball) (distributed in the Japanese version only for the original release; available without an event for all languages in the VC release)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Celebi_(Pok%C3%A9mon)"
+  }
+]

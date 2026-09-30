@@ -1,0 +1,3426 @@
+[
+  {
+    "nationalDex": 101,
+    "name": "Electrode",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Power Plant"
+            ],
+            "notes": "Power Plant (Two)"
+          },
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Trade Raichu at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Power Plant"
+            ],
+            "notes": "Power Plant (Two)"
+          },
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Trade Raichu at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Power Plant"
+            ],
+            "notes": "Power Plant (Two)"
+          },
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Power Plant"
+            ],
+            "notes": "Power Plant (Two)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 100,
+      "fromName": "Voltorb",
+      "method": "level",
+      "level": 30
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Electrode_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 102,
+    "name": "Exeggcute",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Exeggcute_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 103,
+    "name": "Exeggutor",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Exeggcute using a Leaf Stone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Exeggcute using a Leaf Stone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Exeggcute using a Leaf Stone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Exeggcute using a Leaf Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 102,
+      "fromName": "Exeggcute",
+      "method": "item",
+      "item": "Leaf Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Exeggutor_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 104,
+    "name": "Cubone",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Tower"
+            ],
+            "notes": "Pokémon Tower"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Tower"
+            ],
+            "notes": "Pokémon Tower"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Tower"
+            ],
+            "notes": "Pokémon Tower"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Tower",
+              "Safari Zone"
+            ],
+            "notes": "Pokémon Tower and Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Cubone_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 105,
+    "name": "Marowak",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Victory Road and Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Victory Road and Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Victory Road",
+              "Cerulean Cave"
+            ],
+            "notes": "Victory Road and Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 104,
+      "fromName": "Cubone",
+      "method": "level",
+      "level": 28
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Marowak_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 106,
+    "name": "Hitmonlee",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Fighting Dojo",
+              "Saffron City"
+            ],
+            "notes": "Received from the master of the Fighting Dojo in Saffron City (choice between it and Hitmonchan)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Fighting Dojo",
+              "Saffron City"
+            ],
+            "notes": "Received from the master of the Fighting Dojo in Saffron City (choice between it and Hitmonchan)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Fighting Dojo",
+              "Saffron City"
+            ],
+            "notes": "Received from the master of the Fighting Dojo in Saffron City (choice between it and Hitmonchan)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Fighting Dojo",
+              "Saffron City"
+            ],
+            "notes": "Received from the master of the Fighting Dojo in Saffron City (choice between it and Hitmonchan)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Hitmonlee_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 107,
+    "name": "Hitmonchan",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Fighting Dojo",
+              "Saffron City"
+            ],
+            "notes": "Received from the master of the Fighting Dojo in Saffron City (choice between it and Hitmonlee)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Fighting Dojo",
+              "Saffron City"
+            ],
+            "notes": "Received from the master of the Fighting Dojo in Saffron City (choice between it and Hitmonlee)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Fighting Dojo",
+              "Saffron City"
+            ],
+            "notes": "Received from the master of the Fighting Dojo in Saffron City (choice between it and Hitmonlee)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Fighting Dojo",
+              "Saffron City"
+            ],
+            "notes": "Received from the master of the Fighting Dojo in Saffron City (choice between it and Hitmonlee)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Hitmonchan_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 108,
+    "name": "Lickitung",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Route 18"
+            ],
+            "notes": "Trade Slowbro on Route 18"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Route 18"
+            ],
+            "notes": "Trade Slowbro on Route 18"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Lickitung_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 109,
+    "name": "Koffing",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Mansion"
+            ],
+            "notes": "Pokémon Mansion"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Mansion"
+            ],
+            "notes": "Pokémon Mansion"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Mansion"
+            ],
+            "notes": "Pokémon Mansion"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Koffing_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 110,
+    "name": "Weezing",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Mansion"
+            ],
+            "notes": "Pokémon Mansion"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Mansion"
+            ],
+            "notes": "Pokémon Mansion"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Mansion"
+            ],
+            "notes": "Pokémon Mansion"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 109,
+      "fromName": "Koffing",
+      "method": "level",
+      "level": 35
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Weezing_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 111,
+    "name": "Rhyhorn",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Cerulean Cave"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Rhyhorn_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 112,
+    "name": "Rhydon",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Trade Golduck at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 111,
+      "fromName": "Rhyhorn",
+      "method": "level",
+      "level": 42
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Rhydon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 113,
+    "name": "Chansey",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone",
+              "Cerulean Cave"
+            ],
+            "notes": "Safari Zone, Cerulean Cave"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Chansey_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 114,
+    "name": "Tangela",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 21"
+            ],
+            "notes": "Route 21"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Trade Venonat at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 21"
+            ],
+            "notes": "Route 21"
+          },
+          {
+            "label": "trade",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Trade Venonat at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 21"
+            ],
+            "notes": "Route 21"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Tangela_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 115,
+    "name": "Kangaskhan",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Route 11"
+            ],
+            "notes": "Trade Rhydon on Route 11"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Kangaskhan_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 116,
+    "name": "Horsea",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Seafoam Islands",
+              "Cinnabar Island"
+            ],
+            "notes": "Routes 19, 20, and 21, Seafoam Islands, Cinnabar Island (Super Rod)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Seafoam Islands",
+              "Cinnabar Island"
+            ],
+            "notes": "Routes 19, 20, and 21, Seafoam Islands, Cinnabar Island (Super Rod)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Rocket Game Corner, Seafoam Islands"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner"
+            ],
+            "notes": "Rocket Game Corner, Seafoam Islands"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Seafoam Islands",
+              "Cinnabar Island"
+            ],
+            "notes": "Routes 19, 20, and 21, Seafoam Islands, Cinnabar Island (Super Rod)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 10",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Vermilion City"
+            ],
+            "notes": "Routes 10, 11, 12, and 13, Vermilion City (Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Horsea_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 117,
+    "name": "Seadra",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 23",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 23 and Cerulean Cave (Super Rod)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 23",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 23 and Cerulean Cave (Super Rod)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 23",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 23 and Cerulean Cave (Super Rod)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13"
+            ],
+            "notes": "Routes 12 and 13 (Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 116,
+      "fromName": "Horsea",
+      "method": "level",
+      "level": 32
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Seadra_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 118,
+    "name": "Goldeen",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 6",
+              "Route 10",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 23",
+              "Route 24",
+              "Route 25",
+              "Pallet Town",
+              "Viridian City",
+              "Cerulean City",
+              "Vermilion City",
+              "Celadon City",
+              "Fuchsia City",
+              "Safari Zone",
+              "Seafoam Islands",
+              "Cinnabar Island",
+              "Indigo Plateau",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 6, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22, 23, 24, and 25, Pallet Town, Viridian City, Cerulean City, Vermilion City, Celadon City, Fuchsia City, Safari Zone, Seafoam Islands, Cinnabar Island, Indigo Plateau, Cerulean Cave (Good Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 24",
+              "Route 25",
+              "Cerulean City",
+              "Fuchsia City",
+              "Seafoam Islands",
+              "Cinnabar Island"
+            ],
+            "notes": "Routes 12, 13, 17, 18, 19, 20, 21, 22, 24, and 25, Cerulean City, Fuchsia City, Seafoam Islands, Cinnabar Island (Super Rod)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 6",
+              "Route 10",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 23",
+              "Route 24",
+              "Route 25",
+              "Pallet Town",
+              "Viridian City",
+              "Cerulean City",
+              "Vermilion City",
+              "Celadon City",
+              "Fuchsia City",
+              "Safari Zone",
+              "Seafoam Islands",
+              "Cinnabar Island",
+              "Indigo Plateau",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 6, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22, 23, 24, and 25, Pallet Town, Viridian City, Cerulean City, Vermilion City, Celadon City, Fuchsia City, Safari Zone, Seafoam Islands, Cinnabar Island, Indigo Plateau, Cerulean Cave (Good Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 24",
+              "Route 25",
+              "Cerulean City",
+              "Fuchsia City",
+              "Seafoam Islands",
+              "Cinnabar Island"
+            ],
+            "notes": "Routes 12, 13, 17, 18, 19, 20, 21, 22, 24, and 25, Cerulean City, Fuchsia City, Seafoam Islands, Cinnabar Island (Super Rod)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 6",
+              "Route 10",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 23",
+              "Route 24",
+              "Route 25",
+              "Pallet Town",
+              "Viridian City",
+              "Cerulean City",
+              "Vermilion City",
+              "Celadon City",
+              "Fuchsia City",
+              "Safari Zone",
+              "Seafoam Islands",
+              "Cinnabar Island",
+              "Indigo Plateau"
+            ],
+            "notes": "Routes 6, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22, 23, 24, and 25, Pallet Town, Viridian City, Cerulean City, Vermilion City, Celadon City, Fuchsia City, Safari Zone, Seafoam Islands, Cinnabar Island, Indigo Plateau (Good Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 24",
+              "Route 25",
+              "Cerulean City",
+              "Fuchsia City",
+              "Seafoam Islands",
+              "Cinnabar Island"
+            ],
+            "notes": "Routes 12, 13, 17, 18, 19, 20, 21, 22, 24, and 25, Cerulean City, Fuchsia City, Seafoam Islands, Cinnabar Island (Super Rod)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 6",
+              "Route 10",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 23",
+              "Route 24",
+              "Route 25",
+              "Pallet Town",
+              "Viridian City",
+              "Cerulean City",
+              "Vermilion City",
+              "Celadon City",
+              "Fuchsia City",
+              "Safari Zone",
+              "Seafoam Islands",
+              "Cinnabar Island",
+              "Indigo Plateau",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 6, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22, 23, 24, and 25, Pallet Town, Viridian City, Cerulean City, Vermilion City, Celadon City, Fuchsia City, Safari Zone, Seafoam Islands, Cinnabar Island, Indigo Plateau, Cerulean Cave (Good Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 6",
+              "Route 24",
+              "Cerulean City",
+              "Celadon City",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 6 and 24, Cerulean City, Celadon City, Cerulean Cave (Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Goldeen_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 119,
+    "name": "Seaking",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 23",
+              "Fuchsia City",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 23, Fuchsia City, Cerulean Cave (Super Rod)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 23",
+              "Fuchsia City",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 23, Fuchsia City, Cerulean Cave (Super Rod)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 23",
+              "Fuchsia City",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 23, Fuchsia City, Cerulean Cave (Super Rod)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 24",
+              "Cerulean City",
+              "Cerulean Cave"
+            ],
+            "notes": "Route 24, Cerulean City, Cerulean Cave (Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 118,
+      "fromName": "Goldeen",
+      "method": "level",
+      "level": 33
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Seaking_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 120,
+    "name": "Staryu",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Cinnabar Island",
+              "Seafoam Islands"
+            ],
+            "notes": "Routes 19, 20, 21, Cinnabar Island, Seafoam Islands (Super Rod)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Cinnabar Island",
+              "Seafoam Islands"
+            ],
+            "notes": "Routes 19, 20, 21, Cinnabar Island, Seafoam Islands (Super Rod)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Cinnabar Island",
+              "Seafoam Islands"
+            ],
+            "notes": "Routes 19, 20, 21, Cinnabar Island, Seafoam Islands (Super Rod)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "surf",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands (Surfing)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Pallet Town",
+              "Vermilion Harbor",
+              "Cinnabar Island",
+              "Seafoam Islands"
+            ],
+            "notes": "Routes 19, 20, 21, Pallet Town, Vermilion Harbor, Cinnabar Island, Seafoam Islands (Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Staryu_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 121,
+    "name": "Starmie",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Staryu using a Water Stone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Staryu using a Water Stone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Staryu using a Water Stone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Staryu using a Water Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 120,
+      "fromName": "Staryu",
+      "method": "item",
+      "item": "Water Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Starmie_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 122,
+    "name": "Mr. Mime",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Route 2"
+            ],
+            "notes": "Trade Abra on Route 2"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Route 2"
+            ],
+            "notes": "Trade Abra on Route 2"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Route 2"
+            ],
+            "notes": "Trade Jigglypuff on Route 2"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Route 2"
+            ],
+            "notes": "Trade Clefairy on Route 2"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Mr._Mime_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 123,
+    "name": "Scyther",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon City",
+              "Rocket Game Corner"
+            ],
+            "notes": "Celadon City (Rocket Game Corner)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon City",
+              "Rocket Game Corner"
+            ],
+            "notes": "Celadon City (Rocket Game Corner)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Scyther_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 124,
+    "name": "Jynx",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Cerulean City"
+            ],
+            "notes": "Trade Poliwhirl in Cerulean City"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Cerulean City"
+            ],
+            "notes": "Trade Poliwhirl in Cerulean City"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Jynx_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 125,
+    "name": "Electabuzz",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Power Plant"
+            ],
+            "notes": "Power Plant"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Electabuzz_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 126,
+    "name": "Magmar",
+    "versions": {
+      "red": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Mansion"
+            ],
+            "notes": "Pokémon Mansion"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Magmar_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 127,
+    "name": "Pinsir",
+    "versions": {
+      "red": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone, Celadon City (Rocket Game Corner)"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon City",
+              "Rocket Game Corner"
+            ],
+            "notes": "Safari Zone, Celadon City (Rocket Game Corner)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone, Celadon City (Rocket Game Corner)"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Celadon City",
+              "Rocket Game Corner"
+            ],
+            "notes": "Safari Zone, Celadon City (Rocket Game Corner)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Pinsir_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 128,
+    "name": "Tauros",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Route 18"
+            ],
+            "notes": "Trade Persian on Route 18"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Tauros_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 129,
+    "name": "Magikarp",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "old_rod",
+            "locations": [
+              "Route 6",
+              "Route 10",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 23",
+              "Route 24",
+              "Route 25",
+              "Pallet Town",
+              "Viridian City",
+              "Cerulean City",
+              "Vermilion City",
+              "Celadon City",
+              "Fuchsia City",
+              "Safari Zone",
+              "Seafoam Islands",
+              "Cinnabar Island",
+              "Indigo Plateau",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 6, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22, 23, 24, 25, Pallet Town, Viridian City, Cerulean City, Vermilion City, Celadon City, Fuchsia City, Safari Zone, Seafoam Islands, Cinnabar Island, Indigo Plateau, Cerulean Cave (Old Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Fuchsia City"
+            ],
+            "notes": "Routes 12, 13, 17, and 18, Fuchsia City (Super Rod)"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 4"
+            ],
+            "notes": "Buy from Magikarp salesman for ₽500 on Route 4"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "old_rod",
+            "locations": [
+              "Route 6",
+              "Route 10",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 23",
+              "Route 24",
+              "Route 25",
+              "Pallet Town",
+              "Viridian City",
+              "Cerulean City",
+              "Vermilion City",
+              "Celadon City",
+              "Fuchsia City",
+              "Safari Zone",
+              "Seafoam Islands",
+              "Cinnabar Island",
+              "Indigo Plateau",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 6, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22, 23, 24, 25, Pallet Town, Viridian City, Cerulean City, Vermilion City, Celadon City, Fuchsia City, Safari Zone, Seafoam Islands, Cinnabar Island, Indigo Plateau, Cerulean Cave (Old Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Fuchsia City"
+            ],
+            "notes": "Routes 12, 13, 17, and 18, Fuchsia City (Super Rod)"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 4"
+            ],
+            "notes": "Buy from Magikarp salesman for ₽500 on Route 4"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "old_rod",
+            "locations": [
+              "Route 6",
+              "Route 10",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 23",
+              "Route 24",
+              "Route 25",
+              "Pallet Town",
+              "Viridian City",
+              "Cerulean City",
+              "Vermilion City",
+              "Celadon City",
+              "Fuchsia City",
+              "Safari Zone",
+              "Seafoam Islands",
+              "Cinnabar Island",
+              "Indigo Plateau"
+            ],
+            "notes": "Routes 6, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22, 23, 24, 25, Pallet Town, Viridian City, Cerulean City, Vermilion City, Celadon City, Fuchsia City, Safari Zone, Seafoam Islands, Cinnabar Island, Indigo Plateau (Old Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Fuchsia City"
+            ],
+            "notes": "Routes 12, 13, 17, and 18, Fuchsia City (Super Rod)"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 4"
+            ],
+            "notes": "Buy from Magikarp salesman for ₽500 on Route 4"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "old_rod",
+            "locations": [
+              "Route 6",
+              "Route 10",
+              "Route 11",
+              "Route 12",
+              "Route 13",
+              "Route 17",
+              "Route 18",
+              "Route 19",
+              "Route 20",
+              "Route 21",
+              "Route 22",
+              "Route 23",
+              "Route 24",
+              "Route 25",
+              "Pallet Town",
+              "Viridian City",
+              "Cerulean City",
+              "Vermilion City",
+              "Celadon City",
+              "Fuchsia City",
+              "Safari Zone",
+              "Seafoam Islands",
+              "Cinnabar Island",
+              "Indigo Plateau",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 6, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22, 23, 24, and 25, Pallet Town, Viridian City, Cerulean City, Vermilion City, Celadon City, Fuchsia City, Safari Zone, Seafoam Islands, Cinnabar Island, Indigo Plateau, Cerulean Cave (Old Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Fuchsia City",
+              "Safari Zone"
+            ],
+            "notes": "Fuchsia City, Safari Zone (Super Rod)"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 4"
+            ],
+            "notes": "Buy from Magikarp salesman for ₽500 on Route 4"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Magikarp_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 130,
+    "name": "Gyarados",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Magikarp at level 20"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Magikarp at level 20"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Magikarp at level 20"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Fuchsia City"
+            ],
+            "notes": "Fuchsia City (Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 129,
+      "fromName": "Magikarp",
+      "method": "level",
+      "level": 20
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Gyarados_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 131,
+    "name": "Lapras",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Silph Co.",
+              "Saffron City"
+            ],
+            "notes": "Received from a person in Silph Co. (Saffron City)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Silph Co.",
+              "Saffron City"
+            ],
+            "notes": "Received from a person in Silph Co. (Saffron City)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Silph Co.",
+              "Saffron City"
+            ],
+            "notes": "Received from a person in Silph Co. (Saffron City)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Silph Co.",
+              "Saffron City"
+            ],
+            "notes": "Received from a person in Silph Co. (Saffron City)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Lapras_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 132,
+    "name": "Ditto",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 23",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 13, 14, 15, and 23, Cerulean Cave"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 23",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 13, 14, 15, and 23, Cerulean Cave"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 23",
+              "Rock Tunnel",
+              "Cerulean Cave"
+            ],
+            "notes": "Routes 13, 14, 15, and 23, Rock Tunnel, Cerulean Cave"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Pokémon Mansion",
+              "Cerulean Cave"
+            ],
+            "notes": "Pokémon Mansion and Cerulean Cave"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ditto_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 133,
+    "name": "Eevee",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Celadon Mansion"
+            ],
+            "notes": "Received from a person in Celadon Mansion"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Celadon Mansion"
+            ],
+            "notes": "Received from a person in Celadon Mansion"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Celadon Mansion"
+            ],
+            "notes": "Received from a person in Celadon Mansion"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Celadon Mansion"
+            ],
+            "notes": "Received from a person in Celadon Mansion"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Eevee_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 134,
+    "name": "Vaporeon",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Water Stone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Water Stone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Water Stone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Water Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 133,
+      "fromName": "Eevee",
+      "method": "item",
+      "item": "Water Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Vaporeon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 135,
+    "name": "Jolteon",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Thunder Stone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Thunder Stone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Thunder Stone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Thunder Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 133,
+      "fromName": "Eevee",
+      "method": "item",
+      "item": "Thunder Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Jolteon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 136,
+    "name": "Flareon",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Fire Stone"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Fire Stone"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Fire Stone"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Eevee using a Fire Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 133,
+      "fromName": "Eevee",
+      "method": "item",
+      "item": "Fire Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Flareon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 137,
+    "name": "Porygon",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner"
+            ],
+            "notes": "Rocket Game Corner"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner"
+            ],
+            "notes": "Rocket Game Corner"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner"
+            ],
+            "notes": "Rocket Game Corner"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner"
+            ],
+            "notes": "Rocket Game Corner"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Porygon_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 138,
+    "name": "Omanyte",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Helix Fossil at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Helix Fossil at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Helix Fossil at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Helix Fossil at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Omanyte_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 139,
+    "name": "Omastar",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Omanyte at level 40"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Omanyte at level 40"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Omanyte at level 40"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Omanyte at level 40"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 138,
+      "fromName": "Omanyte",
+      "method": "level",
+      "level": 40
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Omastar_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 140,
+    "name": "Kabuto",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Dome Fossil at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Dome Fossil at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Dome Fossil at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Dome Fossil at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Kabuto_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 141,
+    "name": "Kabutops",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kabuto at level 40"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kabuto at level 40"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kabuto at level 40"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Kabuto at level 40"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 140,
+      "fromName": "Kabuto",
+      "method": "level",
+      "level": 40
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Kabutops_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 142,
+    "name": "Aerodactyl",
+    "versions": {
+      "red": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Old Amber at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Old Amber at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Old Amber at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "fossil",
+            "locations": [
+              "Pokémon Lab",
+              "Cinnabar Island"
+            ],
+            "notes": "Revive from Old Amber at the Pokémon Lab on Cinnabar Island"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Aerodactyl_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 143,
+    "name": "Snorlax",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Route 12",
+              "Route 16"
+            ],
+            "notes": "Routes 12 and 16 (Only two)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Route 12",
+              "Route 16"
+            ],
+            "notes": "Routes 12 and 16 (Only two)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Route 12",
+              "Route 16"
+            ],
+            "notes": "Routes 12 and 16 (Only two)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Route 12",
+              "Route 16"
+            ],
+            "notes": "Routes 12 and 16 (Only two)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Snorlax_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 144,
+    "name": "Articuno",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands (Only one)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands (Only one)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands (Only one)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Seafoam Islands"
+            ],
+            "notes": "Seafoam Islands (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Articuno_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 145,
+    "name": "Zapdos",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Power Plant"
+            ],
+            "notes": "Power Plant (Only one)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Power Plant"
+            ],
+            "notes": "Power Plant (Only one)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Power Plant"
+            ],
+            "notes": "Power Plant (Only one)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Power Plant"
+            ],
+            "notes": "Power Plant (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Zapdos_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 146,
+    "name": "Moltres",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Victory Road"
+            ],
+            "notes": "Victory Road (Only one)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Victory Road"
+            ],
+            "notes": "Victory Road (Only one)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Victory Road"
+            ],
+            "notes": "Victory Road (Only one)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Victory Road"
+            ],
+            "notes": "Victory Road (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Moltres_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 147,
+    "name": "Dratini",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone (Super Rod)"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner",
+              "Celadon City"
+            ],
+            "notes": "Buy for 2800C in the Rocket Game Corner in Celadon City"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone (Super Rod)"
+          },
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner",
+              "Celadon City"
+            ],
+            "notes": "Buy for 4600C in the Rocket Game Corner in Celadon City"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone (Super Rod)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone (Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Dratini_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 148,
+    "name": "Dragonair",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Dratini at level 30"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Dratini at level 30"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "game_corner",
+            "locations": [
+              "Rocket Game Corner"
+            ],
+            "notes": "Rocket Game Corner"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Safari Zone"
+            ],
+            "notes": "Safari Zone (Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 147,
+      "fromName": "Dratini",
+      "method": "level",
+      "level": 30
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Dragonair_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 149,
+    "name": "Dragonite",
+    "versions": {
+      "red": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Dragonair at level 55"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Dragonair at level 55"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Dragonair at level 55"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Dragonair at level 55"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 148,
+      "fromName": "Dragonair",
+      "method": "level",
+      "level": 55
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Dragonite_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 150,
+    "name": "Mewtwo",
+    "versions": {
+      "red": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave (Only one)"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave (Only one)"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave (Only one)"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Cerulean Cave"
+            ],
+            "notes": "Cerulean Cave (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Mewtwo_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 151,
+    "name": "Mew",
+    "versions": {
+      "red": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Event"
+          }
+        ]
+      },
+      "green_blue_en": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Event"
+          }
+        ]
+      },
+      "blue_japan": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Event"
+          }
+        ]
+      },
+      "yellow": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Event"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Mew_(Pok%C3%A9mon)"
+  }
+]

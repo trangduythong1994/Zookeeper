@@ -1,12 +1,12 @@
 import Database from "better-sqlite3";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { REGION_BIOMES } from "../data/regions.js";
 import { ALL_GEN3_SPECIES } from "../data/all-gen3-species.js";
 import { KANTO_ENCOUNTERS } from "../data/kanto-encounters.js";
 import { KANTO_LOCATIONS } from "../data/kanto-locations.js";
 import { JOHTO_HOENN_LOCATION_SOURCES } from "../data/johto-hoenn-locations.js";
 import { POKEMON_GO_RATES } from "../data/pokemon-go-rates.js";
+import canonicalEncounterData from "../data/canonical-gen1-3-encounters.json" with { type: "json" };
 
 export function initializeRegionBiomeDatabase(databasePath: string): Database.Database {
   const absolutePath = resolve(databasePath);
@@ -139,6 +139,23 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
       expires_at INTEGER,
       PRIMARY KEY (guild_id, event_key)
     );
+    CREATE TABLE IF NOT EXISTS pokemon_thunder_trails (
+      message_id TEXT PRIMARY KEY,
+      guild_id TEXT NOT NULL,
+      channel_id TEXT NOT NULL,
+      location_key TEXT NOT NULL REFERENCES pokemon_locations(key),
+      target_location_key TEXT NOT NULL REFERENCES pokemon_locations(key),
+      expires_at INTEGER NOT NULL,
+      state TEXT NOT NULL CHECK (state IN ('active', 'lost', 'resolved'))
+    );
+    CREATE INDEX IF NOT EXISTS pokemon_thunder_trails_by_expiry ON pokemon_thunder_trails (state, expires_at);
+    CREATE TABLE IF NOT EXISTS pokemon_thunder_clues (
+      guild_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      target_location_key TEXT NOT NULL REFERENCES pokemon_locations(key),
+      obtained_at INTEGER NOT NULL,
+      PRIMARY KEY (guild_id, user_id)
+    );
     CREATE TABLE IF NOT EXISTS location_area_encounters (
       source_game_key TEXT NOT NULL,
       location_key TEXT NOT NULL REFERENCES pokemon_locations(key) ON DELETE CASCADE,
@@ -167,6 +184,7 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
       go_capture_rate REAL NOT NULL,
       go_flee_rate REAL,
       is_event INTEGER NOT NULL DEFAULT 0,
+      event_key TEXT,
       catch_sequence_length INTEGER,
       appeared_at INTEGER NOT NULL,
       expires_at INTEGER NOT NULL,
@@ -191,6 +209,24 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
       last_gifted_at INTEGER NOT NULL,
       PRIMARY KEY (guild_id, user_id)
     );
+    CREATE TABLE IF NOT EXISTS pokemon_acquisitions (
+      national_dex INTEGER NOT NULL REFERENCES pokemon_species(national_dex),
+      source_game_key TEXT NOT NULL,
+      method TEXT NOT NULL,
+      detail TEXT,
+      hidden INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (national_dex, source_game_key, method, detail)
+    );
+    CREATE TABLE IF NOT EXISTS pokemon_data_migrations (
+      key TEXT PRIMARY KEY,
+      applied_at INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS pokemon_location_migration_notices (
+      guild_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      old_location_name TEXT NOT NULL,
+      PRIMARY KEY (guild_id, user_id)
+    );
     DROP TABLE IF EXISTS game_weather;
   `);
   ensureColumn(database, "pokemon_species", "go_capture_rate REAL NOT NULL DEFAULT 0");
@@ -198,33 +234,77 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
   ensureColumn(database, "pokemon_spawns", "encounter_rate REAL");
   ensureColumn(database, "pokemon_spawns", "encounter_rarity TEXT");
   ensureColumn(database, "pokemon_spawns", "is_event INTEGER NOT NULL DEFAULT 0");
+  ensureColumn(database, "pokemon_spawns", "event_key TEXT");
   ensureColumn(database, "pokemon_spawns", "catch_sequence_length INTEGER");
   ensureColumn(database, "pokemon_event_announcements", "expires_at INTEGER");
   ensureColumn(database, "location_area_encounters", "encounter_label TEXT NOT NULL DEFAULT 'wild'");
 
   const insertRegion = database.prepare("INSERT OR IGNORE INTO regions (key, display_name) VALUES (?, ?)");
-  const insertBiome = database.prepare("INSERT OR IGNORE INTO biomes (key, display_name) VALUES (?, ?)");
-  const insertRegionBiome = database.prepare("INSERT OR IGNORE INTO region_biomes (region_key, biome_key) VALUES (?, ?)");
   const seed = database.transaction(() => {
-    for (const [regionKey, biomes] of Object.entries(REGION_BIOMES)) {
+    for (const regionKey of ["kanto", "johto", "hoenn"]) {
       insertRegion.run(regionKey, displayName(regionKey));
-      for (const biomeKey of biomes) {
-        insertBiome.run(biomeKey, displayName(biomeKey));
-        insertRegionBiome.run(regionKey, biomeKey);
-      }
     }
   });
   seed();
   seedGenerationThreeSpecies(database);
-  seedKantoEncounters(database);
-  seedKantoLocations(database);
-  seedJohtoHoennLocations(database);
-  splitJohtoSafariZone(database);
-  removeSourceRoamingLocations(database);
-  removeCombinedSafariCatches(database);
-  migrateKantoPilotLocations(database);
+  seedCanonicalEncounters(database);
   backfillSpawnEncounterRates(database);
   return database;
+}
+
+function seedCanonicalEncounters(database: Database.Database): void {
+  const migrationKey = "canonical-red-to-emerald-v1";
+  if (database.prepare("SELECT 1 FROM pokemon_data_migrations WHERE key = ?").get(migrationKey)) return;
+
+  const migrate = database.transaction(() => {
+    const affectedPlayers = database.prepare(`
+      SELECT p.guild_id AS guildId, p.user_id AS userId, l.region_key AS regionKey, l.display_name AS oldLocationName
+      FROM player_locations p JOIN pokemon_locations l ON l.key = p.location_key
+    `).all() as { guildId: string; userId: string; regionKey: string; oldLocationName: string }[];
+    const addNotice = database.prepare(`
+      INSERT OR REPLACE INTO pokemon_location_migration_notices (guild_id, user_id, old_location_name)
+      VALUES (?, ?, ?)
+    `);
+    database.prepare("DELETE FROM player_locations").run();
+    database.prepare("DELETE FROM location_area_encounters").run();
+    database.prepare("DELETE FROM location_biomes").run();
+    database.prepare("DELETE FROM biome_encounters").run();
+    database.prepare("DELETE FROM region_biomes").run();
+    database.prepare("DELETE FROM biomes").run();
+    database.prepare("DELETE FROM pokemon_locations").run();
+    database.prepare("DELETE FROM pokemon_acquisitions").run();
+
+    const insertLocation = database.prepare(`
+      INSERT OR IGNORE INTO pokemon_locations (key, region_key, display_name) VALUES (?, ?, ?)
+    `);
+    const insertEncounter = database.prepare(`
+      INSERT INTO location_area_encounters (
+        source_game_key, location_key, area_key, pokemon_national_dex, encounter_method, rate,
+        min_level, max_level, conditions_json, encounter_label
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, '[]', 'wild')
+    `);
+    for (const encounter of canonicalEncounterData.wild) {
+      insertLocation.run(encounter.locationKey, encounter.regionKey, encounter.locationName);
+      insertEncounter.run(encounter.sourceGameKey, encounter.locationKey, encounter.areaKey, encounter.pokemonNationalDex,
+        encounter.encounterMethod, encounter.rate, encounter.minLevel, encounter.maxLevel);
+    }
+    const insertAcquisition = database.prepare(`
+      INSERT INTO pokemon_acquisitions (national_dex, source_game_key, method, detail, hidden)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+    for (const acquisition of canonicalEncounterData.acquisitions) {
+      insertAcquisition.run(acquisition.nationalDex, acquisition.sourceGameKey, acquisition.method, acquisition.detail, Number(acquisition.hidden));
+    }
+    const findReplacement = database.prepare("SELECT key FROM pokemon_locations WHERE region_key = ? AND display_name = ?");
+    const restorePlayer = database.prepare("INSERT INTO player_locations (guild_id, user_id, location_key, selected_at) VALUES (?, ?, ?, ?)");
+    for (const player of affectedPlayers) {
+      const replacement = findReplacement.get(player.regionKey, player.oldLocationName) as { key: string } | undefined;
+      if (replacement) restorePlayer.run(player.guildId, player.userId, replacement.key, Date.now());
+      else addNotice.run(player.guildId, player.userId, player.oldLocationName);
+    }
+    database.prepare("INSERT INTO pokemon_data_migrations (key, applied_at) VALUES (?, ?)").run(migrationKey, Date.now());
+  });
+  migrate();
 }
 
 function removeSourceRoamingLocations(database: Database.Database): void {

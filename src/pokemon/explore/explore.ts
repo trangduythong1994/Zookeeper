@@ -3,20 +3,26 @@ import { REGION_BIOMES, type RegionKey } from "../data/regions.js";
 
 export const EXPLORE_BUTTON_PREFIX = "pk-explore";
 export const WILD_ENCOUNTER_METHODS = [
+  "grass",
+  "cave",
   "walk",
   "surf",
+  "surfing",
   "old-rod",
   "good-rod",
   "super-rod",
   "rock-smash",
   "headbutt",
+  "headbutt-normal-trees",
   "roaming-grass",
   "roaming-water",
   "overworld",
   "overworld-water",
   "overworld-flying",
   "seaweed",
+  "underwater-seaweed",
   "feebas-tile-fishing",
+  "fishing-feebas-tiles",
 ] as const;
 
 export type RarityKey = "common" | "uncommon" | "rare" | "ultra_rare" | "mythic_rare";

@@ -1,0 +1,1762 @@
+[
+  {
+    "nationalDex": 152,
+    "name": "Chikorita",
+    "versions": {
+      "gold": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "New Bark Town"
+            ],
+            "notes": "First partner Pokémon from Professor Elm in New Bark Town"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "New Bark Town"
+            ],
+            "notes": "First partner Pokémon from Professor Elm in New Bark Town"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "New Bark Town"
+            ],
+            "notes": "First partner Pokémon from Professor Elm in New Bark Town"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Chikorita_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 153,
+    "name": "Bayleef",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Chikorita at level 16"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Chikorita at level 16"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Chikorita at level 16"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 152,
+      "fromName": "Chikorita",
+      "method": "level",
+      "level": 16
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Bayleef_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 154,
+    "name": "Meganium",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Bayleef at level 32"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Bayleef at level 32"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Bayleef at level 32"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 153,
+      "fromName": "Bayleef",
+      "method": "level",
+      "level": 32
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Meganium_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 155,
+    "name": "Cyndaquil",
+    "versions": {
+      "gold": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "New Bark Town"
+            ],
+            "notes": "First partner Pokémon from Professor Elm in New Bark Town"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "New Bark Town"
+            ],
+            "notes": "First partner Pokémon from Professor Elm in New Bark Town"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "New Bark Town"
+            ],
+            "notes": "First partner Pokémon from Professor Elm in New Bark Town"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Cyndaquil_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 156,
+    "name": "Quilava",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Cyndaquil at level 14"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Cyndaquil at level 14"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Cyndaquil at level 14"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 155,
+      "fromName": "Cyndaquil",
+      "method": "level",
+      "level": 14
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Quilava_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 157,
+    "name": "Typhlosion",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Quilava at level 36"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Quilava at level 36"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Quilava at level 36"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 156,
+      "fromName": "Quilava",
+      "method": "level",
+      "level": 36
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Typhlosion_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 158,
+    "name": "Totodile",
+    "versions": {
+      "gold": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "New Bark Town"
+            ],
+            "notes": "First partner Pokémon from Professor Elm in New Bark Town"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "New Bark Town"
+            ],
+            "notes": "First partner Pokémon from Professor Elm in New Bark Town"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "starter",
+            "locations": [
+              "New Bark Town"
+            ],
+            "notes": "First partner Pokémon from Professor Elm in New Bark Town"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Totodile_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 159,
+    "name": "Croconaw",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Totodile at level 18"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Totodile at level 18"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Totodile at level 18"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 158,
+      "fromName": "Totodile",
+      "method": "level",
+      "level": 18
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Croconaw_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 160,
+    "name": "Feraligatr",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Croconaw at level 30"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Croconaw at level 30"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Croconaw at level 30"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 159,
+      "fromName": "Croconaw",
+      "method": "level",
+      "level": 30
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Feraligatr_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 161,
+    "name": "Sentret",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 29"
+            ],
+            "notes": "Routes 1 and 29 (Morning) (Day)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 29"
+            ],
+            "notes": "Routes 1 and 29 (Morning) (Day)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 29",
+              "Route 43"
+            ],
+            "notes": "Routes 1, 29, and 43 (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Sentret_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 162,
+    "name": "Furret",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1"
+            ],
+            "notes": "Route 1 (Morning) (Day)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1"
+            ],
+            "notes": "Route 1 (Morning) (Day)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 43"
+            ],
+            "notes": "Routes 1 and 43 (Morning) (Day)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 161,
+      "fromName": "Sentret",
+      "method": "level",
+      "level": 15
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Furret_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 163,
+    "name": "Hoothoot",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 35",
+              "Route 36",
+              "Route 37",
+              "National Park"
+            ],
+            "notes": "Routes 1, 2, 29, 30, 31, 35, 36, and 37, National Park (Night)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 35",
+              "Route 36",
+              "Route 37",
+              "National Park"
+            ],
+            "notes": "Routes 1, 2, 29, 30, 31, 35, 36, and 37, National Park (Night)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 1",
+              "Route 2",
+              "Route 5",
+              "Route 25",
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 32",
+              "Route 34",
+              "Route 35",
+              "Route 36",
+              "Route 37",
+              "Ilex Forest",
+              "National Park"
+            ],
+            "notes": "Routes 1, 2, 5, 25, 29, 30, 31, 32, 34, 35, 36, and 37, Ilex Forest, National Park (Night)"
+          },
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 26",
+              "Route 27",
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 32",
+              "Route 34",
+              "Route 35",
+              "Route 36",
+              "Route 37",
+              "Route 38",
+              "Route 39",
+              "Route 43",
+              "Ilex Forest",
+              "National Park",
+              "Lake of Rage"
+            ],
+            "notes": "Routes 26, 27, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 43, Ilex Forest, National Park, Lake of Rage (Headbutt trees)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Hoothoot_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 164,
+    "name": "Noctowl",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 8",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 43"
+            ],
+            "notes": "Routes 2, 8, 13, 14, 15, and 43 (Night)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 8",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 43"
+            ],
+            "notes": "Routes 2, 8, 13, 14, 15, and 43 (Night)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 5",
+              "Route 8",
+              "Route 11",
+              "Route 13",
+              "Route 14",
+              "Route 15",
+              "Route 25",
+              "Route 26",
+              "Route 27",
+              "Route 37",
+              "Route 38",
+              "Route 39",
+              "Route 43"
+            ],
+            "notes": "Routes 2, 5, 8, 11, 13, 14, 15, 25, 26, 27, 37, 38, 39, 43 (Night)"
+          },
+          {
+            "label": "headbutt",
+            "locations": [
+              "Ilex Forest"
+            ],
+            "notes": "Ilex Forest (Headbutt trees)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 163,
+      "fromName": "Hoothoot",
+      "method": "level",
+      "level": 20
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Noctowl_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 165,
+    "name": "Ledyba",
+    "versions": {
+      "gold": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 30",
+              "Route 31",
+              "Route 37"
+            ],
+            "notes": "Routes 2, 30, 31, and 37 (Morning)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 30",
+              "Route 31",
+              "Route 36",
+              "Route 37",
+              "National Park"
+            ],
+            "notes": "Routes 2, 30, 31, 36, and 37, National Park (Morning)"
+          },
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 34",
+              "Route 35",
+              "Route 36",
+              "Route 37",
+              "Route 38",
+              "Route 39"
+            ],
+            "notes": "Routes 29, 30, 31, 34, 35, 36, 37, 38, and 39 (Headbutt trees)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ledyba_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 166,
+    "name": "Ledian",
+    "versions": {
+      "gold": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Ledyba at level 18"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2"
+            ],
+            "notes": "Route 2 (Morning)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 37"
+            ],
+            "notes": "Routes 2 and 37 (Morning)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 165,
+      "fromName": "Ledyba",
+      "method": "level",
+      "level": 18
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ledian_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 167,
+    "name": "Spinarak",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 30",
+              "Route 31",
+              "Route 37"
+            ],
+            "notes": "Routes 2, 30, 31, and 37 (Night)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "Ev",
+        "acquisitionMethods": [
+          {
+            "label": "event",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 30",
+              "Route 31",
+              "Route 36",
+              "Route 37",
+              "National Park"
+            ],
+            "notes": "Routes 2, 30, 31, 36, and 37, National Park (Night)"
+          },
+          {
+            "label": "headbutt",
+            "locations": [
+              "Route 29",
+              "Route 30",
+              "Route 31",
+              "Route 34",
+              "Route 35",
+              "Route 36",
+              "Route 37",
+              "Route 38",
+              "Route 39"
+            ],
+            "notes": "Routes 29, 30, 31, 34, 35, 36, 37, 38, and 39 (Headbutt trees)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Spinarak_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 168,
+    "name": "Ariados",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2"
+            ],
+            "notes": "Route 2"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "EvE",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Spinarak at level 22"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 2",
+              "Route 37"
+            ],
+            "notes": "Routes 2 and 37 (Night)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 167,
+      "fromName": "Spinarak",
+      "method": "level",
+      "level": 22
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ariados_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 169,
+    "name": "Crobat",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Golbat by leveling up with friendship of at least 220"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Golbat by leveling up with friendship of at least 220"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Golbat by leveling up with friendship of at least 220"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 42,
+      "fromName": "Golbat",
+      "method": "level",
+      "friendship": 220
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Crobat_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 170,
+    "name": "Chinchou",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 20",
+              "Route 21",
+              "Route 26",
+              "Route 27",
+              "Route 41",
+              "Olivine City",
+              "Vermilion City",
+              "Cinnabar Island",
+              "Pallet Town",
+              "New Bark Town"
+            ],
+            "notes": "Routes 20, 21, 26, 27, 41, Olivine City (Harbor), Vermilion City (City and Harbor), Cinnabar Island, Pallet Town, New Bark Town (Good Rod or Super Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 20",
+              "Route 21",
+              "Route 26",
+              "Route 27",
+              "Route 41",
+              "Olivine City",
+              "Vermilion City",
+              "Cinnabar Island",
+              "Pallet Town",
+              "New Bark Town"
+            ],
+            "notes": "Routes 20, 21, 26, 27, 41, Olivine City (Harbor), Vermilion City (City and Harbor), Cinnabar Island, Pallet Town, New Bark Town (Good Rod or Super Rod)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 20",
+              "Route 21",
+              "Route 26",
+              "Route 27",
+              "Route 41",
+              "Olivine City",
+              "Vermilion City",
+              "Cinnabar Island",
+              "Pallet Town",
+              "New Bark Town"
+            ],
+            "notes": "Routes 20, 21, 26, 27, 41, Olivine City (Harbor), Vermilion City (City and Harbor), Cinnabar Island, Pallet Town, New Bark Town (Good Rod or Super Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 20",
+              "Route 21",
+              "Route 26",
+              "Route 27",
+              "Route 41",
+              "Olivine City",
+              "Vermilion City",
+              "Cinnabar Island",
+              "Pallet Town",
+              "New Bark Town"
+            ],
+            "notes": "Routes 20, 21, 26, 27, 41, Olivine City (Harbor), Vermilion City (City and Harbor), Cinnabar Island, Pallet Town, New Bark Town (Good Rod or Super Rod)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "good_rod",
+            "locations": [
+              "Route 20",
+              "Route 21",
+              "Route 26",
+              "Route 27",
+              "Route 41",
+              "Olivine City",
+              "Vermilion City",
+              "Cinnabar Island",
+              "Pallet Town",
+              "New Bark Town"
+            ],
+            "notes": "Routes 20, 21, 26, 27, 41, Olivine City (Harbor), Vermilion City (City and Harbor), Cinnabar Island, Pallet Town, New Bark Town (Good Rod or Super Rod)"
+          },
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 20",
+              "Route 21",
+              "Route 26",
+              "Route 27",
+              "Route 41",
+              "Olivine City",
+              "Vermilion City",
+              "Cinnabar Island",
+              "Pallet Town",
+              "New Bark Town"
+            ],
+            "notes": "Routes 20, 21, 26, 27, 41, Olivine City (Harbor), Vermilion City (City and Harbor), Cinnabar Island, Pallet Town, New Bark Town (Good Rod or Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Chinchou_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 171,
+    "name": "Lanturn",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 20",
+              "Route 21",
+              "Route 26",
+              "Route 27",
+              "Route 41",
+              "Olivine City",
+              "Vermilion City",
+              "Pallet Town",
+              "New Bark Town",
+              "Cinnabar Island"
+            ],
+            "notes": "Routes 20, 21, 26, 27, 41, Olivine City (Harbor), Vermilion City (City and Bay), Pallet Town, New Bark Town, Cinnabar Island (Super Rod)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 20",
+              "Route 21",
+              "Route 26",
+              "Route 27",
+              "Route 41",
+              "Olivine City",
+              "Vermilion City",
+              "Pallet Town",
+              "New Bark Town",
+              "Cinnabar Island"
+            ],
+            "notes": "Routes 20, 21, 26, 27, 41, Olivine City (Harbor), Vermilion City (City and Bay), Pallet Town, New Bark Town, Cinnabar Island (Super Rod)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "super_rod",
+            "locations": [
+              "Route 20",
+              "Route 21",
+              "Route 26",
+              "Route 27",
+              "Route 41",
+              "Olivine City",
+              "Vermilion City",
+              "Pallet Town",
+              "New Bark Town",
+              "Cinnabar Island"
+            ],
+            "notes": "Routes 20, 21, 26, 27, 41, Olivine City (Harbor), Vermilion City (City and Bay), Pallet Town, New Bark Town, Cinnabar Island (Super Rod)"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 170,
+      "fromName": "Chinchou",
+      "method": "level",
+      "level": 27
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Lanturn_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 172,
+    "name": "Pichu",
+    "versions": {
+      "gold": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Pikachu or Raichu"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Pikachu or Raichu"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Pikachu or Raichu"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 34"
+            ],
+            "notes": "Route 34 (Odd Egg (The Pokémon in the Egg is random))"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Pichu_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 173,
+    "name": "Cleffa",
+    "versions": {
+      "gold": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Clefairy or Clefable"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Clefairy or Clefable"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Clefairy or Clefable"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 34"
+            ],
+            "notes": "Route 34 (Odd Egg (The Pokémon in the Egg is random))"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Cleffa_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 174,
+    "name": "Igglybuff",
+    "versions": {
+      "gold": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Jigglypuff or Wigglytuff"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "B",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Jigglypuff or Wigglytuff"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "breeding",
+            "locations": [],
+            "notes": "Breed Jigglypuff or Wigglytuff"
+          },
+          {
+            "label": "gift",
+            "locations": [
+              "Route 34"
+            ],
+            "notes": "Route 34 (Odd Egg (The Pokémon in the Egg is random))"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Igglybuff_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 175,
+    "name": "Togepi",
+    "versions": {
+      "gold": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Pokémon Center",
+              "Violet City"
+            ],
+            "notes": "Hatch Egg received from Professor Elm's assistant in the Pokémon Center in Violet City"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Pokémon Center",
+              "Violet City"
+            ],
+            "notes": "Hatch Egg received from Professor Elm's assistant in the Pokémon Center in Violet City"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "gift",
+            "locations": [
+              "Pokémon Center",
+              "Violet City"
+            ],
+            "notes": "Hatch Egg received from Professor Elm's assistant in the Pokémon Center in Violet City"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Togepi_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 176,
+    "name": "Togetic",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Togepi by leveling up with friendship of at least 220"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Togepi by leveling up with friendship of at least 220"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Togepi by leveling up with friendship of at least 220"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 175,
+      "fromName": "Togepi",
+      "method": "level",
+      "friendship": 220
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Togetic_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 177,
+    "name": "Natu",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ruins of Alph"
+            ],
+            "notes": "Ruins of Alph"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ruins of Alph"
+            ],
+            "notes": "Ruins of Alph"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Ruins of Alph"
+            ],
+            "notes": "Ruins of Alph"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Natu_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 178,
+    "name": "Xatu",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Natu at level 25"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Natu at level 25"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "R",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [
+              "Pewter City"
+            ],
+            "notes": "Trade Haunter in Pewter City"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 177,
+      "fromName": "Natu",
+      "method": "level",
+      "level": 25
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Xatu_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 179,
+    "name": "Mareep",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 32",
+              "Route 42",
+              "Route 43"
+            ],
+            "notes": "Routes 32, 42, and 43"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 32",
+              "Route 42",
+              "Route 43"
+            ],
+            "notes": "Routes 32, 42, and 43"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Mareep_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 180,
+    "name": "Flaaffy",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 42",
+              "Route 43"
+            ],
+            "notes": "Routes 42 and 43"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 42",
+              "Route 43"
+            ],
+            "notes": "Routes 42 and 43"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 179,
+      "fromName": "Mareep",
+      "method": "level",
+      "level": 15
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Flaaffy_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 181,
+    "name": "Ampharos",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Flaaffy at level 30"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Flaaffy at level 30"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "T",
+        "acquisitionMethods": [
+          {
+            "label": "trade",
+            "locations": [],
+            "notes": "Source does not specify further details"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 180,
+      "fromName": "Flaaffy",
+      "method": "level",
+      "level": 30
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Ampharos_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 182,
+    "name": "Bellossom",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Gloom using a Sun Stone"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Gloom using a Sun Stone"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Gloom using a Sun Stone"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 44,
+      "fromName": "Gloom",
+      "method": "item",
+      "item": "Sun Stone"
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Bellossom_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 183,
+    "name": "Marill",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Mortar"
+            ],
+            "notes": "Mt. Mortar (walking)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Mt. Mortar"
+            ],
+            "notes": "Mt. Mortar (walking)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "surf",
+            "locations": [
+              "Mt. Mortar"
+            ],
+            "notes": "Mt. Mortar (Surfing)"
+          },
+          {
+            "label": "wild_walk",
+            "locations": [
+              "Route 42",
+              "Mt. Mortar"
+            ],
+            "notes": "Route 42, Mt. Mortar (Night)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Marill_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 184,
+    "name": "Azumarill",
+    "versions": {
+      "gold": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Marill at level 18"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Marill at level 18"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "E",
+        "acquisitionMethods": [
+          {
+            "label": "evolution",
+            "locations": [],
+            "notes": "Evolves from Marill at level 18"
+          }
+        ]
+      }
+    },
+    "evolution": {
+      "fromNationalDex": 183,
+      "fromName": "Marill",
+      "method": "level",
+      "level": 18
+    },
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Azumarill_(Pok%C3%A9mon)"
+  },
+  {
+    "nationalDex": 185,
+    "name": "Sudowoodo",
+    "versions": {
+      "gold": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Route 36"
+            ],
+            "notes": "Route 36 (Only one)"
+          }
+        ]
+      },
+      "silver": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Route 36"
+            ],
+            "notes": "Route 36 (Only one)"
+          }
+        ]
+      },
+      "crystal": {
+        "availabilityCode": "C",
+        "acquisitionMethods": [
+          {
+            "label": "static",
+            "locations": [
+              "Route 36"
+            ],
+            "notes": "Route 36 (Only one)"
+          }
+        ]
+      }
+    },
+    "evolution": null,
+    "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Sudowoodo_(Pok%C3%A9mon)"
+  }
+]
