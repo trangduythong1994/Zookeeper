@@ -1,18 +1,20 @@
 import assert from "node:assert/strict";
 import { SpeechIntroductionTracker, speechRequestFromMessage } from "./command.js";
 
-assert.deepEqual(speechRequestFromMessage("-s Xin chào"), { content: "Xin chào", language: "vi", provider: "edge", deleteSource: false, whisper: false, shouting: false });
-assert.deepEqual(speechRequestFromMessage("-sen Hello everyone"), { content: "Hello everyone", language: "en", provider: "edge", deleteSource: false, whisper: false, shouting: false });
-assert.deepEqual(speechRequestFromMessage("--s Bí mật"), { content: "Bí mật", language: "vi", provider: "edge", deleteSource: true, whisper: true, shouting: false });
-assert.deepEqual(speechRequestFromMessage("--sen Secret message"), { content: "Secret message", language: "en", provider: "edge", deleteSource: true, whisper: false, shouting: false });
+assert.deepEqual(speechRequestFromMessage("-s Xin chào"), { content: "Xin chào", language: "vi", provider: "google-cloud", deleteSource: false, whisper: false, shouting: false });
+assert.deepEqual(speechRequestFromMessage("-sen Hello everyone"), { content: "Hello everyone", language: "en", provider: "google-cloud", deleteSource: false, whisper: false, shouting: false });
+assert.deepEqual(speechRequestFromMessage("--s Bí mật"), { content: "Bí mật", language: "vi", provider: "google-cloud", deleteSource: true, whisper: true, shouting: false });
+assert.deepEqual(speechRequestFromMessage("--sen Secret message"), { content: "Secret message", language: "en", provider: "google-cloud", deleteSource: true, whisper: false, shouting: false });
 assert.deepEqual(speechRequestFromMessage("-g Xin chào từ Google"), { content: "Xin chào từ Google", language: "vi", provider: "google", deleteSource: false, whisper: false, shouting: false });
 assert.deepEqual(speechRequestFromMessage("-gen Hello from Google"), { content: "Hello from Google", language: "en", provider: "google", deleteSource: false, whisper: false, shouting: false });
 assert.deepEqual(speechRequestFromMessage("--g Bí mật Google"), { content: "Bí mật Google", language: "vi", provider: "google", deleteSource: true, whisper: true, shouting: false });
 assert.deepEqual(speechRequestFromMessage("--gen Secret Google"), { content: "Secret Google", language: "en", provider: "google", deleteSource: true, whisper: false, shouting: false });
 assert.deepEqual(speechRequestFromMessage("—g Mobile Google"), { content: "Mobile Google", language: "vi", provider: "google", deleteSource: true, whisper: true, shouting: false });
-assert.deepEqual(speechRequestFromMessage("–sen Mobile Edge"), { content: "Mobile Edge", language: "en", provider: "edge", deleteSource: true, whisper: false, shouting: false });
-assert.deepEqual(speechRequestFromMessage("-S XIN chào"), { content: "XIN chào", language: "vi", provider: "edge", deleteSource: false, whisper: false, shouting: true });
-assert.deepEqual(speechRequestFromMessage("-SEN HELLO THERE"), { content: "HELLO THERE", language: "en", provider: "edge", deleteSource: false, whisper: false, shouting: true });
+assert.deepEqual(speechRequestFromMessage("–sen Mobile Cloud"), { content: "Mobile Cloud", language: "en", provider: "google-cloud", deleteSource: true, whisper: false, shouting: false });
+assert.deepEqual(speechRequestFromMessage("-e Xin chào Edge"), { content: "Xin chào Edge", language: "vi", provider: "edge", deleteSource: false, whisper: false, shouting: false });
+assert.deepEqual(speechRequestFromMessage("--een Secret Edge"), { content: "Secret Edge", language: "en", provider: "edge", deleteSource: true, whisper: false, shouting: false });
+assert.deepEqual(speechRequestFromMessage("-S XIN chào"), { content: "XIN chào", language: "vi", provider: "google-cloud", deleteSource: false, whisper: false, shouting: true });
+assert.deepEqual(speechRequestFromMessage("-SEN HELLO THERE"), { content: "HELLO THERE", language: "en", provider: "google-cloud", deleteSource: false, whisper: false, shouting: true });
 assert.equal(speechRequestFromMessage("hello"), undefined);
 assert.equal(speechRequestFromMessage("-sen   "), undefined);
 

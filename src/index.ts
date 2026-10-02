@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, Events, GatewayIntentBits, PermissionFlagsBits, SlashCommandBuilder, StringSelectMenuBuilder, ThreadAutoArchiveDuration, type ButtonInteraction, type ChatInputCommandInteraction, type Guild, type Message, type TextChannel, type ThreadChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, Client, EmbedBuilder, Events, GatewayIntentBits, PermissionFlagsBits, SlashCommandBuilder, StringSelectMenuBuilder, ThreadAutoArchiveDuration, type ButtonInteraction, type ChatInputCommandInteraction, type Guild, type Message, type TextChannel, type ThreadChannel } from "discord.js";
 import { rollChance } from "./chance/command.js";
 import { colorInteger, isColorRoleName, normalizeHexColor } from "./color/command.js";
 import { loadEnvironment } from "./config/environment.js";
@@ -18,10 +18,13 @@ import { logger } from "./utils/logger.js";
 import { SpeechIntroductionTracker, speechRequestFromMessage } from "./voice/command.js";
 import { shouldAnnouncePresenceBoundary, shouldSpeakMemberArrival, shouldWelcomeFirstVoiceMember, watchedVoiceTransition } from "./voice/arrival.js";
 import { SpeakerManager } from "./voice/speaker.js";
+import { CLOUD_TTS_TIERS, TTS_VOICES, canUseGoogleCloudTts, cloudQuotaRemainingPercent, googleCloudTtsUsage, recordGoogleCloudTtsUsage, setTtsVoiceForPlayer, ttsVoiceForPlayer, type TtsVoice } from "./voice/google-cloud-config.js";
 import { replaceUserMentionsForSpeech } from "./voice/mentions.js";
+import { askZookeeperAi, clearAiChatHistory } from "./ai/chat.js";
 
 const WATCHED_USER_ID = "493076491106779148";
 const VOICE_ARRIVAL_CHANNEL_ID = "1513220978816319538";
+const JOCKIE_MUSIC_BOT_IDS = new Set(["412347553141751808", "412347257233604609", "411916947773587456"]);
 const POKEMON_EXPLORE_ROLE_ID = "1453575259843461120";
 const LOCATION_EXPLORE_BUTTON_ID = "pk-explore-location";
 const TRAVEL_BUTTON_ID = "pk-travel-start";
@@ -43,6 +46,14 @@ const THUNDER_TRAIL_DURATION_MS = 2 * 60_000;
 const THUNDER_TRAIL_READY_DELAY_MS = 3_000;
 const THUNDER_TRAIL_PREVIEW_MS = 5_000;
 const THUNDER_RAIKOU_ENCOUNTER_CHANCE = 0.1;
+const EMPTY_AI_MENTION_REPLIES = [
+  "Tag tao xong im ru là cái lồn gì? Có chuyện thì nói đi.",
+  "Gọi hồn tao lên rồi câm như hến, bị đần à?",
+  "Mày tag tao để ngắm à? Nói mẹ mày muốn gì.",
+  "Có cái mồm thì hỏi đi, đừng tag không như thằng ngáo.",
+  "Ủa rồi tag tao làm đéo gì? Gõ tiếp đi.",
+  "Tao ở đây rồi. Mày tính nói hay định đứng đó làm cảnh?",
+];
 
 type ThunderTrail = {
   messageId: string;
@@ -70,6 +81,15 @@ async function main(): Promise<void> {
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildPresences, GatewayIntentBits.MessageContent],
   });
   const speakers = new SpeakerManager();
+  const googleCloudOptions = (guildId: string, voice: TtsVoice) => {
+    const tier = voice.tier!;
+    return {
+      apiKey: environment.googleCloudTtsApiKey,
+      voiceName: voice.id,
+      canUseCharacters: (characters: number) => canUseGoogleCloudTts(database, tier, characters),
+      recordCharacters: (characters: number) => recordGoogleCloudTtsUsage(database, guildId, tier, characters),
+    };
+  };
   const introductions = new SpeechIntroductionTracker();
   const watchedPresenceByGuild = new Map<string, string>();
   const catchSessions = new Map<string, CatchSession>();
@@ -85,6 +105,7 @@ async function main(): Promise<void> {
   const thunderTrailEventEndTimers = new Map<string, NodeJS.Timeout>();
   const thunderTrailExpiryTimers = new Map<string, NodeJS.Timeout>();
   const thunderTrackSessions = new Map<string, ThunderTrackSession>();
+  const aiConversationsInFlight = new Set<string>();
   let shuttingDown = false;
 
   const chanceCommand = new SlashCommandBuilder()
@@ -120,9 +141,19 @@ async function main(): Promise<void> {
     .addNumberOption((option) => option.setName("percent").setDescription("Chance per Explore, from 0 to 100").setRequired(true).setMinValue(0).setMaxValue(100));
   const pokemonCreateCommand = new SlashCommandBuilder().setName("pk-create").setDescription("Tạo channel Pokémon #explore").setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
   const pokemonRemoveCommand = new SlashCommandBuilder().setName("pk-remove").setDescription("Xóa category Kanto và toàn bộ biome").setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+  const ttsVoiceCommand = new SlashCommandBuilder()
+    .setName("tts-voice")
+    .setDescription("Choose your personal TTS voice");
+  const ttsStatusCommand = new SlashCommandBuilder()
+    .setName("tts-status")
+    .setDescription("Show Google Cloud TTS voice and monthly usage")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+  const aiResetCommand = new SlashCommandBuilder()
+    .setName("ai-reset")
+    .setDescription("Forget your recent Zookeeper AI chat in this channel");
 
   const registerCommands = async (guild: Guild): Promise<void> => {
-    await guild.commands.set([chanceCommand, colorCommand, pokemonSetupCommand, pokemonTestRemoveCommand, pokemonExploreCommand, pokemonCatchCommand, pokemonTravelCommand, pokemonShowOffCommand, pokemonGiftCommand, pokemonWarpCandyCommand, pokemonRoamingCommand, pokemonCreateCommand, pokemonRemoveCommand]);
+    await guild.commands.set([chanceCommand, colorCommand, pokemonSetupCommand, pokemonTestRemoveCommand, pokemonExploreCommand, pokemonCatchCommand, pokemonTravelCommand, pokemonShowOffCommand, pokemonGiftCommand, pokemonWarpCandyCommand, pokemonRoamingCommand, pokemonCreateCommand, pokemonRemoveCommand, ttsVoiceCommand, ttsStatusCommand, aiResetCommand]);
     logger.info("Registered guild commands", { guildId: guild.id });
   };
 
@@ -355,8 +386,27 @@ async function main(): Promise<void> {
 
   const openInventoryThread = async (interaction: ButtonInteraction | ChatInputCommandInteraction): Promise<void> => {
     if (!interaction.guild || !interaction.channel?.isTextBased()) return;
-    await interaction.reply({ content: `<@${interaction.user.id}> is opening their Pokédex.`, allowedMentions: { users: [interaction.user.id] } });
-    const anchor = await interaction.fetchReply();
+    // Discord does not allow a Thread inside another Thread. Pokédex buttons can
+    // appear in Catch/Travel threads, so open the private menu directly there.
+    if (interaction.channel.isThread()) {
+      await interaction.reply({ ephemeral: true, ...await inventoryMenu(interaction.guild, interaction.user.id) });
+      return;
+    }
+    const isVoiceChat = interaction.channel.type === ChannelType.GuildVoice || interaction.channel.type === ChannelType.GuildStageVoice;
+    let anchor: Message;
+    if (isVoiceChat) {
+      const channels = await interaction.guild.channels.fetch();
+      const exploreChannel = channels.find((channel) => channel?.type === ChannelType.GuildText && channel.name === "explore");
+      if (!exploreChannel?.isSendable()) {
+        await interaction.reply({ content: "The #explore channel is not available. Ask an admin to run /pk-create.", ephemeral: true });
+        return;
+      }
+      await interaction.reply({ content: `Your Pokédex thread is being opened in <#${exploreChannel.id}>.`, ephemeral: true });
+      anchor = await exploreChannel.send({ content: `<@${interaction.user.id}> is opening their Pokédex.`, allowedMentions: { users: [interaction.user.id] } });
+    } else {
+      await interaction.reply({ content: `<@${interaction.user.id}> is opening their Pokédex.`, allowedMentions: { users: [interaction.user.id] } });
+      anchor = await interaction.fetchReply();
+    }
     const thread = await anchor.startThread({ name: `Pokédex · ${interaction.user.username}`.slice(0, 100), autoArchiveDuration: ThreadAutoArchiveDuration.OneHour, reason: "Pokémon Pokédex" });
     scheduleManagedThreadExpiry(thread);
     await thread.send({
@@ -978,7 +1028,51 @@ async function main(): Promise<void> {
     if (!message.inGuild() || message.author.bot) return;
 
     const speechRequest = speechRequestFromMessage(message.content);
-    if (!speechRequest) return;
+    if (!speechRequest) {
+      const botUserId = client.user?.id;
+      if (!botUserId || !message.mentions.users.has(botUserId)) return;
+
+      const prompt = message.content.replaceAll(`<@${botUserId}>`, "").replaceAll(`<@!${botUserId}>`, "").trim();
+      if (!prompt) {
+        const reply = EMPTY_AI_MENTION_REPLIES[Math.floor(Math.random() * EMPTY_AI_MENTION_REPLIES.length)]!;
+        await message.reply({ content: reply, allowedMentions: { repliedUser: false } }).catch(() => undefined);
+        return;
+      }
+
+      const conversationKey = `${message.guildId}:${message.channelId}:${message.author.id}`;
+      if (aiConversationsInFlight.has(conversationKey)) {
+        await message.reply({ content: "Tao đang trả lời câu trước rồi, chờ một chút nhé.", allowedMentions: { repliedUser: false } }).catch(() => undefined);
+        return;
+      }
+
+      aiConversationsInFlight.add(conversationKey);
+      try {
+        await message.channel.sendTyping().catch(() => undefined);
+        const result = await askZookeeperAi({
+          apiKey: environment.openAiApiKey,
+          database,
+          guildId: message.guildId,
+          channelId: message.channelId,
+          userId: message.author.id,
+          prompt,
+          monthlyBudgetUsd: environment.openAiMonthlyBudgetUsd,
+        });
+        if (result.kind === "reply") {
+          await message.reply({ content: result.content, allowedMentions: { parse: [], repliedUser: false } });
+        } else if (result.kind === "not-configured") {
+          await message.reply({ content: "AI chat chưa được cấu hình API key.", allowedMentions: { repliedUser: false } });
+        } else if (result.kind === "budget-exhausted") {
+          await message.reply({ content: "Ngân sách AI tháng này đã dùng hết. Zookeeper sẽ mở lại vào tháng sau.", allowedMentions: { repliedUser: false } });
+        } else {
+          await message.reply({ content: "Tao chưa trả lời được lúc này, thử lại sau nhé.", allowedMentions: { repliedUser: false } });
+        }
+      } catch (error) {
+        logger.error("AI chat reply could not be sent", { guildId: message.guildId, channelId: message.channelId, message: error instanceof Error ? error.message : String(error) });
+      } finally {
+        aiConversationsInFlight.delete(conversationKey);
+      }
+      return;
+    }
 
     if (speechRequest.deleteSource) {
       void message.delete().catch((error: unknown) => {
@@ -1016,8 +1110,14 @@ async function main(): Promise<void> {
       speechRequest.shouting,
     );
 
+    const selectedVoice = ttsVoiceForPlayer(database, message.guildId, message.author.id, speechRequest.language);
+    if (selectedVoice.provider === "google-cloud" && speechRequest.content.length > 100) {
+      await message.reply("Google Cloud voices accept at most **100 characters** per `-s`, `--s`, `-sen`, or `--sen` message. Choose Edge or free Google TTS with `/tts-voice` for longer messages.").catch(() => undefined);
+      return;
+    }
+
     try {
-      await speakers.speak(voiceChannel, textToSpeak, speechRequest.language, speechRequest.provider);
+      await speakers.speak(voiceChannel, textToSpeak, speechRequest.language, selectedVoice.provider, selectedVoice.provider === "google-cloud" ? googleCloudOptions(message.guildId, selectedVoice) : undefined);
       introductions.remember(message.guildId, message.author.id);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -1026,8 +1126,46 @@ async function main(): Promise<void> {
     }
   });
 
+  const ttsVoiceMenu = (guildId: string, userId: string, notice?: string) => {
+    const voiceDetails = (voice: TtsVoice): string => {
+      if (!voice.tier) return "Free · no Google Cloud characters used";
+      const tier = CLOUD_TTS_TIERS[voice.tier];
+      const used = googleCloudTtsUsage(database, voice.tier);
+      return `${tier.label} · ${used.toLocaleString()} used · ${(tier.safetyLimit - used).toLocaleString()} left (${cloudQuotaRemainingPercent(database, voice.tier)}%)`;
+    };
+    const optionsFor = (language: "vi" | "en") => TTS_VOICES
+      .filter((voice) => voice.language === language || voice.language === "both")
+      .map((voice) => ({ label: voice.label, value: voice.id, description: voiceDetails(voice).slice(0, 100) }));
+    const vietnamese = ttsVoiceForPlayer(database, guildId, userId, "vi");
+    const english = ttsVoiceForPlayer(database, guildId, userId, "en");
+    const quotaFields = (Object.entries(CLOUD_TTS_TIERS) as [keyof typeof CLOUD_TTS_TIERS, typeof CLOUD_TTS_TIERS[keyof typeof CLOUD_TTS_TIERS]][])
+      .map(([tier, details]) => ({ name: details.label, value: `${googleCloudTtsUsage(database, tier).toLocaleString()} used · ${(details.safetyLimit - googleCloudTtsUsage(database, tier)).toLocaleString()} left · ${cloudQuotaRemainingPercent(database, tier)}% remaining`, inline: false }));
+    const embed = new EmbedBuilder()
+      .setColor(0x5865f2)
+      .setTitle("Your TTS Voices")
+      .setDescription(`${notice ? `${notice}\n\n` : ""}Vietnamese: **${vietnamese.label}**\nEnglish: **${english.label}**\n\nGoogle Cloud voices allow up to **100 characters** per TTS message. Edge and free Google TTS have no Cloud quota.`)
+      .addFields(quotaFields);
+    const viMenu = new StringSelectMenuBuilder().setCustomId(`tts-voice:${userId}:vi`).setPlaceholder("Choose your Vietnamese voice").addOptions(optionsFor("vi"));
+    const enMenu = new StringSelectMenuBuilder().setCustomId(`tts-voice:${userId}:en`).setPlaceholder("Choose your English voice").addOptions(optionsFor("en"));
+    return { embeds: [embed], components: [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(viMenu), new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(enMenu)] };
+  };
+
   client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isStringSelectMenu()) {
+      const [ttsPrefix, ttsOwnerUserId, ttsLanguage] = interaction.customId.split(":");
+      if (ttsPrefix === "tts-voice" && ttsOwnerUserId && (ttsLanguage === "vi" || ttsLanguage === "en") && interaction.guild) {
+        if (ttsOwnerUserId !== interaction.user.id) {
+          await interaction.reply({ content: "This voice menu belongs to another user.", ephemeral: true });
+          return;
+        }
+        const voice = setTtsVoiceForPlayer(database, interaction.guild.id, interaction.user.id, ttsLanguage, interaction.values[0]!);
+        if (!voice) {
+          await interaction.update({ content: "That voice is not available for this language.", components: [] });
+          return;
+        }
+        await interaction.update(ttsVoiceMenu(interaction.guild.id, interaction.user.id, `Voice changed to **${voice.label}**.`));
+        return;
+      }
       const [prefix, action, ownerUserId, regionKey, pageText] = interaction.customId.split(":");
       if (prefix === "pk-inventory" && action && ownerUserId && interaction.guild) {
         if (ownerUserId !== interaction.user.id) {
@@ -1369,13 +1507,20 @@ async function main(): Promise<void> {
             return;
           }
           const member = await interaction.guild.members.fetch(interaction.user.id);
-          const showOffChannel = interaction.guild.channels.cache.find((channel) => channel.name === "show-off" && channel.isSendable());
+          const channels = await interaction.guild.channels.fetch();
+          const showOffChannel = channels.find((channel) => channel?.name === "show-off" && channel.isSendable());
           if (!showOffChannel?.isSendable()) {
             await interaction.reply({ content: "The #show-off channel has not been created yet. Ask an admin to run /pk-create.", ephemeral: true });
             return;
           }
-          await showOffChannel.send(showOffAnnouncement(pokemon, member.displayName, interaction.user.displayAvatarURL({ size: 128 })));
-          await interaction.update({ content: `You showed off **${pokemon.nameEn}** in <#${showOffChannel.id}>!`, embeds: [], components: [] });
+          try {
+            await showOffChannel.send(showOffAnnouncement(pokemon, member.displayName, interaction.user.displayAvatarURL({ size: 128 })));
+            await interaction.update({ content: `You showed off **${pokemon.nameEn}** in <#${showOffChannel.id}>!`, embeds: [], components: [] });
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            logger.error("Could not publish Pokémon Show Off", { guildId: interaction.guild.id, userId: interaction.user.id, message });
+            await interaction.update({ content: "Could not publish to #show-off. The bot needs View Channel, Send Messages, and Embed Links there.", embeds: [], components: [] });
+          }
           return;
         }
       }
@@ -1524,6 +1669,38 @@ async function main(): Promise<void> {
       const question = interaction.options.getString("question", true);
       const chance = rollChance();
       await interaction.reply(`> ${question}\n**${chance.percent}%** — ${chance.response}`);
+      return;
+    }
+
+    if (interaction.commandName === "ai-reset") {
+      if (!interaction.guild) {
+        await interaction.reply({ content: "AI history can only be reset in a server.", ephemeral: true });
+        return;
+      }
+      clearAiChatHistory(database, interaction.guild.id, interaction.channelId, interaction.user.id);
+      await interaction.reply({ content: "Your recent AI chat in this channel has been forgotten.", ephemeral: true });
+      return;
+    }
+
+    if (interaction.commandName === "tts-voice") {
+      if (!interaction.guild) {
+        await interaction.reply({ content: "TTS voices can only be set in a server.", ephemeral: true });
+        return;
+      }
+      await interaction.reply({ ephemeral: true, ...ttsVoiceMenu(interaction.guild.id, interaction.user.id) });
+      return;
+    }
+
+    if (interaction.commandName === "tts-status") {
+      if (!interaction.guild || !interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+        await interaction.reply({ content: "Only server administrators can view TTS status.", ephemeral: true });
+        return;
+      }
+      const keyStatus = environment.googleCloudTtsApiKey ? "Cloud API key configured" : "No Cloud API key — free Google TTS fallback is active";
+      const usage = (Object.entries(CLOUD_TTS_TIERS) as [keyof typeof CLOUD_TTS_TIERS, typeof CLOUD_TTS_TIERS[keyof typeof CLOUD_TTS_TIERS]][])
+        .map(([tier, details]) => `${details.label}: **${googleCloudTtsUsage(database, tier).toLocaleString()} / ${details.safetyLimit.toLocaleString()}** · ${cloudQuotaRemainingPercent(database, tier)}% remaining`)
+        .join("\n");
+      await interaction.reply({ content: `**Google Cloud TTS**\n${keyStatus}\n${usage}`, ephemeral: true });
       return;
     }
 
@@ -1766,7 +1943,37 @@ async function main(): Promise<void> {
 
   client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
     const member = newState.member ?? oldState.member;
-    if (!member || member.user.bot || oldState.channelId === newState.channelId) return;
+    if (!member || oldState.channelId === newState.channelId) return;
+
+    const botChannelIdAtUpdate = speakers.getVoiceChannelId(newState.guild.id);
+    if (JOCKIE_MUSIC_BOT_IDS.has(member.id)) {
+      if (newState.channel && newState.channelId === botChannelIdAtUpdate) {
+        try {
+          await speakers.speakArrival(newState.channel, "Lên nhạc.");
+        } catch (error) {
+          logger.error("Could not announce Jockie Music arrival", {
+            guildId: newState.guild.id,
+            userId: member.id,
+            message: error instanceof Error ? error.message : String(error),
+          });
+        }
+      }
+      return;
+    }
+    if (member.user.bot) return;
+
+    const botChannelIdBeforeMove = speakers.getVoiceChannelId(newState.guild.id);
+    if (oldState.channel && oldState.channelId === botChannelIdBeforeMove) {
+      try {
+        await speakers.speakArrival(oldState.channel, `Bái bai ${member.displayName}.`);
+      } catch (error) {
+        logger.error("Could not speak member-departure announcement", {
+          guildId: newState.guild.id,
+          userId: member.id,
+          message: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
 
     if (oldState.channel) speakers.leaveIfAlone(oldState.channel);
 

@@ -1,7 +1,7 @@
 const REPEAT_SPEAKER_AFTER_MS = 30_000;
 
 export type SpeechLanguage = "vi" | "en";
-export type SpeechProvider = "edge" | "google";
+export type SpeechProvider = "edge" | "google" | "google-cloud";
 
 export type SpeechRequest = {
   content: string;
@@ -27,22 +27,30 @@ export function speechRequestFromMessage(content: string): SpeechRequest | undef
   // Normalize only the command prefix so dashes in the spoken message stay intact.
   const commandContent = content.replace(/^[–—]/u, "--");
   const normalizedContent = commandContent.toLowerCase();
-  const command = normalizedContent.startsWith("--sen")
-    ? { prefix: "--sen", language: "en" as const, provider: "edge" as const, deleteSource: true, whisper: false }
+  const command = normalizedContent.startsWith("--een")
+    ? { prefix: "--een", language: "en" as const, provider: "edge" as const, deleteSource: true, whisper: false }
+    : normalizedContent.startsWith("--e")
+      ? { prefix: "--e", language: "vi" as const, provider: "edge" as const, deleteSource: true, whisper: true }
+      : normalizedContent.startsWith("--sen")
+    ? { prefix: "--sen", language: "en" as const, provider: "google-cloud" as const, deleteSource: true, whisper: false }
     : normalizedContent.startsWith("--s")
-      ? { prefix: "--s", language: "vi" as const, provider: "edge" as const, deleteSource: true, whisper: true }
+      ? { prefix: "--s", language: "vi" as const, provider: "google-cloud" as const, deleteSource: true, whisper: true }
       : normalizedContent.startsWith("--gen")
         ? { prefix: "--gen", language: "en" as const, provider: "google" as const, deleteSource: true, whisper: false }
         : normalizedContent.startsWith("--g")
           ? { prefix: "--g", language: "vi" as const, provider: "google" as const, deleteSource: true, whisper: true }
-          : normalizedContent.startsWith("-gen")
+          : normalizedContent.startsWith("-een")
+            ? { prefix: "-een", language: "en" as const, provider: "edge" as const, deleteSource: false, whisper: false }
+            : normalizedContent.startsWith("-e")
+              ? { prefix: "-e", language: "vi" as const, provider: "edge" as const, deleteSource: false, whisper: false }
+              : normalizedContent.startsWith("-gen")
             ? { prefix: "-gen", language: "en" as const, provider: "google" as const, deleteSource: false, whisper: false }
             : normalizedContent.startsWith("-g")
               ? { prefix: "-g", language: "vi" as const, provider: "google" as const, deleteSource: false, whisper: false }
       : normalizedContent.startsWith("-sen")
-        ? { prefix: "-sen", language: "en" as const, provider: "edge" as const, deleteSource: false, whisper: false }
+        ? { prefix: "-sen", language: "en" as const, provider: "google-cloud" as const, deleteSource: false, whisper: false }
         : normalizedContent.startsWith("-s")
-          ? { prefix: "-s", language: "vi" as const, provider: "edge" as const, deleteSource: false, whisper: false }
+          ? { prefix: "-s", language: "vi" as const, provider: "google-cloud" as const, deleteSource: false, whisper: false }
           : undefined;
   if (!command) return undefined;
 

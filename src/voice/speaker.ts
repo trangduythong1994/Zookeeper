@@ -5,9 +5,14 @@ import { createRequire } from "node:module";
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { PassThrough } from "node:stream";
 import { delimiter, dirname } from "node:path";
+import { setDefaultResultOrder } from "node:dns";
 import { logger } from "../utils/logger.js";
 import type { SpeechLanguage, SpeechProvider } from "./command.js";
 import { SpeechQueue, type SpeechPriority } from "./queue.js";
+
+// Some local networks advertise IPv6 but cannot route it to Google APIs. Prefer
+// IPv4 first so Cloud TTS does not wait for an IPv6 connection timeout.
+setDefaultResultOrder("ipv4first");
 
 const edgeTtsOptions = {
   outputFormat: "audio-24khz-48kbitrate-mono-mp3",
@@ -29,12 +34,23 @@ if (!ffmpegPath) {
 const ffmpegExecutable = ffmpegPath;
 process.env.PATH = `${dirname(ffmpegExecutable)}${delimiter}${process.env.PATH ?? ""}`;
 const MAX_TTS_ATTEMPTS = 3;
+const EDGE_SOCKET_IDLE_MS = 60_000;
+
+export type GoogleCloudSpeechOptions = {
+  apiKey?: string;
+  voiceName: string;
+  canUseCharacters: (characters: number) => boolean;
+  recordCharacters: (characters: number) => void;
+};
 
 type EdgeTtsSocket = {
   close(): void;
   on(event: "close", listener: (code: number, reason: Buffer) => void): void;
   on(event: "message", listener: (data: Buffer, isBinary: boolean) => void): void;
   once(event: "error", listener: (error: Error) => void): void;
+  off(event: "close", listener: (code: number, reason: Buffer) => void): void;
+  off(event: "message", listener: (data: Buffer, isBinary: boolean) => void): void;
+  off(event: "error", listener: (error: Error) => void): void;
   send(data: string): void;
 };
 
@@ -52,30 +68,75 @@ function escapeXml(value: string): string {
   })[character] ?? character);
 }
 
-async function streamSpeech(text: string, language: SpeechLanguage, destination: PassThrough): Promise<void> {
-  // Edge sometimes drops an individual socket (close code 1006).  A TTS client
-  // has no session state, so make a fresh client and a fresh WebSocket for every
-  // synthesis attempt instead of ever reusing a closed connection.
-  const edgeTts = new EdgeTTS(edgeTtsOptions);
-  const socket = await (edgeTts as unknown as StreamableEdgeTts)._connectWebSocket();
+type CachedEdgeSocket = { socket: EdgeTtsSocket; closeTimer?: NodeJS.Timeout };
+
+/** Reuses one idle Edge WebSocket per language inside a guild's serialized speech queue. */
+class EdgeSocketCache {
+  private readonly sockets = new Map<SpeechLanguage, CachedEdgeSocket>();
+
+  async acquire(language: SpeechLanguage): Promise<EdgeTtsSocket> {
+    const cached = this.sockets.get(language);
+    if (cached) {
+      if (cached.closeTimer) clearTimeout(cached.closeTimer);
+      cached.closeTimer = undefined;
+      return cached.socket;
+    }
+    const edgeTts = new EdgeTTS(edgeTtsOptions);
+    const socket = await (edgeTts as unknown as StreamableEdgeTts)._connectWebSocket();
+    const entry: CachedEdgeSocket = { socket };
+    socket.on("close", () => {
+      if (this.sockets.get(language)?.socket === socket) this.sockets.delete(language);
+    });
+    this.sockets.set(language, entry);
+    return socket;
+  }
+
+  release(language: SpeechLanguage, socket: EdgeTtsSocket): void {
+    const cached = this.sockets.get(language);
+    if (!cached || cached.socket !== socket) return;
+    if (cached.closeTimer) clearTimeout(cached.closeTimer);
+    cached.closeTimer = setTimeout(() => this.invalidate(language, socket), EDGE_SOCKET_IDLE_MS);
+  }
+
+  invalidate(language: SpeechLanguage, socket: EdgeTtsSocket): void {
+    const cached = this.sockets.get(language);
+    if (!cached || cached.socket !== socket) return;
+    if (cached.closeTimer) clearTimeout(cached.closeTimer);
+    this.sockets.delete(language);
+    socket.close();
+  }
+
+  closeAll(): void {
+    for (const [language, cached] of this.sockets) this.invalidate(language, cached.socket);
+  }
+}
+
+async function streamSpeech(text: string, language: SpeechLanguage, destination: PassThrough, sockets: EdgeSocketCache): Promise<void> {
+  const socket = await sockets.acquire(language);
   const settings = speechSettings[language];
 
   await new Promise<void>((resolve, reject) => {
     let settled = false;
-    const timeout = setTimeout(() => fail(new Error("Edge TTS timed out.")), 15_000);
+    const cleanup = (): void => {
+      socket.off("close", onClose);
+      socket.off("message", onMessage);
+      socket.off("error", fail);
+    };
     const finish = (): void => {
       if (settled) return;
       settled = true;
+      cleanup();
       clearTimeout(timeout);
-      socket.close();
       destination.end();
+      sockets.release(language, socket);
       resolve();
     };
     const fail = (error: Error): void => {
       if (settled) return;
       settled = true;
+      cleanup();
       clearTimeout(timeout);
-      socket.close();
+      sockets.invalidate(language, socket);
       // The caller receives this rejection and reports it to Discord. Ending the
       // stream without an error prevents Node from treating a transient TTS
       // network failure as an uncaught process-wide exception.
@@ -83,20 +144,23 @@ async function streamSpeech(text: string, language: SpeechLanguage, destination:
       reject(error);
     };
 
-    socket.once("error", fail);
-    socket.on("close", (code, reason) => {
+    const onClose = (code: number, reason: Buffer): void => {
       if (!settled) fail(new Error(`Edge TTS closed unexpectedly (${code}): ${reason.toString() || "no reason"}`));
-    });
-    socket.on("message", (data, isBinary) => {
+    };
+    const onMessage = (data: Buffer, isBinary: boolean): void => {
+      if (settled) return;
       if (isBinary) {
         const separator = Buffer.from("Path:audio\r\n");
         const index = data.indexOf(separator);
         if (index >= 0) destination.write(data.subarray(index + separator.length));
         return;
       }
-
       if (data.toString().includes("Path:turn.end")) finish();
-    });
+    };
+    const timeout = setTimeout(() => fail(new Error("Edge TTS timed out.")), 15_000);
+    socket.once("error", fail);
+    socket.on("close", onClose);
+    socket.on("message", onMessage);
 
     const requestId = crypto.randomUUID().replaceAll("-", "");
     socket.send(`X-RequestId:${requestId}\r\nContent-Type:application/ssml+xml\r\nPath:ssml\r\n\r\n<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="${settings.locale}"><voice name="${settings.voice}"><prosody rate="default" pitch="default" volume="default">${escapeXml(text)}</prosody></voice></speak>`);
@@ -135,6 +199,28 @@ async function streamGoogleSpeech(text: string, language: SpeechLanguage, destin
   }
 }
 
+async function streamGoogleCloudSpeech(text: string, language: SpeechLanguage, destination: PassThrough, options: GoogleCloudSpeechOptions): Promise<void> {
+  if (!options.apiKey) throw new Error("Google Cloud TTS API key is not configured.");
+  try {
+    const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${encodeURIComponent(options.apiKey)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: { text },
+        voice: { languageCode: speechSettings[language].locale, name: options.voiceName },
+        audioConfig: { audioEncoding: "MP3" },
+      }),
+    });
+    if (!response.ok) throw new Error(`Google Cloud TTS request failed (${response.status}): ${(await response.text()).slice(0, 240)}`);
+    const body = await response.json() as { audioContent?: string };
+    if (!body.audioContent) throw new Error("Google Cloud TTS returned no audio.");
+    destination.end(Buffer.from(body.audioContent, "base64"));
+  } catch (error) {
+    destination.end();
+    throw error;
+  }
+}
+
 function createLowLatencyResource(audio: PassThrough) {
   const decoder = spawn(ffmpegExecutable, [
     "-hide_banner",
@@ -152,17 +238,28 @@ function createLowLatencyResource(audio: PassThrough) {
   audio.pipe(decoder.stdin);
   decoder.stderr.on("data", (data: Buffer) => {
     const message = data.toString().trim();
-    if (message) logger.error("FFmpeg voice decoder error", { message });
+    // AudioPlayer closes FFmpeg's output pipe when a voice state changes or a
+    // retry interrupts playback. FFmpeg reports that normal cancellation as an
+    // "Invalid argument" trailer error; the original TTS error is more useful.
+    const expectedCancellation = message.includes("Error writing trailer")
+      || message.includes("Error closing file")
+      || (message.includes("Invalid argument") && message.includes("pcm_s16le"));
+    if (message && !expectedCancellation) logger.error("FFmpeg voice decoder error", { message });
   });
 
   return createAudioResource(decoder.stdout, { inputType: StreamType.Raw });
 }
 
-async function warmUpEdgeTts(): Promise<void> {
+async function checkEdgeTtsEndpoint(): Promise<void> {
   await Promise.all((["vi", "en"] as const).map(async (language) => {
+    const sockets = new EdgeSocketCache();
     const sink = new PassThrough();
     sink.resume();
-    await streamSpeech(language === "vi" ? "Sẵn sàng." : "Ready.", language, sink);
+    try {
+      await streamSpeech(language === "vi" ? "Sẵn sàng." : "Ready.", language, sink, sockets);
+    } finally {
+      sockets.closeAll();
+    }
   }));
 }
 
@@ -171,6 +268,7 @@ class GuildSpeaker {
   private channelId?: string;
   private speaking = false;
   private speechStartedAt?: number;
+  private readonly edgeSockets = new EdgeSocketCache();
 
   constructor(private readonly guildId: string) {
     this.player.on("error", (error) => {
@@ -191,7 +289,7 @@ class GuildSpeaker {
     return this.channelId;
   }
 
-  async speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider): Promise<"busy" | "spoken"> {
+  async speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider, googleCloud?: GoogleCloudSpeechOptions): Promise<"busy" | "spoken"> {
     if (this.speaking) return "busy";
     this.speaking = true;
     this.speechStartedAt = Date.now();
@@ -200,6 +298,28 @@ class GuildSpeaker {
       if (provider === "google") {
         await this.playOnce(channel, text, language, "google");
         return "spoken";
+      }
+
+      if (provider === "google-cloud") {
+        if (!googleCloud?.apiKey || !googleCloud.canUseCharacters(text.length)) {
+          logger.warn("Google Cloud TTS unavailable or monthly safety limit reached; using free Google TTS", { guildId: this.guildId, channelId: channel.id });
+          await this.playOnce(channel, text, language, "google");
+          return "spoken";
+        }
+        try {
+          await this.playOnce(channel, text, language, "google-cloud", googleCloud);
+          googleCloud.recordCharacters(text.length);
+          return "spoken";
+        } catch (error) {
+          this.player.stop(true);
+          logger.warn("Google Cloud TTS failed; using free Google TTS", {
+            guildId: this.guildId,
+            channelId: channel.id,
+            message: error instanceof Error ? error.message : String(error),
+          });
+          await this.playOnce(channel, text, language, "google");
+          return "spoken";
+        }
       }
 
       let lastEdgeError: unknown;
@@ -242,15 +362,20 @@ class GuildSpeaker {
 
   leave(): void {
     this.player.stop(true);
+    this.edgeSockets.closeAll();
     getVoiceConnection(this.guildId)?.destroy();
     this.channelId = undefined;
     logger.info("Left voice channel", { guildId: this.guildId });
   }
 
-  private async playOnce(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider): Promise<void> {
+  private async playOnce(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider, googleCloud?: GoogleCloudSpeechOptions): Promise<void> {
     const audio = new PassThrough();
     const resource = createLowLatencyResource(audio);
-    const synthesis = provider === "google" ? streamGoogleSpeech(text, language, audio) : streamSpeech(text, language, audio);
+    const synthesis = provider === "google"
+      ? streamGoogleSpeech(text, language, audio)
+      : provider === "google-cloud"
+        ? streamGoogleCloudSpeech(text, language, audio, googleCloud!)
+        : streamSpeech(text, language, audio, this.edgeSockets);
     await this.connect(channel);
     this.player.play(resource);
     await Promise.all([synthesis, entersState(this.player, AudioPlayerStatus.Idle, 120_000)]);
@@ -259,7 +384,13 @@ class GuildSpeaker {
 
   private async connect(channel: VoiceBasedChannel): Promise<VoiceConnection> {
     const existingConnection = getVoiceConnection(this.guildId);
-    if (existingConnection && this.channelId === channel.id) return existingConnection;
+    if (existingConnection && this.channelId === channel.id) {
+      // A Discord voice reconnect can keep the connection object but drop its
+      // player subscription. Reattach on every utterance so the player does not
+      // pause forever and eventually hit its 120-second timeout.
+      existingConnection.subscribe(this.player);
+      return existingConnection;
+    }
 
     existingConnection?.destroy();
     const connection = joinVoiceChannel({
@@ -314,14 +445,14 @@ export class SpeakerManager {
     if (now - this.lastTtsWarmUpAt < 10 * 60_000) return;
 
     this.lastTtsWarmUpAt = now;
-    this.warmingUp = warmUpEdgeTts()
-      .then(() => logger.info("Edge TTS warmed up"))
+    this.warmingUp = checkEdgeTtsEndpoint()
+      .then(() => logger.info("Edge TTS endpoint checked"))
       .finally(() => { this.warmingUp = undefined; });
     return this.warmingUp;
   }
 
-  speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider): Promise<"spoken"> {
-    return this.enqueue(channel, text, language, provider, "standard");
+  speak(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider, googleCloud?: GoogleCloudSpeechOptions): Promise<"spoken"> {
+    return this.enqueue(channel, text, language, provider, "standard", googleCloud);
   }
 
   speakArrival(channel: VoiceBasedChannel, text: string): Promise<"spoken"> {
@@ -356,14 +487,14 @@ export class SpeakerManager {
     }
   }
 
-  private enqueue(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider, priority: SpeechPriority): Promise<"spoken"> {
+  private enqueue(channel: VoiceBasedChannel, text: string, language: SpeechLanguage, provider: SpeechProvider, priority: SpeechPriority, googleCloud?: GoogleCloudSpeechOptions): Promise<"spoken"> {
     const guildId = channel.guild.id;
     const queueState = this.queues.get(guildId) ?? { queue: new SpeechQueue<QueuedSpeech>(), processing: false, cancelled: false, arrivalCount: 0 };
     this.queues.set(guildId, queueState);
     if (priority === "arrival") queueState.arrivalCount += 1;
 
     const pendingSpeech = new Promise<"spoken">((resolve, reject) => {
-      queueState.queue.enqueue({ channel, text, language, provider, priority, resolve, reject }, priority);
+      queueState.queue.enqueue({ channel, text, language, provider, priority, googleCloud, resolve, reject }, priority);
     });
     void this.processQueue(guildId, queueState);
     return pendingSpeech;
@@ -379,7 +510,7 @@ export class SpeakerManager {
         const speaker = this.speakers.get(guildId) ?? new GuildSpeaker(guildId);
         this.speakers.set(guildId, speaker);
         try {
-          await speaker.speak(pendingSpeech.channel, pendingSpeech.text, pendingSpeech.language, pendingSpeech.provider);
+          await speaker.speak(pendingSpeech.channel, pendingSpeech.text, pendingSpeech.language, pendingSpeech.provider, pendingSpeech.googleCloud);
           if (queueState.cancelled) pendingSpeech.reject(new Error("No human members remain in the voice channel."));
           else pendingSpeech.resolve("spoken");
         } catch (error) {
@@ -399,7 +530,9 @@ export class SpeakerManager {
 
 export function isRetryableTtsFailure(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
-  return message.startsWith("Edge TTS closed unexpectedly") || message === "Edge TTS timed out.";
+  return message.startsWith("Edge TTS closed unexpectedly")
+    || message === "Edge TTS timed out."
+    || message === "The operation was aborted";
 }
 
 export function ttsRetryDelayMs(attempt: number): number {
@@ -412,6 +545,7 @@ type QueuedSpeech = {
   language: SpeechLanguage;
   provider: SpeechProvider;
   priority: SpeechPriority;
+  googleCloud?: GoogleCloudSpeechOptions;
   resolve: (value: "spoken") => void;
   reject: (reason?: unknown) => void;
 };

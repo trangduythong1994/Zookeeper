@@ -128,6 +128,48 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
       guild_id TEXT PRIMARY KEY,
       chance REAL NOT NULL CHECK (chance >= 0 AND chance <= 1)
     );
+    CREATE TABLE IF NOT EXISTS google_cloud_tts_settings (
+      guild_id TEXT PRIMARY KEY,
+      vi_voice TEXT NOT NULL,
+      en_voice TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS google_cloud_tts_usage (
+      guild_id TEXT NOT NULL,
+      month_key TEXT NOT NULL,
+      characters INTEGER NOT NULL DEFAULT 0 CHECK (characters >= 0),
+      PRIMARY KEY (guild_id, month_key)
+    );
+    CREATE TABLE IF NOT EXISTS tts_user_settings (
+      guild_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      vi_voice TEXT NOT NULL,
+      en_voice TEXT NOT NULL,
+      PRIMARY KEY (guild_id, user_id)
+    );
+    CREATE TABLE IF NOT EXISTS google_cloud_tts_usage_v2 (
+      guild_id TEXT NOT NULL,
+      month_key TEXT NOT NULL,
+      tier TEXT NOT NULL CHECK (tier IN ('neural2', 'standard')),
+      characters INTEGER NOT NULL DEFAULT 0 CHECK (characters >= 0),
+      PRIMARY KEY (guild_id, month_key, tier)
+    );
+    CREATE TABLE IF NOT EXISTS ai_chat_history (
+      guild_id TEXT NOT NULL,
+      channel_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+      role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+      content TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS ai_chat_history_by_conversation
+      ON ai_chat_history (guild_id, channel_id, user_id, sequence DESC);
+    CREATE TABLE IF NOT EXISTS ai_chat_usage (
+      month_key TEXT PRIMARY KEY,
+      input_tokens INTEGER NOT NULL DEFAULT 0 CHECK (input_tokens >= 0),
+      output_tokens INTEGER NOT NULL DEFAULT 0 CHECK (output_tokens >= 0),
+      cost_microusd INTEGER NOT NULL DEFAULT 0 CHECK (cost_microusd >= 0)
+    );
     CREATE TABLE IF NOT EXISTS pokemon_roaming_settings (
       guild_id TEXT PRIMARY KEY,
       chance REAL NOT NULL CHECK (chance >= 0 AND chance <= 1)
