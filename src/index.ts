@@ -21,6 +21,8 @@ import { SpeakerManager } from "./voice/speaker.js";
 import { CLOUD_TTS_TIERS, TTS_VOICES, canUseGoogleCloudTts, cloudQuotaRemainingPercent, googleCloudTtsUsage, recordGoogleCloudTtsUsage, setTtsVoiceForPlayer, ttsVoiceForPlayer, type TtsVoice } from "./voice/google-cloud-config.js";
 import { replaceUserMentionsForSpeech } from "./voice/mentions.js";
 import { askZookeeperAi, clearAiChatHistory } from "./ai/chat.js";
+import { HANABI_COLORS, HANABI_MAX_CLUES, HANABI_NUMBERS, HANABI_STARTING_FUSES, cardText, colorEmoji, createHanabiGame, currentPlayer as hanabiCurrentPlayer, discardCard as hanabiDiscardCard, emptyState as emptyHanabiState, giveHint as giveHanabiHint, hanabiGame, joinLobby as joinHanabiLobby, leaveLobby as leaveHanabiLobby, playCard as playHanabiCard, reserveHanabiGameNumber, saveHanabiGame, score as hanabiScore, startClassicGame, type HanabiCard, type HanabiGame } from "./hanabi/hanabi.js";
+import { randomUUID } from "node:crypto";
 
 const WATCHED_USER_ID = "493076491106779148";
 const VOICE_ARRIVAL_CHANNEL_ID = "1513220978816319538";
@@ -105,6 +107,7 @@ async function main(): Promise<void> {
   const thunderTrailEventEndTimers = new Map<string, NodeJS.Timeout>();
   const thunderTrailExpiryTimers = new Map<string, NodeJS.Timeout>();
   const thunderTrackSessions = new Map<string, ThunderTrackSession>();
+  const hanabiChannelDeletionTimers = new Map<string, NodeJS.Timeout>();
   const aiConversationsInFlight = new Set<string>();
   let shuttingDown = false;
 
@@ -151,9 +154,12 @@ async function main(): Promise<void> {
   const aiResetCommand = new SlashCommandBuilder()
     .setName("ai-reset")
     .setDescription("Forget your recent Zookeeper AI chat in this channel");
+  const hanabiCommand = new SlashCommandBuilder()
+    .setName("hanabi")
+    .setDescription("Create a text-only Hanabi lobby");
 
   const registerCommands = async (guild: Guild): Promise<void> => {
-    await guild.commands.set([chanceCommand, colorCommand, pokemonSetupCommand, pokemonTestRemoveCommand, pokemonExploreCommand, pokemonCatchCommand, pokemonTravelCommand, pokemonShowOffCommand, pokemonGiftCommand, pokemonWarpCandyCommand, pokemonRoamingCommand, pokemonCreateCommand, pokemonRemoveCommand, ttsVoiceCommand, ttsStatusCommand, aiResetCommand]);
+    await guild.commands.set([chanceCommand, colorCommand, pokemonSetupCommand, pokemonTestRemoveCommand, pokemonExploreCommand, pokemonCatchCommand, pokemonTravelCommand, pokemonShowOffCommand, pokemonGiftCommand, pokemonWarpCandyCommand, pokemonRoamingCommand, pokemonCreateCommand, pokemonRemoveCommand, ttsVoiceCommand, ttsStatusCommand, aiResetCommand, hanabiCommand]);
     logger.info("Registered guild commands", { guildId: guild.id });
   };
 
@@ -187,6 +193,16 @@ async function main(): Promise<void> {
           await exploreChannel.send({ content: `<@${notice.userId}> Your previous location (**${notice.oldLocationName}**) is no longer available. Please use \`/pk-travel\` to choose a new Location.`, allowedMentions: { users: [notice.userId] } });
         }
         if (notices.length > 0) database.prepare("DELETE FROM pokemon_location_migration_notices WHERE guild_id = ?").run(guild.id);
+      }
+      const completedHanabiGameIds = database.prepare("SELECT game_id AS gameId FROM hanabi_games WHERE guild_id = ? AND state = 'completed'").all(guild.id) as { gameId: string }[];
+      for (const { gameId } of completedHanabiGameIds) {
+        const game = hanabiGame(database, gameId);
+        if (game) scheduleHanabiChannelDeletion(game, Math.max(0, game.updatedAt + 60 * 60_000 - Date.now()));
+      }
+      const activeHanabiGameIds = database.prepare("SELECT game_id AS gameId FROM hanabi_games WHERE guild_id = ? AND state = 'active'").all(guild.id) as { gameId: string }[];
+      for (const { gameId } of activeHanabiGameIds) {
+        const game = hanabiGame(database, gameId);
+        if (game) await syncHanabiBoard(game);
       }
     }
   });
@@ -1150,8 +1166,243 @@ async function main(): Promise<void> {
     return { embeds: [embed], components: [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(viMenu), new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(enMenu)] };
   };
 
+  const hanabiLobbyView = (game: HanabiGame, notice?: string) => {
+    const names = game.data.players.map((player, index) => `${index + 1}. <@${player.userId}>`).join("\n");
+    const started = game.state !== "lobby";
+    return {
+      embeds: [new EmbedBuilder()
+        .setColor(started ? 0x57f287 : 0xfaa61a)
+        .setTitle("🃏 Hanabi")
+        .setDescription(`${notice ? `${notice}\n\n` : ""}A cooperative game of fireworks, bad memory, and inevitable embarrassment.\n\n**Players (${game.data.players.length}/5)**\n${names}\n\n${started ? "The game has started in its thread." : "Need **2–5 players**. The host starts when ready."}`)],
+      components: [new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`hanabi:join:${game.gameId}`).setLabel("Join").setEmoji("🃏").setStyle(ButtonStyle.Primary).setDisabled(started || game.data.players.length >= 5),
+        new ButtonBuilder().setCustomId(`hanabi:leave:${game.gameId}`).setLabel("Leave").setStyle(ButtonStyle.Secondary).setDisabled(started),
+        new ButtonBuilder().setCustomId(`hanabi:start:${game.gameId}`).setLabel("Start").setEmoji("🎆").setStyle(ButtonStyle.Success).setDisabled(started || game.data.players.length < 2),
+      )],
+    };
+  };
+
+  const hanabiBoardView = (game: HanabiGame) => {
+    const data = game.data;
+    const active = game.state === "active";
+    const current = active ? hanabiCurrentPlayer(data) : undefined;
+    const turnOrder = active
+      ? [...data.players.slice(data.turnIndex), ...data.players.slice(0, data.turnIndex)]
+        .map((player, index) => `${index === 0 ? "👉 " : ""}<@${player.userId}>`)
+        .join(" → ")
+      : "";
+    const fireworks = HANABI_COLORS.map((color) => `${colorEmoji(color)} **${data.fireworks[color]}**`).join(" · ");
+    const cardsStillInPlay = [...data.deck, ...data.players.flatMap((player) => player.hand)];
+    const remainingCards = HANABI_COLORS.map((color) => {
+      const counts = HANABI_NUMBERS.map((number) => {
+        const count = cardsStillInPlay.filter((card) => card.color === color && card.number === number).length;
+        return count === 0 ? "✕" : count.toString();
+      }).join("  ");
+      return `${colorEmoji(color)}    ${counts}`;
+    }).join("\n");
+    const fuses = "❤️".repeat(data.fuses) + "🖤".repeat(HANABI_STARTING_FUSES - data.fuses);
+    const endStatus = game.state === "completed"
+      ? `**Game over · ${hanabiScore(data)}/25**${data.endReason === "impossible-firework" && data.impossibleColor ? `\n${colorEmoji(data.impossibleColor)} ${data.impossibleColor[0]!.toUpperCase()}${data.impossibleColor.slice(1)} can no longer be completed.` : ""}`
+      : data.finalTurnsRemaining !== undefined
+        ? `**Final round:** ${data.finalTurnsRemaining} turn${data.finalTurnsRemaining === 1 ? "" : "s"} left`
+        : "";
+    const embed = new EmbedBuilder()
+      .setColor(active ? 0x5865f2 : 0x747f8d)
+      .setTitle("🎆 Hanabi")
+      .setDescription(`${active ? `**Turn:** <@${current!.userId}>\n**Order:** ${turnOrder}\n` : ""}${endStatus}\n\n**Fireworks**\n${fireworks}\n\n**Hints:** ${"💡".repeat(data.clues)}${"⚫".repeat(HANABI_MAX_CLUES - data.clues)}\n**Fuses:** ${fuses}\n**Draw pile:** ${data.deck.length} cards · **Discard:** ${data.discard.length}\n\n**Cards remaining** *(deck + players' hands; played/discarded cards excluded)*\n\`\`\`\n      1  2  3  4  5\n${remainingCards}\n\`\`\``);
+    return {
+      embeds: [embed],
+      components: [new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`hanabi:view:${game.gameId}`).setLabel("View Table").setEmoji("👁️").setStyle(ButtonStyle.Secondary).setDisabled(!active),
+        new ButtonBuilder().setCustomId(`hanabi:hint-start:${game.gameId}`).setLabel("Give Hint").setEmoji("💡").setStyle(ButtonStyle.Primary).setDisabled(!active),
+        new ButtonBuilder().setCustomId(`hanabi:play-start:${game.gameId}`).setLabel("Play a Card").setEmoji("🎆").setStyle(ButtonStyle.Success).setDisabled(!active),
+        new ButtonBuilder().setCustomId(`hanabi:discard-start:${game.gameId}`).setLabel("Discard").setEmoji("🗑️").setStyle(ButtonStyle.Danger).setDisabled(!active),
+      )],
+    };
+  };
+
+  const ownHanabiCardText = (card: HanabiCard, index: number): string => {
+    const facts = [card.knownColor ? `${colorEmoji(card.knownColor)} ${card.knownColor}` : undefined, card.knownNumber?.toString()]
+      .filter((fact): fact is string => Boolean(fact));
+    return `${String.fromCharCode(9312 + index)} **[?]**${facts.length > 0 ? ` · ${facts.join(" · ")}` : " · no confirmed information"}`;
+  };
+
+  const hanabiTableView = (game: HanabiGame, userId: string) => {
+    const player = game.data.players.find((entry) => entry.userId === userId);
+    if (!player) return { content: "You are not part of this Hanabi game.", embeds: [], components: [] };
+    const others = game.data.players.filter((entry) => entry.userId !== userId)
+      .map((entry) => `👤 **${entry.displayName}**\n${entry.hand.map(cardText).join(" · ") || "No cards"}`)
+      .join("\n\n");
+    return {
+      embeds: [new EmbedBuilder()
+        .setColor(0x5865f2)
+        .setTitle("👁️ Your Hanabi Table")
+        .setDescription(`**Your hand**\n${player.hand.map(ownHanabiCardText).join("\n") || "No cards"}\n\n**Other players**\n${others || "No other players"}\n\n*Only confirmed hints are shown. Remember negative information yourself.*`)],
+      components: [new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`hanabi:table-refresh:${game.gameId}:${userId}`).setLabel("Refresh").setEmoji("🔄").setStyle(ButtonStyle.Secondary),
+      )],
+    };
+  };
+
+  const hanabiHintPlayerMenu = (game: HanabiGame, actorUserId: string) => new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+    new StringSelectMenuBuilder()
+      .setCustomId(`hanabi-hint-player:${game.gameId}:${actorUserId}`)
+      .setPlaceholder("Choose a player")
+      .addOptions(game.data.players.filter((player) => player.userId !== actorUserId).map((player) => ({ label: player.displayName.slice(0, 100), value: player.userId }))),
+  );
+
+  const hanabiHintMenu = (gameId: string, actorUserId: string, targetUserId: string) => new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+    new StringSelectMenuBuilder()
+      .setCustomId(`hanabi-hint:${gameId}:${actorUserId}:${targetUserId}`)
+      .setPlaceholder("Choose any Color or Number")
+      .addOptions([
+        ...HANABI_COLORS.map((color) => ({ label: `${colorEmoji(color)} ${color[0]!.toUpperCase()}${color.slice(1)}`, value: `color-${color}` })),
+        ...HANABI_NUMBERS.map((number) => ({ label: `Number ${number}`, value: `number-${number}` })),
+      ]),
+  );
+
+  const hanabiCardMenu = (action: "play" | "discard", game: HanabiGame, actorUserId: string) => {
+    const player = game.data.players.find((entry) => entry.userId === actorUserId)!;
+    return new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+      new StringSelectMenuBuilder()
+        .setCustomId(`hanabi-${action}:${game.gameId}:${actorUserId}`)
+        .setPlaceholder(action === "play" ? "Choose a card to play" : "Choose a card to discard")
+        .addOptions(player.hand.map((card, index) => ({ label: `Card ${String.fromCharCode(9312 + index)}`, value: index.toString(), description: [card.knownColor ? `${colorEmoji(card.knownColor)} ${card.knownColor}` : undefined, card.knownNumber ? `Number ${card.knownNumber}` : undefined].filter(Boolean).join(" · ") || "No confirmed information" }))),
+    );
+  };
+
+  const hanabiThread = async (game: HanabiGame): Promise<ThreadChannel | undefined> => {
+    if (!game.threadId) return undefined;
+    const channel = await client.channels.fetch(game.threadId).catch(() => undefined);
+    return channel?.isThread() ? channel : undefined;
+  };
+
+  const syncHanabiBoard = async (game: HanabiGame): Promise<void> => {
+    if (!game.channelId || !game.boardMessageId) return;
+    const channel = await client.channels.fetch(game.channelId).catch(() => undefined);
+    if (!channel?.isTextBased()) return;
+    const board = await channel.messages.fetch(game.boardMessageId).catch(() => undefined);
+    if (board) await board.edit(hanabiBoardView(game));
+  };
+
+  const announceHanabi = async (game: HanabiGame, content: string): Promise<void> => {
+    const thread = await hanabiThread(game);
+    if (thread?.isSendable()) await thread.send({ content });
+  };
+
+  const hanabiGameOverMessage = (game: HanabiGame): string => {
+    const score = hanabiScore(game.data);
+    if (game.data.endReason === "impossible-firework" && game.data.impossibleColor) {
+      const color = game.data.impossibleColor;
+      return `🛑 Game over. ${colorEmoji(color)} **${color[0]!.toUpperCase()}${color.slice(1)}** can no longer be completed. Final score: **${score}/25**.`;
+    }
+    if (game.data.endReason === "perfect") return "🎇 Perfect game — **25/25**. Miraculously, nobody ruined it.";
+    if (game.data.endReason === "fuses") return `💥 Game over. You blew all three Fuses. Final score: **${score}/25**.`;
+    return `🎆 Game over. Final score: **${score}/25**.`;
+  };
+
+  const scheduleHanabiChannelDeletion = (game: HanabiGame, delayMs = 60 * 60_000): void => {
+    if (!game.channelId) return;
+    const existing = hanabiChannelDeletionTimers.get(game.gameId);
+    if (existing) clearTimeout(existing);
+    hanabiChannelDeletionTimers.set(game.gameId, setTimeout(() => {
+      hanabiChannelDeletionTimers.delete(game.gameId);
+      void (async () => {
+        const channel = await client.channels.fetch(game.channelId!).catch(() => undefined);
+        await channel?.delete("Hanabi game ended one hour ago").catch(() => undefined);
+      })();
+    }, Math.max(0, delayMs)));
+  };
+
   client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isStringSelectMenu()) {
+      const hanabiParts = interaction.customId.split(":");
+      if ((hanabiParts[0] === "hanabi-hint-player" || hanabiParts[0] === "hanabi-hint" || hanabiParts[0] === "hanabi-play" || hanabiParts[0] === "hanabi-discard") && interaction.guild) {
+        const [hanabiAction, gameId, actorUserId, targetUserId] = hanabiParts;
+        const game = gameId ? hanabiGame(database, gameId) : undefined;
+        if (!game || game.guildId !== interaction.guild.id || game.state !== "active" || !actorUserId || actorUserId !== interaction.user.id) {
+          await interaction.update({ content: "This Hanabi action is no longer available.", embeds: [], components: [] });
+          return;
+        }
+        if (hanabiCurrentPlayer(game.data).userId !== actorUserId) {
+          await interaction.update({ content: "It is no longer your turn, so stop touching things.", embeds: [], components: [] });
+          return;
+        }
+        if (hanabiAction === "hanabi-hint-player") {
+          const target = game.data.players.find((player) => player.userId === interaction.values[0]);
+          if (!target || target.userId === actorUserId) {
+            await interaction.update({ content: "Choose another player, genius.", embeds: [], components: [] });
+            return;
+          }
+          await interaction.update({ content: `Hint for **${target.displayName}** — choose one Color or Number. Zero matching cards is allowed.`, embeds: [], components: [hanabiHintMenu(game.gameId, actorUserId, target.userId)] });
+          return;
+        }
+        if (hanabiAction === "hanabi-hint" && targetUserId) {
+          const [kind, value] = (interaction.values[0] ?? "").split("-");
+          const hint = kind === "color" && HANABI_COLORS.includes(value as typeof HANABI_COLORS[number])
+            ? value as typeof HANABI_COLORS[number]
+            : kind === "number" && HANABI_NUMBERS.includes(Number(value) as typeof HANABI_NUMBERS[number])
+              ? Number(value) as typeof HANABI_NUMBERS[number]
+              : undefined;
+          if (hint === undefined) {
+            await interaction.update({ content: "That is not a valid Hint.", embeds: [], components: [] });
+            return;
+          }
+          // Replace the private picker immediately with an invisible message. This
+          // acknowledges the click within Discord's time limit without creating a
+          // noisy "Hint sent" response for a successful action.
+          await interaction.update({ content: "\u200B", embeds: [], components: [] });
+          try {
+            const result = giveHanabiHint(game.data, actorUserId, targetUserId, hint);
+            game.state = result.status;
+            saveHanabiGame(database, game);
+            await syncHanabiBoard(game);
+            const target = game.data.players.find((player) => player.userId === targetUserId)!;
+            await announceHanabi(game, `💡 <@${actorUserId}> hinted <@${targetUserId}>: **${typeof hint === "string" ? `${colorEmoji(hint)} ${hint}` : hint}** · ${result.matches} matching card${result.matches === 1 ? "" : "s"}.`);
+            if (game.state === "completed") {
+              await announceHanabi(game, hanabiGameOverMessage(game));
+              scheduleHanabiChannelDeletion(game);
+            }
+          } catch (error) {
+            await interaction.followUp({ content: error instanceof Error ? error.message : "Could not give that Hint.", ephemeral: true }).catch(() => undefined);
+          }
+          return;
+        }
+        if (hanabiAction === "hanabi-play" || hanabiAction === "hanabi-discard") {
+          const cardIndex = Number(interaction.values[0]);
+          if (!Number.isInteger(cardIndex) || cardIndex < 0) {
+            await interaction.update({ content: "That card is gone.", embeds: [], components: [] });
+            return;
+          }
+          // See the hint branch above: acknowledge first so a slow message edit
+          // cannot turn a valid move into Discord's "Interaction Failed".
+          await interaction.deferUpdate();
+          try {
+            if (hanabiAction === "hanabi-play") {
+              const result = playHanabiCard(game.data, actorUserId, cardIndex);
+              game.state = result.status;
+              saveHanabiGame(database, game);
+              await syncHanabiBoard(game);
+              await announceHanabi(game, result.correct ? `🎆 <@${actorUserId}> played **${cardText(result.card)}** correctly.` : `💥 <@${actorUserId}> played **${cardText(result.card)}** and blew up a Fuse.`);
+              await interaction.editReply({ content: result.correct ? `Played **${cardText(result.card)}**. Somehow that worked.` : `Played **${cardText(result.card)}**. Nice one, you blew it up.`, embeds: [], components: [] });
+            } else {
+              const result = hanabiDiscardCard(game.data, actorUserId, cardIndex);
+              game.state = result.status;
+              saveHanabiGame(database, game);
+              await syncHanabiBoard(game);
+              await announceHanabi(game, `🗑️ <@${actorUserId}> discarded **${cardText(result.card)}** and recovered a Hint Token.`);
+              await interaction.editReply({ content: `Discarded **${cardText(result.card)}**. One Hint Token recovered.`, embeds: [], components: [] });
+            }
+            if (game.state === "completed") {
+              await announceHanabi(game, hanabiGameOverMessage(game));
+              scheduleHanabiChannelDeletion(game);
+            }
+          } catch (error) {
+            await interaction.editReply({ content: error instanceof Error ? error.message : "Could not use that card.", embeds: [], components: [] }).catch(() => undefined);
+          }
+          return;
+        }
+      }
       const [ttsPrefix, ttsOwnerUserId, ttsLanguage] = interaction.customId.split(":");
       if (ttsPrefix === "tts-voice" && ttsOwnerUserId && (ttsLanguage === "vi" || ttsLanguage === "en") && interaction.guild) {
         if (ttsOwnerUserId !== interaction.user.id) {
@@ -1219,6 +1470,119 @@ async function main(): Promise<void> {
     }
 
     if (interaction.isButton()) {
+      const [hanabiPrefix, hanabiAction, hanabiGameId, hanabiViewUserId] = interaction.customId.split(":");
+      if (hanabiPrefix === "hanabi" && hanabiAction && hanabiGameId && interaction.guild) {
+        const game = hanabiGame(database, hanabiGameId);
+        if (!game || game.guildId !== interaction.guild.id) {
+          await interaction.reply({ content: "This Hanabi game no longer exists.", ephemeral: true });
+          return;
+        }
+        if (hanabiAction === "table-refresh") {
+          if (hanabiViewUserId !== interaction.user.id) {
+            await interaction.reply({ content: "This Table belongs to another player.", ephemeral: true });
+            return;
+          }
+          await interaction.update(hanabiTableView(game, interaction.user.id));
+          return;
+        }
+        if (hanabiAction === "join" || hanabiAction === "leave") {
+          if (game.state !== "lobby") {
+            await interaction.reply({ content: "The game already started. Too late, mate.", ephemeral: true });
+            return;
+          }
+          if (hanabiAction === "leave" && game.hostUserId === interaction.user.id) {
+            await interaction.reply({ content: "The host cannot leave the lobby. Start it or make a new game instead.", ephemeral: true });
+            return;
+          }
+          const isJoined = game.data.players.some((player) => player.userId === interaction.user.id);
+          if (hanabiAction === "join" && isJoined) {
+            await interaction.reply({ content: "You are already in this game.", ephemeral: true });
+            return;
+          }
+          if (hanabiAction === "join" && game.data.players.length >= 5) {
+            await interaction.reply({ content: "This Hanabi lobby is full.", ephemeral: true });
+            return;
+          }
+          if (hanabiAction === "leave" && !isJoined) {
+            await interaction.reply({ content: "You were not in this lobby.", ephemeral: true });
+            return;
+          }
+          await interaction.deferUpdate();
+          const member = await interaction.guild.members.fetch(interaction.user.id);
+          const outcome = hanabiAction === "join"
+            ? joinHanabiLobby(game.data, interaction.user.id, member.displayName)
+            : leaveHanabiLobby(game.data, interaction.user.id) ? "left" : "not-joined";
+          saveHanabiGame(database, game);
+          await interaction.editReply(hanabiLobbyView(game, outcome === "left" ? "A player left the lobby." : "A player joined the lobby."));
+          return;
+        }
+        if (hanabiAction === "start") {
+          if (game.state !== "lobby") {
+            await interaction.reply({ content: "This game has already started.", ephemeral: true });
+            return;
+          }
+          if (game.hostUserId !== interaction.user.id) {
+            await interaction.reply({ content: "Only the host can start this game.", ephemeral: true });
+            return;
+          }
+          if (game.data.players.length < 2) {
+            await interaction.reply({ content: "Hanabi needs at least two players.", ephemeral: true });
+            return;
+          }
+          // Thread creation may be slow. ACK this button before asking Discord to
+          // create it, otherwise the host sees a false interaction failure.
+          await interaction.deferUpdate();
+          try {
+            const logThread = await interaction.message.startThread({ name: "Game log".slice(0, 100), autoArchiveDuration: ThreadAutoArchiveDuration.OneDay, reason: "Hanabi game log" });
+            game.threadId = logThread.id;
+          } catch {
+            await interaction.editReply({ content: "Could not create the game log thread. The bot needs Create Public Threads here.", embeds: [], components: [] }).catch(() => undefined);
+            return;
+          }
+          startClassicGame(game.data);
+          game.state = "active";
+          game.boardMessageId = interaction.message.id;
+          saveHanabiGame(database, game);
+          await interaction.editReply(hanabiBoardView(game));
+          await announceHanabi(game, `🎆 Hanabi started with ${game.data.players.map((player) => `<@${player.userId}>`).join(", ")}. <@${hanabiCurrentPlayer(game.data).userId}>, it is your turn.`);
+          return;
+        }
+        if (game.state !== "active") {
+          await interaction.reply({ content: "This Hanabi game is not active.", ephemeral: true });
+          return;
+        }
+        if (hanabiAction === "view") {
+          await interaction.reply({ ephemeral: true, ...hanabiTableView(game, interaction.user.id) });
+          return;
+        }
+        if (!game.data.players.some((player) => player.userId === interaction.user.id)) {
+          await interaction.reply({ content: "You are not playing this Hanabi game.", ephemeral: true });
+          return;
+        }
+        if (hanabiCurrentPlayer(game.data).userId !== interaction.user.id) {
+          await interaction.reply({ content: "It is not your turn. Sit down and wait.", ephemeral: true });
+          return;
+        }
+        if (hanabiAction === "hint-start") {
+          if (game.data.clues <= 0) {
+            await interaction.reply({ content: "No Hint Tokens left. Figure it out yourself.", ephemeral: true });
+            return;
+          }
+          await interaction.reply({ content: "Choose who to hint. You may choose any of the ten Color/Number hints next, even one matching zero cards.", ephemeral: true, components: [hanabiHintPlayerMenu(game, interaction.user.id)] });
+          return;
+        }
+        if (hanabiAction === "play-start" || hanabiAction === "discard-start") {
+          const player = game.data.players.find((entry) => entry.userId === interaction.user.id)!;
+          if (player.hand.length === 0) {
+            await interaction.reply({ content: "You have no cards left. The game should already be over, you gremlin.", ephemeral: true });
+            return;
+          }
+          const action = hanabiAction === "play-start" ? "play" : "discard";
+          await interaction.reply({ content: action === "play" ? "Choose a card. You do not get to see its face, obviously." : "Choose a card to discard.", ephemeral: true, components: [hanabiCardMenu(action, game, interaction.user.id)] });
+          return;
+        }
+      }
+
       if (interaction.customId === "pk-thunder-track" && interaction.guild) {
         const trail = thunderTrailFromMessage(interaction.message.id);
         if (!trail) {
@@ -1679,6 +2043,67 @@ async function main(): Promise<void> {
       }
       clearAiChatHistory(database, interaction.guild.id, interaction.channelId, interaction.user.id);
       await interaction.reply({ content: "Your recent AI chat in this channel has been forgotten.", ephemeral: true });
+      return;
+    }
+
+    if (interaction.commandName === "hanabi") {
+      if (!interaction.guild) {
+        await interaction.reply({ content: "Hanabi can only be started in a server.", ephemeral: true });
+        return;
+      }
+      if (!(await mayExplore(interaction.guild, interaction.user.id))) {
+        await interaction.reply({ content: "You do not have permission to create a Hanabi game.", ephemeral: true });
+        return;
+      }
+      await interaction.deferReply();
+      const member = await interaction.guild.members.fetch(interaction.user.id);
+      const playerRole = await interaction.guild.roles.fetch(POKEMON_EXPLORE_ROLE_ID);
+      if (!playerRole) {
+        await interaction.editReply("The Hanabi player role could not be found.");
+        return;
+      }
+      const permissionOverwrites = [
+        { id: interaction.guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
+        { id: playerRole.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+        { id: interaction.client.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.ManageMessages, PermissionFlagsBits.CreatePublicThreads, PermissionFlagsBits.SendMessagesInThreads] },
+      ];
+      const existingCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name.toLowerCase() === "hanabi");
+      const category = existingCategory?.type === ChannelType.GuildCategory
+        ? existingCategory
+        : await interaction.guild.channels.create({ name: "Hanabi", type: ChannelType.GuildCategory, permissionOverwrites, reason: "Hanabi games" });
+      await category.permissionOverwrites.set(permissionOverwrites, "Configured private Hanabi access");
+      const gameNumber = reserveHanabiGameNumber(database, interaction.guild.id);
+      const gameChannel = await interaction.guild.channels.create({
+        name: `hanabi-${gameNumber.toString().padStart(3, "0")}`,
+        type: ChannelType.GuildText,
+        parent: category.id,
+        permissionOverwrites,
+        reason: `Hanabi game ${gameNumber}`,
+      });
+      await gameChannel.lockPermissions();
+      const game: HanabiGame = {
+        gameId: randomUUID(),
+        guildId: interaction.guild.id,
+        hostUserId: interaction.user.id,
+        channelId: gameChannel.id,
+        state: "lobby",
+        data: emptyHanabiState(interaction.user.id, member.displayName),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+      createHanabiGame(database, game);
+      try {
+        const lobby = await gameChannel.send(hanabiLobbyView(game));
+        game.lobbyMessageId = lobby.id;
+        saveHanabiGame(database, game);
+        await interaction.editReply({ content: `<@${interaction.user.id}> created a Hanabi lobby in <#${gameChannel.id}>.`, allowedMentions: { users: [interaction.user.id] } });
+      } catch (error) {
+        game.state = "cancelled";
+        saveHanabiGame(database, game);
+        logger.error("Could not create Hanabi lobby", { guildId: interaction.guild.id, message: error instanceof Error ? error.message : String(error) });
+        await gameChannel.delete("Hanabi lobby creation failed").catch(() => undefined);
+        await interaction.editReply({ content: "Could not create the Hanabi lobby. The bot needs Manage Channels and Send Messages permissions." }).catch(() => undefined);
+      }
       return;
     }
 

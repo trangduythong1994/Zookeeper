@@ -170,6 +170,24 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
       output_tokens INTEGER NOT NULL DEFAULT 0 CHECK (output_tokens >= 0),
       cost_microusd INTEGER NOT NULL DEFAULT 0 CHECK (cost_microusd >= 0)
     );
+    CREATE TABLE IF NOT EXISTS hanabi_games (
+      game_id TEXT PRIMARY KEY,
+      guild_id TEXT NOT NULL,
+      host_user_id TEXT NOT NULL,
+      channel_id TEXT,
+      lobby_message_id TEXT,
+      thread_id TEXT,
+      board_message_id TEXT,
+      state TEXT NOT NULL CHECK (state IN ('lobby', 'active', 'completed', 'cancelled')),
+      data_json TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS hanabi_games_by_guild_state ON hanabi_games (guild_id, state, updated_at DESC);
+    CREATE TABLE IF NOT EXISTS hanabi_guild_settings (
+      guild_id TEXT PRIMARY KEY,
+      next_game_number INTEGER NOT NULL DEFAULT 1 CHECK (next_game_number > 0)
+    );
     CREATE TABLE IF NOT EXISTS pokemon_roaming_settings (
       guild_id TEXT PRIMARY KEY,
       chance REAL NOT NULL CHECK (chance >= 0 AND chance <= 1)
@@ -280,6 +298,7 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
   ensureColumn(database, "pokemon_spawns", "catch_sequence_length INTEGER");
   ensureColumn(database, "pokemon_event_announcements", "expires_at INTEGER");
   ensureColumn(database, "location_area_encounters", "encounter_label TEXT NOT NULL DEFAULT 'wild'");
+  ensureColumn(database, "hanabi_games", "channel_id TEXT");
 
   const insertRegion = database.prepare("INSERT OR IGNORE INTO regions (key, display_name) VALUES (?, ?)");
   const seed = database.transaction(() => {
