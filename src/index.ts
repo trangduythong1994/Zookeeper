@@ -22,6 +22,7 @@ import { CLOUD_TTS_TIERS, TTS_VOICES, canUseGoogleCloudTts, cloudQuotaRemainingP
 import { replaceUserMentionsForSpeech } from "./voice/mentions.js";
 import { askZookeeperAi, clearAiChatHistory } from "./ai/chat.js";
 import { HANABI_COLORS, HANABI_MAX_CLUES, HANABI_NUMBERS, HANABI_STARTING_FUSES, cardText, colorEmoji, createHanabiGame, currentPlayer as hanabiCurrentPlayer, discardCard as hanabiDiscardCard, emptyState as emptyHanabiState, giveHint as giveHanabiHint, hanabiGame, joinLobby as joinHanabiLobby, leaveLobby as leaveHanabiLobby, playCard as playHanabiCard, reserveHanabiGameNumber, saveHanabiGame, score as hanabiScore, startClassicGame, type HanabiCard, type HanabiGame } from "./hanabi/hanabi.js";
+import { SPLENDOR_COLORS, autoPassBlockedTurns, bonusEmoji as splendorBonusEmoji, buyCard as splendorBuyCard, buyableCards as splendorBuyableCards, canReserve as splendorCanReserve, canTake as splendorCanTake, cardText as splendorCardText, colorEmoji as splendorColorEmoji, costText as splendorCostText, createSplendorGame, createState as createSplendorState, currentPlayer as splendorCurrentPlayer, finishTurn as finishSplendorTurn, marketCards as splendorMarketCards, mustPay as splendorMustPay, points as splendorPoints, reserveCard as splendorReserveCard, reserveTopDeckCard, reserveSplendorGameNumber, returnGemsAndEndTurn, saveSplendorGame, splendorGame, takeGems as splendorTakeGems, tokenCount as splendorTokenCount, tokenText as splendorTokenText, type SplendorCard, type SplendorColor, type SplendorGame, type SplendorState, type SplendorTokens } from "./splendor/splendor.js";
 import { randomUUID } from "node:crypto";
 
 const WATCHED_USER_ID = "493076491106779148";
@@ -108,6 +109,7 @@ async function main(): Promise<void> {
   const thunderTrailExpiryTimers = new Map<string, NodeJS.Timeout>();
   const thunderTrackSessions = new Map<string, ThunderTrackSession>();
   const hanabiChannelDeletionTimers = new Map<string, NodeJS.Timeout>();
+  const splendorDrafts = new Map<string, { kind: "take" | "return" | "buy" | "reserve"; gameId: string; userId: string; data: SplendorState; selected: Array<SplendorColor | "gold">; cardId?: string; blindTier?: 1 | 2 | 3; actionText?: string }>();
   const aiConversationsInFlight = new Set<string>();
   let shuttingDown = false;
 
@@ -157,9 +159,12 @@ async function main(): Promise<void> {
   const hanabiCommand = new SlashCommandBuilder()
     .setName("hanabi")
     .setDescription("Create a text-only Hanabi lobby");
+  const splendorCommand = new SlashCommandBuilder()
+    .setName("splendor")
+    .setDescription("Create a Splendor lobby");
 
   const registerCommands = async (guild: Guild): Promise<void> => {
-    await guild.commands.set([chanceCommand, colorCommand, pokemonSetupCommand, pokemonTestRemoveCommand, pokemonExploreCommand, pokemonCatchCommand, pokemonTravelCommand, pokemonShowOffCommand, pokemonGiftCommand, pokemonWarpCandyCommand, pokemonRoamingCommand, pokemonCreateCommand, pokemonRemoveCommand, ttsVoiceCommand, ttsStatusCommand, aiResetCommand, hanabiCommand]);
+    await guild.commands.set([chanceCommand, colorCommand, pokemonSetupCommand, pokemonTestRemoveCommand, pokemonExploreCommand, pokemonCatchCommand, pokemonTravelCommand, pokemonShowOffCommand, pokemonGiftCommand, pokemonWarpCandyCommand, pokemonRoamingCommand, pokemonCreateCommand, pokemonRemoveCommand, ttsVoiceCommand, ttsStatusCommand, aiResetCommand, hanabiCommand, splendorCommand]);
     logger.info("Registered guild commands", { guildId: guild.id });
   };
 
@@ -203,6 +208,11 @@ async function main(): Promise<void> {
       for (const { gameId } of activeHanabiGameIds) {
         const game = hanabiGame(database, gameId);
         if (game) await syncHanabiBoard(game);
+      }
+      const activeSplendorGameIds = database.prepare("SELECT game_id AS gameId FROM splendor_games WHERE guild_id = ? AND state = 'active'").all(guild.id) as { gameId: string }[];
+      for (const { gameId } of activeSplendorGameIds) {
+        const game = splendorGame(database, gameId);
+        if (game) await syncSplendorBoard(game);
       }
     }
   });
@@ -1285,6 +1295,32 @@ async function main(): Promise<void> {
     if (board) await board.edit(hanabiBoardView(game));
   };
 
+  const syncSplendorBoard = async (game: SplendorGame): Promise<void> => {
+    if (!game.channelId || !game.boardMessageId) return;
+    const channel = await client.channels.fetch(game.channelId).catch(() => undefined);
+    if (!channel?.isTextBased()) return;
+    const board = await channel.messages.fetch(game.boardMessageId).catch(() => undefined);
+    if (board) await board.edit(splendorBoardView(game));
+  };
+
+  const announceSplendor = async (game: SplendorGame, action: string): Promise<void> => {
+    if (!game.threadId) return;
+    const channel = await client.channels.fetch(game.threadId).catch(() => undefined);
+    if (!channel?.isThread() || !channel.isSendable()) return;
+    const entries = game.data.logEntries ?? [];
+    entries.push(action.replace(/<@(\d+)>/g, (_match, userId: string) => `@${game.data.players.find((player) => player.userId === userId)?.displayName ?? userId}`));
+    // Discord limits a message to 2,000 characters. Keep the most recent log
+    // lines so the fixed message remains editable for a long game.
+    while (`\`\`\`\n${entries.join("\n")}\n\`\`\``.length > 1_850) entries.shift();
+    game.data.logEntries = entries;
+    const next = game.state === "active" ? `\n<@${splendorCurrentPlayer(game.data).userId}>, your turn.` : "";
+    const content = `\`\`\`\n${entries.join("\n")}\n\`\`\`${next}`;
+    const message = game.logMessageId ? await channel.messages.fetch(game.logMessageId).catch(() => undefined) : undefined;
+    if (message) await message.edit({ content });
+    else game.logMessageId = (await channel.send({ content })).id;
+    saveSplendorGame(database, game);
+  };
+
   const announceHanabi = async (game: HanabiGame, content: string): Promise<void> => {
     const thread = await hanabiThread(game);
     if (thread?.isSendable()) await thread.send({ content });
@@ -1314,8 +1350,118 @@ async function main(): Promise<void> {
     }, Math.max(0, delayMs)));
   };
 
+  const splendorLobbyView = (game: SplendorGame) => ({
+    embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle("💎 Splendor").setDescription(`A contest of gems, discounts, and shamelessly hoarding gold.\n\n**Players (${game.data.players.length}/4)**\n${game.data.players.map((player, index) => `${index + 1}. <@${player.userId}>`).join("\n")}\n\nNeed **2–4 players**. The host starts when ready.`)],
+    components: [new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder().setCustomId(`splendor:join:${game.gameId}`).setLabel("Join").setEmoji("💎").setStyle(ButtonStyle.Primary).setDisabled(game.data.players.length >= 4),
+      new ButtonBuilder().setCustomId(`splendor:leave:${game.gameId}`).setLabel("Leave").setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId(`splendor:start:${game.gameId}`).setLabel("Start").setEmoji("✨").setStyle(ButtonStyle.Success).setDisabled(game.data.players.length < 2),
+    )],
+  });
+
+  const splendorNobleText = (state: SplendorState) => {
+    if (state.nobles.length === 0) return "None";
+    const longestName = Math.max(...state.nobles.map((noble) => noble.name.length));
+    return state.nobles.map((noble) => `${noble.name.padEnd(longestName)} ${SPLENDOR_COLORS.filter((color) => noble.requirement[color] > 0).map((color) => `${splendorBonusEmoji(color)}${noble.requirement[color]}`).join(" ")}`).join("\n");
+  };
+  /** The internal C1…C90 ID is useful to the engine, not to a human looking at the board. */
+  const splendorCardLine = (card: SplendorCard) => `${card.points}⭐(${splendorBonusEmoji(card.bonus)}) · ${splendorCostText(card.cost)}`;
+  const splendorCardCodeLine = (card: SplendorCard) => `${card.points}⭐(${splendorBonusEmoji(card.bonus)}) ${splendorCostText(card.cost)}`;
+  const splendorMarketText = (state: SplendorState, tier: 1 | 2 | 3) => state.market[tier].map(splendorCardCodeLine).join("\n") || "No cards left";
+  const splendorTokenCodeText = (value: SplendorTokens) => [...SPLENDOR_COLORS, "gold" as const].map((color) => `${splendorColorEmoji(color)}${value[color]}`).join(" ");
+  const splendorBoardView = (game: SplendorGame) => {
+    const state = game.data;
+    const active = game.state === "active";
+    const current = active ? splendorCurrentPlayer(state) : undefined;
+    const ending = state.winnerUserIds ? `\n\n🏆 **Winner:** ${state.winnerUserIds.map((id) => `<@${id}>`).join(", ")}` : game.state === "stalled" ? "\n\n🛑 **Game stalled:** no legal actions remain." : "";
+    const playerFields = state.players.map((player) => ({
+      name: `${player.userId === current?.userId ? "👉 " : ""}@${player.displayName} — ${splendorPoints(player)}⭐ · ${splendorTokenCount(player)}/10 · ${player.reserved.length}/3`,
+      value: `\`\`\`\n${SPLENDOR_COLORS.map((color) => `${splendorBonusEmoji(color)}${player.bonuses[color]}`).join(" ")}\n${splendorTokenCodeText(player.tokens)}\n\`\`\``,
+    }));
+    const boardEmbed = new EmbedBuilder()
+      .setColor(active ? 0x5865f2 : 0x747f8d)
+      .setTitle(`💎 SPLENDOR · ${state.roundEndingAt === undefined ? "In progress" : "Final round"}`)
+      .setDescription(`${active ? `**Turn:** <@${current!.userId}>` : "**Game over**"}${ending}`)
+      .addFields(
+        { name: "👑 Nobles", value: `\`\`\`\n${splendorNobleText(state)}\n\`\`\`` },
+        { name: `💠 Tier III · (${state.decks[3].length})`, value: `\`\`\`\n${splendorMarketText(state, 3)}\n\`\`\`` },
+        { name: `💠 Tier II · (${state.decks[2].length})`, value: `\`\`\`\n${splendorMarketText(state, 2)}\n\`\`\`` },
+        { name: `💠 Tier I · (${state.decks[1].length})`, value: `\`\`\`\n${splendorMarketText(state, 1)}\n\`\`\`` },
+        ...playerFields,
+        { name: "Bank", value: `\`\`\`\n${splendorTokenCodeText(state.bank)}\n\`\`\`` },
+      );
+    return {
+      embeds: [boardEmbed],
+      components: [new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`splendor:take:${game.gameId}`).setLabel("Take").setEmoji("💎").setStyle(ButtonStyle.Primary).setDisabled(!active || !splendorCanTake(state)),
+        new ButtonBuilder().setCustomId(`splendor:buy:${game.gameId}`).setLabel("Buy").setEmoji("🛒").setStyle(ButtonStyle.Success).setDisabled(!active),
+        new ButtonBuilder().setCustomId(`splendor:reserve:${game.gameId}`).setLabel("Reserve").setEmoji("🃏").setStyle(ButtonStyle.Secondary).setDisabled(!active),
+      )],
+    };
+  };
+
+  const emptySplendorTokens = (): SplendorTokens => ({ white: 0, blue: 0, green: 0, red: 0, black: 0, gold: 0 });
+  const splendorDraftKey = (gameId: string, userId: string) => `${gameId}:${userId}`;
+  const splendorGemButtons = (gameId: string, action: string, selected: Array<SplendorColor | "gold">) => new ActionRowBuilder<ButtonBuilder>().addComponents(...SPLENDOR_COLORS.map((color) => new ButtonBuilder().setCustomId(`splendor:${action}:${gameId}:${color}`).setEmoji(splendorColorEmoji(color)).setStyle(ButtonStyle.Secondary).setLabel(String(selected.filter((entry) => entry === color).length)).setDisabled(false)));
+  const splendorTakeView = (gameId: string, draft: { selected: Array<SplendorColor | "gold">; kind: "take" | "return"; data: SplendorState }) => ({
+    embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle(draft.kind === "take" ? "💎 Take Gems" : "↩️ Return Gems").setDescription(draft.kind === "take" ? `**Bank:** ${splendorTokenText(draft.data.bank)}\n**Selected:** ${draft.selected.map((color) => splendorColorEmoji(color)).join(" ") || "—"}\n\nTake 3 different gems, or 2 identical gems when that pile has at least 4.` : `Return exactly **${Math.max(0, splendorTokenCount(splendorCurrentPlayer(draft.data)) - 10)}** token(s).\n**Selected:** ${draft.selected.map((color) => splendorColorEmoji(color)).join(" ") || "—"}`)],
+    components: [splendorGemButtons(gameId, draft.kind === "take" ? "take-gem" : "return-gem", draft.selected), new ActionRowBuilder<ButtonBuilder>().addComponents(...(draft.kind === "return" ? [new ButtonBuilder().setCustomId(`splendor:return-gem:${gameId}:gold`).setEmoji("🪙").setLabel(String(draft.selected.filter((color) => color === "gold").length)).setStyle(ButtonStyle.Secondary)] : []), new ButtonBuilder().setCustomId(`splendor:${draft.kind === "take" ? "take-confirm" : "return-confirm"}:${gameId}`).setLabel("Confirm").setStyle(ButtonStyle.Success), new ButtonBuilder().setCustomId(`splendor:cancel:${gameId}`).setLabel("Cancel").setStyle(ButtonStyle.Danger))],
+  });
+  const splendorPaymentView = (game: SplendorGame, draft: { data: SplendorState; selected: Array<SplendorColor | "gold">; cardId?: string }, source: "market" | "reserved") => {
+    const player = splendorCurrentPlayer(draft.data);
+    const card = draft.cardId ? [...splendorMarketCards(draft.data), ...player.reserved].find((entry) => entry.id === draft.cardId) : undefined;
+    const options = (source === "market" ? splendorBuyableCards(draft.data, player.userId, false) : player.reserved.filter((entry) => splendorBuyableCards(draft.data, player.userId).some((candidate) => candidate.id === entry.id)))
+      .map((entry) => ({ label: splendorCardText(entry).slice(0, 100), value: entry.id }));
+    const due = card ? splendorMustPay(player, card) : undefined;
+    const embed = new EmbedBuilder().setColor(0x57f287).setTitle("🛒 Buy").setDescription(card ? `**${splendorCardText(card)}**\nCost: ${splendorCostText(card.cost)}\nBonus: ${SPLENDOR_COLORS.map((color) => `${splendorBonusEmoji(color)}${player.bonuses[color]}`).join(" ")}\nMust pay: ${splendorCostText(due!)}\n\nYour tokens\n${splendorTokenText(player.tokens)}\nSelected payment: ${draft.selected.map((color) => splendorColorEmoji(color)).join(" ") || "—"}` : "Choose a card you can afford.");
+    const menu = new StringSelectMenuBuilder().setCustomId(`splendor-buy-card:${game.gameId}:${source}`).setPlaceholder(source === "market" ? "Choose a market card" : "Choose a reserved card").setDisabled(options.length === 0).addOptions(options.length ? options : [{ label: "No affordable cards", value: "none" }]);
+    const paymentRow = new ActionRowBuilder<ButtonBuilder>().addComponents(...SPLENDOR_COLORS.map((color) => new ButtonBuilder().setCustomId(`splendor:pay-gem:${game.gameId}:${color}`).setEmoji(splendorColorEmoji(color)).setLabel(String(draft.selected.filter((entry) => entry === color).length)).setStyle(ButtonStyle.Secondary).setDisabled(!card)));
+    return { embeds: [embed], components: [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(menu), paymentRow, new ActionRowBuilder<ButtonBuilder>().addComponents(new ButtonBuilder().setCustomId(`splendor:pay-gem:${game.gameId}:gold`).setEmoji("🪙").setLabel(String(draft.selected.filter((entry) => entry === "gold").length)).setStyle(ButtonStyle.Secondary).setDisabled(!card), new ButtonBuilder().setCustomId(`splendor:pay-confirm:${game.gameId}`).setLabel("Pay").setStyle(ButtonStyle.Success).setDisabled(!card), new ButtonBuilder().setCustomId(`splendor:pay-auto:${game.gameId}`).setLabel("Auto Pay").setStyle(ButtonStyle.Primary).setDisabled(!card), new ButtonBuilder().setCustomId(`splendor:cancel:${game.gameId}`).setLabel("Cancel").setStyle(ButtonStyle.Danger))] };
+  };
+  const splendorReserveView = (game: SplendorGame) => {
+    const player = splendorCurrentPlayer(game.data);
+    const market = splendorMarketCards(game.data);
+    const marketOptions = market.map((card) => ({ label: splendorCardText(card).slice(0, 100), value: card.id }));
+    const ownOptions = player.reserved.map((card) => ({ label: splendorCardText(card).slice(0, 100), value: card.id }));
+    const mayBlindReserve = splendorCanReserve(game.data, player);
+    return { embeds: [new EmbedBuilder().setColor(0xfee75c).setTitle(`🃏 Reserve · ${player.reserved.length}/3`).setDescription(`**Your Reserved Cards**\n${player.reserved.map(splendorCardText).join("\n") || "None"}\n\n**Gold in Bank:** 🪙${game.data.bank.gold}\n\nYou may reserve one face-up card, or the unknown top card of a Tier deck.`)], components: [new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(new StringSelectMenuBuilder().setCustomId(`splendor-reserve-market:${game.gameId}`).setPlaceholder("Reserve a market card").setDisabled(!mayBlindReserve).addOptions(marketOptions.length ? marketOptions : [{ label: "No cards left", value: "none" }])), new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(new StringSelectMenuBuilder().setCustomId(`splendor-reserve-owned:${game.gameId}`).setPlaceholder("Buy one of your reserved cards").setDisabled(ownOptions.length === 0).addOptions(ownOptions.length ? ownOptions : [{ label: "No reserved cards", value: "none" }])), new ActionRowBuilder<ButtonBuilder>().addComponents(...([1, 2, 3] as const).map((tier) => new ButtonBuilder().setCustomId(`splendor:reserve-deck:${game.gameId}:${tier}`).setLabel(`Tier ${tier}`).setEmoji("🎴").setStyle(ButtonStyle.Secondary).setDisabled(!mayBlindReserve || game.data.decks[tier].length === 0))), new ActionRowBuilder<ButtonBuilder>().addComponents(new ButtonBuilder().setCustomId(`splendor:cancel:${game.gameId}`).setLabel("Cancel").setStyle(ButtonStyle.Danger))] };
+  };
+  const splendorReserveConfirmView = (game: SplendorGame, card: SplendorCard) => ({
+    embeds: [new EmbedBuilder().setColor(0xfee75c).setTitle("🃏 Reserve").setDescription(`Reserve **${splendorCardText(card)}**?\n\n${game.data.bank.gold > 0 ? "You will also take one 🪙 gold token." : "There is no gold token left in the bank."}`)],
+    components: [new ActionRowBuilder<ButtonBuilder>().addComponents(new ButtonBuilder().setCustomId(`splendor:reserve-confirm:${game.gameId}`).setLabel("Confirm").setStyle(ButtonStyle.Success), new ButtonBuilder().setCustomId(`splendor:cancel:${game.gameId}`).setLabel("Cancel").setStyle(ButtonStyle.Danger))],
+  });
+  const splendorBlindReserveConfirmView = (game: SplendorGame, tier: 1 | 2 | 3) => ({
+    embeds: [new EmbedBuilder().setColor(0xfee75c).setTitle("🃏 Reserve a face-down card").setDescription(`Reserve the unknown top card from **Tier ${tier}**?\n\n${game.data.bank.gold > 0 ? "You will also take one 🪙 gold token." : "There is no gold token left in the bank."}`)],
+    components: [new ActionRowBuilder<ButtonBuilder>().addComponents(new ButtonBuilder().setCustomId(`splendor:reserve-confirm:${game.gameId}`).setLabel("Confirm").setStyle(ButtonStyle.Success), new ButtonBuilder().setCustomId(`splendor:cancel:${game.gameId}`).setLabel("Cancel").setStyle(ButtonStyle.Danger))],
+  });
+
   client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isStringSelectMenu()) {
+      const splendorMenuParts = interaction.customId.split(":");
+      if ((splendorMenuParts[0] === "splendor-buy-card" || splendorMenuParts[0] === "splendor-reserve-market" || splendorMenuParts[0] === "splendor-reserve-owned") && interaction.guild) {
+        const [menuAction, gameId, source] = splendorMenuParts;
+        const game = gameId ? splendorGame(database, gameId) : undefined;
+        if (!game || game.guildId !== interaction.guild.id) { await interaction.update({ content: "This Splendor game no longer exists.", embeds: [], components: [] }); return; }
+        if (game.state !== "active") { await interaction.update({ content: "This Splendor game is no longer active.", embeds: [], components: [] }); return; }
+        if (splendorCurrentPlayer(game.data).userId !== interaction.user.id) { await interaction.update({ content: "It is no longer your turn. Open the menu again when the board tags you.", embeds: [], components: [] }); return; }
+        const key = splendorDraftKey(game.gameId, interaction.user.id);
+        const selected = interaction.values[0];
+        if (!selected || selected === "none") { await interaction.update({ content: "That card is not available.", embeds: [], components: [] }); return; }
+        if (menuAction === "splendor-reserve-market") {
+          const card = splendorMarketCards(game.data).find((entry) => entry.id === selected);
+          if (!card) { await interaction.update({ content: "That card is gone.", embeds: [], components: [] }); return; }
+          const draft = { kind: "reserve" as const, gameId: game.gameId, userId: interaction.user.id, data: structuredClone(game.data), selected: [] as Array<SplendorColor | "gold">, cardId: card.id };
+          splendorDrafts.set(key, draft);
+          await interaction.update(splendorReserveConfirmView(game, card));
+          return;
+        }
+        const card = (menuAction === "splendor-reserve-owned" ? splendorCurrentPlayer(game.data).reserved : splendorMarketCards(game.data)).find((entry) => entry.id === selected);
+        if (!card) { await interaction.update({ content: "That card is gone.", embeds: [], components: [] }); return; }
+        const draft = { kind: "buy" as const, gameId: game.gameId, userId: interaction.user.id, data: structuredClone(game.data), selected: [] as Array<SplendorColor | "gold">, cardId: card.id };
+        splendorDrafts.set(key, draft);
+        await interaction.update(splendorPaymentView(game, draft, menuAction === "splendor-reserve-owned" ? "reserved" : "market"));
+        return;
+      }
       const hanabiParts = interaction.customId.split(":");
       if ((hanabiParts[0] === "hanabi-hint-player" || hanabiParts[0] === "hanabi-hint" || hanabiParts[0] === "hanabi-play" || hanabiParts[0] === "hanabi-discard") && interaction.guild) {
         const [hanabiAction, gameId, actorUserId, targetUserId] = hanabiParts;
@@ -1470,6 +1616,52 @@ async function main(): Promise<void> {
     }
 
     if (interaction.isButton()) {
+      const splendorParts = interaction.customId.split(":");
+      if (splendorParts[0] === "splendor" && splendorParts[1] && splendorParts[2] && interaction.guild) {
+        const [, splendorAction, splendorGameId, splendorArgument] = splendorParts;
+        const game = splendorGame(database, splendorGameId);
+        if (!game || game.guildId !== interaction.guild.id) {
+          await interaction.reply({ content: "This Splendor game no longer exists.", ephemeral: true });
+          return;
+        }
+        if (splendorAction === "join" || splendorAction === "leave") {
+          if (game.state !== "lobby") { await interaction.reply({ content: "The game has already started.", ephemeral: true }); return; }
+          const joined = game.data.players.some((player) => player.userId === interaction.user.id);
+          if (splendorAction === "join" && joined) { await interaction.reply({ content: "You are already in this game.", ephemeral: true }); return; }
+          if (splendorAction === "leave" && !joined) { await interaction.reply({ content: "You are not in this game.", ephemeral: true }); return; }
+          if (splendorAction === "leave" && game.hostUserId === interaction.user.id) { await interaction.reply({ content: "The host cannot leave the lobby.", ephemeral: true }); return; }
+          if (splendorAction === "join" && game.data.players.length >= 4) { await interaction.reply({ content: "This Splendor lobby is full.", ephemeral: true }); return; }
+          await interaction.deferUpdate();
+          if (splendorAction === "join") { const member = await interaction.guild.members.fetch(interaction.user.id); game.data.players.push({ userId: interaction.user.id, displayName: member.displayName, tokens: emptySplendorTokens(), bonuses: { white: 0, blue: 0, green: 0, red: 0, black: 0 }, cards: [], reserved: [], nobles: [] }); } else game.data.players = game.data.players.filter((player) => player.userId !== interaction.user.id);
+          saveSplendorGame(database, game); await interaction.editReply(splendorLobbyView(game)); return;
+        }
+        if (splendorAction === "start") {
+          if (game.state !== "lobby" || game.hostUserId !== interaction.user.id || game.data.players.length < 2) { await interaction.reply({ content: "Only the host can start a 2–4 player lobby.", ephemeral: true }); return; }
+          await interaction.deferUpdate();
+          game.data = createSplendorState(game.data.players.map(({ userId, displayName }) => ({ userId, displayName })));
+          game.state = autoPassBlockedTurns(game.data) === "stalled" ? "stalled" : "active";
+          game.boardMessageId = interaction.message.id;
+          try { game.threadId = (await interaction.message.startThread({ name: "Game log", autoArchiveDuration: ThreadAutoArchiveDuration.OneDay, reason: "Splendor game log" })).id; } catch { /* board still works without an optional log thread */ }
+          saveSplendorGame(database, game); await interaction.editReply(splendorBoardView(game)); await announceSplendor(game, "💎 Game started."); return;
+        }
+        if (game.state !== "active") { await interaction.reply({ content: "This Splendor game is no longer active.", ephemeral: true }); return; }
+        if (!game.data.players.some((player) => player.userId === interaction.user.id)) { await interaction.reply({ content: "You are not playing this game.", ephemeral: true }); return; }
+        if (splendorCurrentPlayer(game.data).userId !== interaction.user.id) { await interaction.reply({ content: "It is not your turn.", ephemeral: true }); return; }
+        const key = splendorDraftKey(game.gameId, interaction.user.id);
+        if (splendorAction === "take") { const draft = { kind: "take" as const, gameId: game.gameId, userId: interaction.user.id, data: structuredClone(game.data), selected: [] as Array<SplendorColor | "gold"> }; splendorDrafts.set(key, draft); await interaction.reply({ ephemeral: true, ...splendorTakeView(game.gameId, draft) }); return; }
+        if (splendorAction === "take-gem" && splendorArgument && SPLENDOR_COLORS.includes(splendorArgument as SplendorColor)) { const draft = splendorDrafts.get(key); if (!draft || draft.kind !== "take") { await interaction.reply({ content: "Open Take Gems again.", ephemeral: true }); return; } const color = splendorArgument as SplendorColor; const repeated = draft.selected.includes(color); const duplicateAllowed = draft.selected.length === 1 && draft.selected[0] === color && draft.data.bank[color] >= 4; if (draft.selected.length >= 3 || (repeated && !duplicateAllowed)) { await interaction.reply({ content: "Choose three different gems, or exactly two of one gem from a pile of at least four.", ephemeral: true }); return; } draft.selected.push(color); await interaction.update(splendorTakeView(game.gameId, draft as typeof draft & { kind: "take" })); return; }
+        if (splendorAction === "take-confirm") { const draft = splendorDrafts.get(key); if (!draft || draft.kind !== "take") { await interaction.reply({ content: "That Take action expired.", ephemeral: true }); return; } const taken = [...draft.selected]; try { splendorTakeGems(draft.data, interaction.user.id, taken as SplendorColor[]); if (splendorTokenCount(splendorCurrentPlayer(draft.data)) > 10) { draft.kind = "return"; draft.actionText = `💎 <@${interaction.user.id}> took ${taken.map((color) => splendorColorEmoji(color)).join(" ")}`; draft.selected = []; await interaction.update(splendorTakeView(game.gameId, draft as typeof draft & { kind: "return" })); return; } finishSplendorTurn(draft.data, interaction.user.id); game.data = draft.data; game.state = game.data.winnerUserIds ? "completed" : autoPassBlockedTurns(game.data) === "stalled" ? "stalled" : "active"; saveSplendorGame(database, game); splendorDrafts.delete(key); await interaction.update({ content: "\u200B", embeds: [], components: [] }); await syncSplendorBoard(game); await announceSplendor(game, `💎 <@${interaction.user.id}> took ${taken.map((color) => splendorColorEmoji(color)).join(" ")}.`); } catch (error) { await interaction.reply({ content: error instanceof Error ? error.message : "Invalid gems.", ephemeral: true }); } return; }
+        if (splendorAction === "return-gem" && splendorArgument && ([...SPLENDOR_COLORS, "gold"] as string[]).includes(splendorArgument)) { const draft = splendorDrafts.get(key); if (!draft || draft.kind !== "return") { await interaction.reply({ content: "That return action expired.", ephemeral: true }); return; } const color = splendorArgument as SplendorColor | "gold"; const excess = splendorTokenCount(splendorCurrentPlayer(draft.data)) - 10; if (draft.selected.length >= excess || draft.selected.filter((entry) => entry === color).length >= splendorCurrentPlayer(draft.data).tokens[color]) { await interaction.reply({ content: "You cannot return any more of that token.", ephemeral: true }); return; } draft.selected.push(color); await interaction.update(splendorTakeView(game.gameId, draft as typeof draft & { kind: "return" })); return; }
+        if (splendorAction === "return-confirm") { const draft = splendorDrafts.get(key); if (!draft || draft.kind !== "return") { await interaction.reply({ content: "That return action expired.", ephemeral: true }); return; } const returned = [...draft.selected]; const actionText = draft.actionText; try { returnGemsAndEndTurn(draft.data, interaction.user.id, returned); game.data = draft.data; game.state = game.data.winnerUserIds ? "completed" : autoPassBlockedTurns(game.data) === "stalled" ? "stalled" : "active"; saveSplendorGame(database, game); splendorDrafts.delete(key); await interaction.update({ content: "\u200B", embeds: [], components: [] }); await syncSplendorBoard(game); await announceSplendor(game, `${actionText ? `${actionText}, then` : `↩️ <@${interaction.user.id}>`} returned ${returned.map((color) => splendorColorEmoji(color)).join(" ")}.`); } catch (error) { await interaction.reply({ content: error instanceof Error ? error.message : "Invalid return.", ephemeral: true }); } return; }
+        if (splendorAction === "pay-gem" && splendorArgument && ([...SPLENDOR_COLORS, "gold"] as string[]).includes(splendorArgument)) { const draft = splendorDrafts.get(key); if (!draft || draft.kind !== "buy" || !draft.cardId) { await interaction.reply({ content: "Choose a card first.", ephemeral: true }); return; } const player = splendorCurrentPlayer(draft.data); const card = [...splendorMarketCards(draft.data), ...player.reserved].find((entry) => entry.id === draft.cardId)!; const due = splendorMustPay(player, card); const color = splendorArgument as SplendorColor | "gold"; const selectedOfColor = draft.selected.filter((entry) => entry === color).length; const totalDue = Object.values(due).reduce((sum, value) => sum + value, 0); if (draft.selected.length >= totalDue || selectedOfColor >= player.tokens[color] || (color !== "gold" && selectedOfColor >= due[color])) { await interaction.reply({ content: "That token cannot be used for this exact payment.", ephemeral: true }); return; } draft.selected.push(color); await interaction.update(splendorPaymentView(game, draft, game.data.players.find((player) => player.userId === interaction.user.id)!.reserved.some((card) => card.id === draft.cardId) ? "reserved" : "market")); return; }
+        if (splendorAction === "pay-confirm") { const draft = splendorDrafts.get(key); if (!draft || draft.kind !== "buy" || !draft.cardId) { await interaction.reply({ content: "Choose a card first.", ephemeral: true }); return; } const payment = emptySplendorTokens(); for (const color of draft.selected) payment[color] += 1; const card = [...splendorMarketCards(draft.data), ...splendorCurrentPlayer(draft.data).reserved].find((entry) => entry.id === draft.cardId); try { splendorBuyCard(draft.data, interaction.user.id, draft.cardId, payment); game.data = draft.data; game.state = game.data.winnerUserIds ? "completed" : autoPassBlockedTurns(game.data) === "stalled" ? "stalled" : "active"; saveSplendorGame(database, game); splendorDrafts.delete(key); await interaction.update({ content: "\u200B", embeds: [], components: [] }); await syncSplendorBoard(game); await announceSplendor(game, `🛒 <@${interaction.user.id}> bought **${card ? splendorCardLine(card) : "a development card"}**.`); } catch (error) { await interaction.reply({ content: error instanceof Error ? error.message : "That payment is not valid.", ephemeral: true }); } return; }
+        if (splendorAction === "pay-auto") { const draft = splendorDrafts.get(key); if (!draft || draft.kind !== "buy" || !draft.cardId) { await interaction.reply({ content: "Choose a card first.", ephemeral: true }); return; } const player = splendorCurrentPlayer(draft.data); const card = [...splendorMarketCards(draft.data), ...player.reserved].find((entry) => entry.id === draft.cardId); if (!card) { await interaction.reply({ content: "That card is no longer available.", ephemeral: true }); return; } const due = splendorMustPay(player, card); const payment = emptySplendorTokens(); for (const color of SPLENDOR_COLORS) payment[color] = Math.min(due[color], player.tokens[color]); payment.gold = SPLENDOR_COLORS.reduce((sum, color) => sum + due[color] - payment[color], 0); try { splendorBuyCard(draft.data, interaction.user.id, draft.cardId, payment); game.data = draft.data; game.state = game.data.winnerUserIds ? "completed" : autoPassBlockedTurns(game.data) === "stalled" ? "stalled" : "active"; saveSplendorGame(database, game); splendorDrafts.delete(key); await interaction.update({ content: "\u200B", embeds: [], components: [] }); await syncSplendorBoard(game); await announceSplendor(game, `🛒 <@${interaction.user.id}> bought **${splendorCardLine(card)}** using Auto Pay.`); } catch (error) { await interaction.reply({ content: error instanceof Error ? error.message : "Auto Pay could not complete that payment.", ephemeral: true }); } return; }
+        if (splendorAction === "reserve-deck" && splendorArgument && ["1", "2", "3"].includes(splendorArgument)) { const tier = Number(splendorArgument) as 1 | 2 | 3; const player = splendorCurrentPlayer(game.data); if (!splendorCanReserve(game.data, player) || game.data.decks[tier].length === 0) { await interaction.reply({ content: "That Tier cannot be reserved right now.", ephemeral: true }); return; } const draft = { kind: "reserve" as const, gameId: game.gameId, userId: interaction.user.id, data: structuredClone(game.data), selected: [] as Array<SplendorColor | "gold">, blindTier: tier }; splendorDrafts.set(key, draft); await interaction.update(splendorBlindReserveConfirmView(game, tier)); return; }
+        if (splendorAction === "reserve-confirm") { const draft = splendorDrafts.get(key); const card = draft?.cardId ? splendorMarketCards(draft.data).find((entry) => entry.id === draft.cardId) : undefined; if (!draft || draft.kind !== "reserve" || (!card && !draft.blindTier)) { await interaction.reply({ content: "That reserve action expired.", ephemeral: true }); return; } const goldWasAvailable = draft.data.bank.gold > 0; const reserveText = draft.blindTier ? `🃏 <@${interaction.user.id}> reserved a face-down **Tier ${draft.blindTier}** card${goldWasAvailable ? " and took a 🪙 gold token" : ""}` : `🃏 <@${interaction.user.id}> reserved **${splendorCardLine(card!)}**${goldWasAvailable ? " and took a 🪙 gold token" : ""}`; try { if (draft.blindTier) reserveTopDeckCard(draft.data, interaction.user.id, draft.blindTier); else splendorReserveCard(draft.data, interaction.user.id, card!); if (splendorTokenCount(splendorCurrentPlayer(draft.data)) > 10) { draft.kind = "return" as never; draft.actionText = reserveText; draft.selected = []; await interaction.update(splendorTakeView(game.gameId, draft as unknown as { selected: Array<SplendorColor | "gold">; kind: "return"; data: SplendorState })); return; } finishSplendorTurn(draft.data, interaction.user.id); game.data = draft.data; game.state = game.data.winnerUserIds ? "completed" : autoPassBlockedTurns(game.data) === "stalled" ? "stalled" : "active"; saveSplendorGame(database, game); splendorDrafts.delete(key); await interaction.update({ content: "\u200B", embeds: [], components: [] }); await syncSplendorBoard(game); await announceSplendor(game, `${reserveText}.`); } catch (error) { await interaction.reply({ content: error instanceof Error ? error.message : "Could not reserve that card.", ephemeral: true }); } return; }
+        if (splendorAction === "cancel") { splendorDrafts.delete(key); await interaction.update({ content: "Cancelled.", embeds: [], components: [] }); return; }
+        if (splendorAction === "buy") { const draft = { kind: "buy" as const, gameId: game.gameId, userId: interaction.user.id, data: structuredClone(game.data), selected: [] as Array<SplendorColor | "gold"> }; splendorDrafts.set(key, draft); await interaction.reply({ ephemeral: true, ...splendorPaymentView(game, draft, "market") }); return; }
+        if (splendorAction === "reserve") { await interaction.reply({ ephemeral: true, ...splendorReserveView(game) }); return; }
+      }
       const [hanabiPrefix, hanabiAction, hanabiGameId, hanabiViewUserId] = interaction.customId.split(":");
       if (hanabiPrefix === "hanabi" && hanabiAction && hanabiGameId && interaction.guild) {
         const game = hanabiGame(database, hanabiGameId);
@@ -2067,11 +2259,11 @@ async function main(): Promise<void> {
         { id: playerRole.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
         { id: interaction.client.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.ManageMessages, PermissionFlagsBits.CreatePublicThreads, PermissionFlagsBits.SendMessagesInThreads] },
       ];
-      const existingCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name.toLowerCase() === "hanabi");
+      const existingCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name.toLowerCase() === "boardgame");
       const category = existingCategory?.type === ChannelType.GuildCategory
         ? existingCategory
-        : await interaction.guild.channels.create({ name: "Hanabi", type: ChannelType.GuildCategory, permissionOverwrites, reason: "Hanabi games" });
-      await category.permissionOverwrites.set(permissionOverwrites, "Configured private Hanabi access");
+        : await interaction.guild.channels.create({ name: "Boardgame", type: ChannelType.GuildCategory, permissionOverwrites, reason: "Boardgame channels" });
+      await category.permissionOverwrites.set(permissionOverwrites, "Configured private Boardgame access");
       const gameNumber = reserveHanabiGameNumber(database, interaction.guild.id);
       const gameChannel = await interaction.guild.channels.create({
         name: `hanabi-${gameNumber.toString().padStart(3, "0")}`,
@@ -2103,6 +2295,38 @@ async function main(): Promise<void> {
         logger.error("Could not create Hanabi lobby", { guildId: interaction.guild.id, message: error instanceof Error ? error.message : String(error) });
         await gameChannel.delete("Hanabi lobby creation failed").catch(() => undefined);
         await interaction.editReply({ content: "Could not create the Hanabi lobby. The bot needs Manage Channels and Send Messages permissions." }).catch(() => undefined);
+      }
+      return;
+    }
+
+    if (interaction.commandName === "splendor") {
+      if (!interaction.guild) { await interaction.reply({ content: "Splendor can only be started in a server.", ephemeral: true }); return; }
+      if (!(await mayExplore(interaction.guild, interaction.user.id))) { await interaction.reply({ content: "You do not have permission to create a Splendor game.", ephemeral: true }); return; }
+      await interaction.deferReply();
+      try {
+        const member = await interaction.guild.members.fetch(interaction.user.id);
+        const playerRole = await interaction.guild.roles.fetch(POKEMON_EXPLORE_ROLE_ID);
+        if (!playerRole) { await interaction.editReply("The Splendor player role could not be found."); return; }
+        const permissionOverwrites = [
+          { id: interaction.guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
+          { id: playerRole.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+          { id: interaction.client.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.ManageMessages, PermissionFlagsBits.CreatePublicThreads, PermissionFlagsBits.SendMessagesInThreads] },
+        ];
+        const existing = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name.toLowerCase() === "boardgame");
+        const category = existing?.type === ChannelType.GuildCategory ? existing : await interaction.guild.channels.create({ name: "Boardgame", type: ChannelType.GuildCategory, permissionOverwrites, reason: "Boardgame channels" });
+        await category.permissionOverwrites.set(permissionOverwrites, "Configured private Boardgame access");
+        const number = reserveSplendorGameNumber(database, interaction.guild.id);
+        const gameChannel = await interaction.guild.channels.create({ name: `splendor-${number.toString().padStart(3, "0")}`, type: ChannelType.GuildText, parent: category.id, permissionOverwrites, reason: `Splendor game ${number}` });
+        await gameChannel.lockPermissions();
+        const game: SplendorGame = { gameId: randomUUID(), guildId: interaction.guild.id, hostUserId: interaction.user.id, channelId: gameChannel.id, state: "lobby", data: { players: [{ userId: interaction.user.id, displayName: member.displayName, tokens: emptySplendorTokens(), bonuses: { white: 0, blue: 0, green: 0, red: 0, black: 0 }, cards: [], reserved: [], nobles: [] }], decks: { 1: [], 2: [], 3: [] }, market: { 1: [], 2: [], 3: [] }, nobles: [], bank: emptySplendorTokens(), turnIndex: 0, autoPasses: 0 }, createdAt: Date.now(), updatedAt: Date.now() };
+        createSplendorGame(database, game);
+        const lobby = await gameChannel.send(splendorLobbyView(game));
+        game.lobbyMessageId = lobby.id;
+        saveSplendorGame(database, game);
+        await interaction.editReply({ content: `<@${interaction.user.id}> created a Splendor lobby in <#${gameChannel.id}>.`, allowedMentions: { users: [interaction.user.id] } });
+      } catch (error) {
+        logger.error("Could not create Splendor lobby", { guildId: interaction.guild.id, message: error instanceof Error ? error.message : String(error) });
+        await interaction.editReply("Could not create the Splendor lobby. The bot needs Manage Channels and Send Messages permissions.").catch(() => undefined);
       }
       return;
     }

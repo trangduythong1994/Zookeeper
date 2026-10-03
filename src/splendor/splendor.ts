@@ -1,0 +1,90 @@
+import type Database from "better-sqlite3";
+
+export const SPLENDOR_COLORS = ["white", "blue", "green", "red", "black"] as const;
+export type SplendorColor = typeof SPLENDOR_COLORS[number];
+export type SplendorTokens = Record<SplendorColor, number> & { gold: number };
+export type SplendorCost = Record<SplendorColor, number>;
+export type SplendorCard = { id: string; tier: 1 | 2 | 3; bonus: SplendorColor; points: number; cost: SplendorCost };
+export type SplendorNoble = { id: string; name: string; requirement: SplendorCost };
+export type SplendorPlayer = { userId: string; displayName: string; tokens: SplendorTokens; bonuses: SplendorCost; cards: SplendorCard[]; reserved: SplendorCard[]; nobles: SplendorNoble[] };
+export type SplendorState = { players: SplendorPlayer[]; decks: Record<1 | 2 | 3, SplendorCard[]>; market: Record<1 | 2 | 3, SplendorCard[]>; nobles: SplendorNoble[]; bank: SplendorTokens; turnIndex: number; roundEndingAt?: number; autoPasses: number; winnerUserIds?: string[]; logEntries?: string[] };
+export type SplendorGame = { gameId: string; guildId: string; hostUserId: string; channelId?: string; lobbyMessageId?: string; threadId?: string; boardMessageId?: string; logMessageId?: string; state: "lobby" | "active" | "completed" | "stalled" | "cancelled"; data: SplendorState; createdAt: number; updatedAt: number };
+
+const cost = (white = 0, blue = 0, green = 0, red = 0, black = 0): SplendorCost => ({ white, blue, green, red, black });
+const tokens = (value = 0): SplendorTokens => ({ white: value, blue: value, green: value, red: value, black: value, gold: 0 });
+const row = (tier: 1 | 2 | 3, bonus: SplendorColor, points: number, white: number, blue: number, green: number, red: number, black: number): SplendorCard => ({ id: `${tier}-${bonus}-${points}-${white}${blue}${green}${red}${black}`, tier, bonus, points, cost: cost(white, blue, green, red, black) });
+
+// Base-game data: 40 / 30 / 20 development cards. Cost order is white, blue, green, red, black.
+export const SPLENDOR_CARDS: SplendorCard[] = [
+  row(1,"black",0,1,1,1,1,0),row(1,"black",0,1,1,1,2,0),row(1,"black",0,2,0,1,2,0),row(1,"black",0,0,1,0,3,1),row(1,"black",0,0,0,2,1,0),row(1,"black",0,2,0,2,0,0),row(1,"black",0,0,0,3,0,0),row(1,"black",1,0,4,0,0,0),
+  row(1,"blue",0,1,0,1,1,1),row(1,"blue",0,1,0,1,2,1),row(1,"blue",0,1,0,2,2,0),row(1,"blue",0,0,1,3,1,0),row(1,"blue",0,1,2,0,0,0),row(1,"blue",0,2,0,2,0,0),row(1,"blue",0,0,3,0,0,0),row(1,"blue",1,0,0,0,4,0),
+  row(1,"white",0,0,1,1,1,1),row(1,"white",0,0,1,2,1,1),row(1,"white",0,0,2,2,0,1),row(1,"white",0,1,1,0,0,3),row(1,"white",0,0,1,0,2,0),row(1,"white",0,2,2,0,0,0),row(1,"white",0,0,0,3,0,0),row(1,"white",1,0,0,4,0,0),
+  row(1,"green",0,1,1,0,1,1),row(1,"green",0,1,1,0,1,2),row(1,"green",0,2,1,0,2,0),row(1,"green",0,1,0,3,1,0),row(1,"green",0,0,0,1,0,2),row(1,"green",0,0,2,0,2,0),row(1,"green",0,0,0,0,3,0),row(1,"green",1,0,0,0,0,4),
+  row(1,"red",0,1,1,1,0,1),row(1,"red",0,2,1,1,0,1),row(1,"red",0,2,0,1,0,2),row(1,"red",0,1,3,0,0,1),row(1,"red",0,0,0,2,1,0),row(1,"red",0,0,2,0,0,2),row(1,"red",0,0,0,0,0,3),row(1,"red",1,0,0,0,0,4),
+  row(2,"black",1,3,2,2,0,0),row(2,"black",1,3,2,0,0,2),row(2,"black",2,0,1,4,2,0),row(2,"black",2,0,0,5,3,0),row(2,"black",2,5,0,0,0,0),row(2,"black",3,0,0,0,0,6),
+  row(2,"blue",1,0,2,2,3,0),row(2,"blue",1,0,3,2,0,3),row(2,"blue",2,5,0,3,0,0),row(2,"blue",2,2,4,0,1,0),row(2,"blue",2,0,0,5,0,0),row(2,"blue",3,0,0,0,6,0),
+  row(2,"white",1,0,0,3,2,2),row(2,"white",1,2,0,0,3,3),row(2,"white",2,0,0,1,4,2),row(2,"white",2,0,3,0,5,0),row(2,"white",2,0,0,0,0,5),row(2,"white",3,0,0,0,0,6),
+  row(2,"green",1,3,0,0,3,2),row(2,"green",1,2,3,0,0,2),row(2,"green",2,0,2,0,0,4),row(2,"green",2,0,0,5,3,0),row(2,"green",2,0,5,0,0,0),row(2,"green",3,0,0,6,0,0),
+  row(2,"red",1,2,0,0,2,3),row(2,"red",1,2,0,3,0,3),row(2,"red",2,1,0,0,4,2),row(2,"red",2,0,0,0,3,5),row(2,"red",2,0,0,0,0,5),row(2,"red",3,0,0,0,6,0),
+  row(3,"black",3,3,3,5,3,0),row(3,"black",4,0,0,0,7,0),row(3,"black",4,3,0,0,6,3),row(3,"black",5,3,0,0,7,0),
+  row(3,"blue",3,3,0,3,3,5),row(3,"blue",4,7,0,0,0,0),row(3,"blue",4,6,3,0,0,3),row(3,"blue",5,7,0,0,0,3),
+  row(3,"white",3,0,3,3,3,5),row(3,"white",4,0,0,0,0,7),row(3,"white",4,3,6,0,0,3),row(3,"white",5,0,7,0,0,3),
+  row(3,"green",3,5,3,0,3,3),row(3,"green",4,0,7,0,0,0),row(3,"green",4,3,3,6,0,0),row(3,"green",5,0,0,7,3,0),
+  row(3,"red",3,3,3,3,0,5),row(3,"red",4,0,0,7,0,0),row(3,"red",4,3,0,3,6,0),row(3,"red",5,0,3,7,0,0),
+].map((card, index) => ({ ...card, id: `C${index + 1}` }));
+
+export const SPLENDOR_NOBLES: SplendorNoble[] = [
+  ["Mary Stuart",cost(0,0,4,4,0)],["Charles V",cost(0,4,4,0,0)],["Machiavelli",cost(4,4,0,0,0)],["Isabella of Castile",cost(4,0,0,0,4)],["Suleiman the Magnificent",cost(0,0,0,4,4)],
+  ["Catherine de' Medici",cost(0,3,3,3,0)],["Anne of Brittany",cost(3,0,3,3,0)],["Henry VIII",cost(3,3,0,0,3)],["Elisabeth of Austria",cost(0,0,3,3,3)],["Francis I of France",cost(3,3,3,0,0)],
+].map(([name, requirement], index) => ({ id: `N${index + 1}`, name: name as string, requirement: requirement as SplendorCost }));
+
+export function colorEmoji(color: SplendorColor | "gold"): string { return { white: "⚪", blue: "🔵", green: "🟢", red: "🔴", black: "⚫", gold: "🪙" }[color]; }
+export function bonusEmoji(color: SplendorColor): string { return { white: "⬜", blue: "🟦", green: "🟩", red: "🟥", black: "⬛" }[color]; }
+export function cardText(card: SplendorCard): string { return `${card.id} · ${card.points}⭐ · ${colorEmoji(card.bonus)} · ${costText(card.cost)}`; }
+export function costText(value: SplendorCost): string { return SPLENDOR_COLORS.filter((color) => value[color] > 0).map((color) => `${colorEmoji(color)}${value[color]}`).join(" ") || "Free"; }
+export function tokenText(value: SplendorTokens): string { return [...SPLENDOR_COLORS, "gold" as const].map((color) => `${colorEmoji(color)}${value[color]}`).join(" · "); }
+export function points(player: SplendorPlayer): number { return player.cards.reduce((sum, card) => sum + card.points, 0) + player.nobles.length * 3; }
+export function currentPlayer(state: SplendorState): SplendorPlayer { return state.players[state.turnIndex]!; }
+export function tokenCount(player: SplendorPlayer): number { return Object.values(player.tokens).reduce((sum, value) => sum + value, 0); }
+
+function shuffle<T>(items: T[], random: () => number): T[] { const result = [...items]; for (let index = result.length - 1; index > 0; index -= 1) { const swap = Math.floor(random() * (index + 1)); [result[index], result[swap]] = [result[swap]!, result[index]!]; } return result; }
+function supply(playerCount: number): SplendorTokens { if (playerCount < 2 || playerCount > 4) throw new Error("Splendor needs 2 to 4 players"); return { ...tokens(playerCount === 2 ? 4 : playerCount === 3 ? 5 : 7), gold: 5 }; }
+function refill(state: SplendorState, tier: 1 | 2 | 3): void { while (state.market[tier].length < 4 && state.decks[tier].length > 0) state.market[tier].push(state.decks[tier].pop()!); }
+function assertTurn(state: SplendorState, userId: string): SplendorPlayer { const player = currentPlayer(state); if (player.userId !== userId) throw new Error("It is not your turn"); return player; }
+
+export function createState(players: Array<Pick<SplendorPlayer, "userId" | "displayName">>, random = Math.random): SplendorState {
+  if (players.length < 2 || players.length > 4) throw new Error("Splendor needs 2 to 4 players");
+  const decks = { 1: shuffle(SPLENDOR_CARDS.filter((card) => card.tier === 1), random), 2: shuffle(SPLENDOR_CARDS.filter((card) => card.tier === 2), random), 3: shuffle(SPLENDOR_CARDS.filter((card) => card.tier === 3), random) };
+  const state: SplendorState = { players: shuffle(players, random).map((player) => ({ ...player, tokens: tokens(), bonuses: cost(), cards: [], reserved: [], nobles: [] })), decks, market: { 1: [], 2: [], 3: [] }, nobles: shuffle(SPLENDOR_NOBLES, random).slice(0, players.length + 1), bank: supply(players.length), turnIndex: 0, autoPasses: 0, logEntries: [] };
+  refill(state, 1); refill(state, 2); refill(state, 3); return state;
+}
+
+export function mustPay(player: SplendorPlayer, card: SplendorCard): SplendorCost { return Object.fromEntries(SPLENDOR_COLORS.map((color) => [color, Math.max(0, card.cost[color] - player.bonuses[color])])) as SplendorCost; }
+export function canBuy(player: SplendorPlayer, card: SplendorCard): boolean { const required = mustPay(player, card); return SPLENDOR_COLORS.reduce((sum, color) => sum + Math.max(0, required[color] - player.tokens[color]), 0) <= player.tokens.gold; }
+export function marketCards(state: SplendorState): SplendorCard[] { return [...state.market[1], ...state.market[2], ...state.market[3]]; }
+export function buyableCards(state: SplendorState, userId: string, includeReserved = true): SplendorCard[] { const player = state.players.find((entry) => entry.userId === userId); return player ? [...marketCards(state), ...(includeReserved ? player.reserved : [])].filter((card) => canBuy(player, card)) : []; }
+export function canTake(state: SplendorState): boolean { const available = SPLENDOR_COLORS.filter((color) => state.bank[color] > 0); return available.length > 0; }
+export function canReserve(state: SplendorState, player: SplendorPlayer): boolean { return player.reserved.length < 3 && ([1,2,3] as const).some((tier) => state.market[tier].length > 0 || state.decks[tier].length > 0); }
+export function hasLegalAction(state: SplendorState, player: SplendorPlayer): boolean { return canTake(state) || canReserve(state, player) || buyableCards(state, player.userId).length > 0; }
+function finishGame(state: SplendorState): void { const best = Math.max(...state.players.map(points)); const finalists = state.players.filter((player) => points(player) === best); const fewest = Math.min(...finalists.map((player) => player.cards.length)); state.winnerUserIds = finalists.filter((player) => player.cards.length === fewest).map((player) => player.userId); }
+function advanceTurn(state: SplendorState): void { state.turnIndex = (state.turnIndex + 1) % state.players.length; state.autoPasses = 0; if (state.roundEndingAt !== undefined && state.turnIndex === state.roundEndingAt) finishGame(state); }
+/** House rule: at turn end, a player takes every Noble they qualify for. */
+function resolveAction(state: SplendorState): void { const player = currentPlayer(state); const eligible = state.nobles.filter((noble) => SPLENDOR_COLORS.every((color) => player.bonuses[color] >= noble.requirement[color])); player.nobles.push(...eligible); state.nobles = state.nobles.filter((noble) => !eligible.some((entry) => entry.id === noble.id)); if (points(player) >= 15 && state.roundEndingAt === undefined) state.roundEndingAt = state.turnIndex; advanceTurn(state); }
+
+/** Applies a take to a draft state. Call finishTurn or returnGemsAndEndTurn afterwards. */
+export function takeGems(state: SplendorState, userId: string, selection: SplendorColor[]): void { const player = assertTurn(state, userId); const unique = new Set(selection); const available = SPLENDOR_COLORS.filter((color) => state.bank[color] > 0); const isDifferent = selection.length >= 1 && selection.length <= 3 && unique.size === selection.length && selection.length === Math.min(3, available.length); const isDouble = selection.length === 2 && selection[0] === selection[1] && state.bank[selection[0]!] >= 4; if (!isDifferent && !isDouble) throw new Error("Choose 3 different gems, or 2 identical gems with at least 4 in the bank"); for (const color of selection) { if (state.bank[color] <= 0) throw new Error("That gem is no longer available"); state.bank[color] -= 1; player.tokens[color] += 1; } }
+export function finishTurn(state: SplendorState, userId: string): void { if (tokenCount(assertTurn(state, userId)) > 10) throw new Error("Return gems before ending this turn"); resolveAction(state); }
+export function returnGemsAndEndTurn(state: SplendorState, userId: string, selection: Array<SplendorColor | "gold">): void { const player = assertTurn(state, userId); const excess = tokenCount(player) - 10; if (excess <= 0 || selection.length !== excess) throw new Error("Return exactly the excess gems"); for (const color of selection) { if (player.tokens[color] <= 0) throw new Error("You do not have that gem"); player.tokens[color] -= 1; state.bank[color] += 1; } resolveAction(state); }
+/** Applies a reserve to a draft state. Call finishTurn or returnGemsAndEndTurn afterwards. */
+export function reserveCard(state: SplendorState, userId: string, card: SplendorCard): void { const player = assertTurn(state, userId); if (!canReserve(state, player)) throw new Error("You cannot reserve another card"); const marketTier = ([1,2,3] as const).find((tier) => state.market[tier].some((entry) => entry.id === card.id)); if (!marketTier) throw new Error("That card is no longer in the market"); state.market[marketTier] = state.market[marketTier].filter((entry) => entry.id !== card.id); refill(state, marketTier); player.reserved.push(card); if (state.bank.gold > 0) { state.bank.gold -= 1; player.tokens.gold += 1; } }
+/** Reserve the unknown top card of a chosen development deck. */
+export function reserveTopDeckCard(state: SplendorState, userId: string, tier: 1 | 2 | 3): SplendorCard { const player = assertTurn(state, userId); if (!canReserve(state, player)) throw new Error("You cannot reserve another card"); const card = state.decks[tier].pop(); if (!card) throw new Error("That deck is empty"); player.reserved.push(card); if (state.bank.gold > 0) { state.bank.gold -= 1; player.tokens.gold += 1; } return card; }
+export function buyCard(state: SplendorState, userId: string, cardId: string, payment: SplendorTokens): void { const player = assertTurn(state, userId); const card = [...marketCards(state), ...player.reserved].find((entry) => entry.id === cardId); if (!card) throw new Error("That card is no longer available"); const required = mustPay(player, card); const paid = SPLENDOR_COLORS.reduce((sum, color) => sum + payment[color], 0) + payment.gold; const due = SPLENDOR_COLORS.reduce((sum, color) => sum + required[color], 0); if (paid !== due || SPLENDOR_COLORS.some((color) => payment[color] > required[color] || payment[color] > player.tokens[color]) || payment.gold > player.tokens.gold) throw new Error("That payment is not valid"); const missing = SPLENDOR_COLORS.reduce((sum, color) => sum + Math.max(0, required[color] - payment[color]), 0); if (missing !== payment.gold) throw new Error("Gold must cover the remaining cost exactly"); for (const color of [...SPLENDOR_COLORS, "gold" as const]) { player.tokens[color] -= payment[color]; state.bank[color] += payment[color]; } const tier = ([1,2,3] as const).find((value) => state.market[value].some((entry) => entry.id === card.id)); if (tier) { state.market[tier] = state.market[tier].filter((entry) => entry.id !== card.id); refill(state, tier); } else player.reserved = player.reserved.filter((entry) => entry.id !== card.id); player.cards.push(card); player.bonuses[card.bonus] += 1; resolveAction(state); }
+export function autoPassBlockedTurns(state: SplendorState): "active" | "stalled" { if (state.winnerUserIds) return "stalled"; while (!hasLegalAction(state, currentPlayer(state))) { state.autoPasses += 1; if (state.autoPasses >= state.players.length) return "stalled"; advanceTurn(state); } state.autoPasses = 0; return "active"; }
+
+type StoredGame = Omit<SplendorGame, "data"> & { dataJson: string };
+function rowToGame(row: StoredGame | undefined): SplendorGame | undefined { return row ? { ...row, channelId: row.channelId ?? undefined, lobbyMessageId: row.lobbyMessageId ?? undefined, threadId: row.threadId ?? undefined, boardMessageId: row.boardMessageId ?? undefined, logMessageId: row.logMessageId ?? undefined, data: JSON.parse(row.dataJson) as SplendorState } : undefined; }
+export function createSplendorGame(database: Database.Database, game: Omit<SplendorGame, "createdAt" | "updatedAt">): void { const now = Date.now(); database.prepare(`INSERT INTO splendor_games (game_id, guild_id, host_user_id, channel_id, lobby_message_id, thread_id, board_message_id, log_message_id, state, data_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(game.gameId, game.guildId, game.hostUserId, game.channelId ?? null, game.lobbyMessageId ?? null, game.threadId ?? null, game.boardMessageId ?? null, game.logMessageId ?? null, game.state, JSON.stringify(game.data), now, now); }
+export function splendorGame(database: Database.Database, gameId: string): SplendorGame | undefined { return rowToGame(database.prepare(`SELECT game_id AS gameId, guild_id AS guildId, host_user_id AS hostUserId, channel_id AS channelId, lobby_message_id AS lobbyMessageId, thread_id AS threadId, board_message_id AS boardMessageId, log_message_id AS logMessageId, state, data_json AS dataJson, created_at AS createdAt, updated_at AS updatedAt FROM splendor_games WHERE game_id = ?`).get(gameId) as StoredGame | undefined); }
+export function saveSplendorGame(database: Database.Database, game: SplendorGame): void { database.prepare(`UPDATE splendor_games SET channel_id = ?, lobby_message_id = ?, thread_id = ?, board_message_id = ?, log_message_id = ?, state = ?, data_json = ?, updated_at = ? WHERE game_id = ?`).run(game.channelId ?? null, game.lobbyMessageId ?? null, game.threadId ?? null, game.boardMessageId ?? null, game.logMessageId ?? null, game.state, JSON.stringify(game.data), Date.now(), game.gameId); }
+export function reserveSplendorGameNumber(database: Database.Database, guildId: string): number { return database.transaction(() => { database.prepare("INSERT INTO splendor_guild_settings (guild_id, next_game_number) VALUES (?, 1) ON CONFLICT(guild_id) DO NOTHING").run(guildId); const row = database.prepare("SELECT next_game_number AS nextGameNumber FROM splendor_guild_settings WHERE guild_id = ?").get(guildId) as { nextGameNumber: number }; database.prepare("UPDATE splendor_guild_settings SET next_game_number = ? WHERE guild_id = ?").run(row.nextGameNumber + 1, guildId); return row.nextGameNumber; })(); }

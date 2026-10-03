@@ -188,6 +188,25 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
       guild_id TEXT PRIMARY KEY,
       next_game_number INTEGER NOT NULL DEFAULT 1 CHECK (next_game_number > 0)
     );
+    CREATE TABLE IF NOT EXISTS splendor_games (
+      game_id TEXT PRIMARY KEY,
+      guild_id TEXT NOT NULL,
+      host_user_id TEXT NOT NULL,
+      channel_id TEXT,
+      lobby_message_id TEXT,
+      thread_id TEXT,
+      board_message_id TEXT,
+      log_message_id TEXT,
+      state TEXT NOT NULL CHECK (state IN ('lobby', 'active', 'completed', 'stalled', 'cancelled')),
+      data_json TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS splendor_games_by_guild_state ON splendor_games (guild_id, state, updated_at DESC);
+    CREATE TABLE IF NOT EXISTS splendor_guild_settings (
+      guild_id TEXT PRIMARY KEY,
+      next_game_number INTEGER NOT NULL DEFAULT 1 CHECK (next_game_number > 0)
+    );
     CREATE TABLE IF NOT EXISTS pokemon_roaming_settings (
       guild_id TEXT PRIMARY KEY,
       chance REAL NOT NULL CHECK (chance >= 0 AND chance <= 1)
@@ -299,6 +318,7 @@ export function initializeRegionBiomeDatabase(databasePath: string): Database.Da
   ensureColumn(database, "pokemon_event_announcements", "expires_at INTEGER");
   ensureColumn(database, "location_area_encounters", "encounter_label TEXT NOT NULL DEFAULT 'wild'");
   ensureColumn(database, "hanabi_games", "channel_id TEXT");
+  ensureColumn(database, "splendor_games", "log_message_id TEXT");
 
   const insertRegion = database.prepare("INSERT OR IGNORE INTO regions (key, display_name) VALUES (?, ?)");
   const seed = database.transaction(() => {
